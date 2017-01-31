@@ -1,0 +1,38 @@
+---
+kind: "operation"
+client: "rug-cli 0.21.4"
+executor:
+  name: "EnableTravisForRugArchive"
+  group: "atomist-rugs"
+  artifact: "travis-editors"
+  version: "0.12.0"
+  origin:
+    repo: "git@github.com:atomist-rugs/travis-editors.git"
+    branch: "master"
+    sha: "678d3e9"
+  parameters:
+    - "owner": "atomist"
+    - "repo": "handlers"
+    - "org": ".org"
+    - "github_token": "3**************************************9"
+    - "maven_base_url": "https://atomist.jfrog.io/atomist"
+    - "maven_user": "t***************y"
+    - "maven_token": "z**************7"
+
+---
+kind: "operation"
+client: "rug-cli 0.21.4"
+generator:
+  name: "NewHandlersProject"
+  group: "atomist"
+  artifact: "handlers"
+  version: "0.6.0"
+  origin:
+    repo: "https://github.com/atomist/handlers.git"
+    branch: "23285115100d4a061a004f01e273e87d4bc58795"
+    sha: "2328511*"
+  parameters:
+    - "project_name": "handlers"
+    - "group_id": "atomist-rugs"
+    - "version": "0.1.0"
+

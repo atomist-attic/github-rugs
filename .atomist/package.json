@@ -1,0 +1,7 @@
+{
+    "dependencies": {
+        "@atomist/rug": "0.10.0",
+        "@atomist/github": "0.2.0",
+        "@atomist/travis": "0.6.1"
+    }
+}

@@ -1,0 +1,5 @@
+group: "atomist-rugs"
+artifact: "default-handlers"
+version: "0.1.0"
+requires: "0.10.0"
+extensions:
