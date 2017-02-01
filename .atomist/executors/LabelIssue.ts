@@ -14,7 +14,7 @@ interface Parameters {
     token: string
 }
 
-var labelIssue: Executor = {
+export let labelIssue: Executor = {
     description: "Label a GitHub issue",
     name: "LabelIssue",
     tags: ["atomist/intent=label issue", "atomist/private=false"],

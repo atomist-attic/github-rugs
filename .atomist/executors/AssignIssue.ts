@@ -14,7 +14,7 @@ interface Parameters {
     token: string
 }
 
-var assignIssue: Executor = {
+export let assignIssue: Executor = {
     description: "Assign a GitHub issue",
     name: "AssignIssue",
     tags: ["atomist/intent=assign issue", "atomist/private=false"],

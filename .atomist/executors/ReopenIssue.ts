@@ -13,7 +13,7 @@ interface Parameters {
     token: string
 }
 
-var reopenIssue: Executor = {
+export let reopenIssue: Executor = {
     description: "Reopen a GitHub issue",
     name: "ReopenIssue",
     tags: ["atomist/intent=reopen issue", "atomist/private=false"],

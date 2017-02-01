@@ -13,7 +13,7 @@ interface Parameters {
     token: string
 }
 
-var listRepositoryIssues: Executor = {
+export let listRepositoryIssues: Executor = {
     description: "List repository GitHub issues",
     name: "ListRepositoryIssues",
     tags: ["atomist/intent=open issues", "atomist/private=false"],

@@ -1,6 +1,6 @@
 import { Parameter } from '@atomist/rug/operations/RugOperation'
 
-export var Owner: Parameter = {
+export let Owner: Parameter = {
   name: "owner",
   description: "GitHub Owner",
   pattern: "^.*$",
@@ -10,7 +10,7 @@ export var Owner: Parameter = {
   tags: ["atomist/owner"]
 }
 
-export var Repository: Parameter = {
+export let Repository: Parameter = {
   name: "repo",
   description: "GitHub Repository",
   pattern: "^.*$",
@@ -20,7 +20,7 @@ export var Repository: Parameter = {
   tags: ["atomist/repository"]
 }
 
-export var RepoUserToken: Parameter = {
+export let RepoUserToken: Parameter = {
   name: "token",
   description: "GitHub Token",
   pattern: "^.*$",

@@ -13,7 +13,7 @@ interface Parameters {
     token: string
 }
 
-var closeIssue: Executor = {
+export let closeIssue: Executor = {
     description: "Close a GitHub issue",
     name: "CloseIssue",
     tags: ["atomist/intent=close issue", "atomist/private=false"],
