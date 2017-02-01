@@ -27,5 +27,5 @@ export var RepoUserToken: Parameter = {
   maxLength: 100,
   required: false,
   displayable: false,
-  tags: ["atomist/user_token", "atomist/github/user_token=repo"]
+  tags: ["atomist/github/user_token=repo"]
 }
