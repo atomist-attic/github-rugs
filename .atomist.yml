@@ -57,3 +57,24 @@ executor:
     - "maven_user": "t***************y"
     - "maven_token": "z**************7"
 
+---
+kind: "operation"
+client: "rug-cli 0.21.4"
+executor:
+  name: "EnableTravisForRugArchive"
+  group: "atomist-rugs"
+  artifact: "travis-editors"
+  version: "0.12.0"
+  origin:
+    repo: "git@github.com:atomist-rugs/travis-editors.git"
+    branch: "master"
+    sha: "678d3e9"
+  parameters:
+    - "owner": "atomist-rugs"
+    - "repo": "default-handlers"
+    - "org": ".org"
+    - "github_token": "3**************************************9"
+    - "maven_base_url": "https://atomist.jfrog.io/atomist"
+    - "maven_user": "t***************y"
+    - "maven_token": "z**************7"
+
