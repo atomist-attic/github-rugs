@@ -15,13 +15,13 @@ interface Parameters {
 }
 
 export let commentIssue: Executor = {
-    description: "Close a GitHub issue",
+    description: "Comment on a GitHub issue",
     name: "CommentIssue",
     tags: ["atomist/intent=add comment", "atomist/intent=create comment", "atomist/private=false"],
     parameters: [
         // TODO proper patterns and validation
         { name: "number", description: "Issue Number", pattern: "^.*$", maxLength: 100, required: true },
-        { name: "comment", description: "Issue Comment", pattern: "^.*$", maxLength: 100, required: true },
+        { name: "comment", description: "Issue Comment", pattern: "@any", maxLength: 100, required: true },
         Owner, Repository, RepoUserToken
     ],
     execute(services: Services, p: Parameters): Result {

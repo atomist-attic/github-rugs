@@ -1,7 +1,7 @@
 group: "atomist-rugs"
 artifact: "default-handlers"
-version: "0.3.0"
-requires: "0.10.0"
+version: "0.5.0"
+requires: "0.12.0"
 extensions:
-  - "com.atomist:github-commands:0.4.0"
-  - "com.atomist:travis-rug-type:0.7.0"
+  - "com.atomist:github-commands:0.6.0"
+  - "com.atomist:travis-rug-type:0.9.1"
