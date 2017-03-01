@@ -1,0 +1,13 @@
+@atomist register command --name AssignIssue --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name CloseIssue --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name CommentIssue --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name CreateIssue --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name LabelIssue --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name ListIssues --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name ListRepositoryIssues --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name MergePullRequest --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name ReopenIssue --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name CreateRelease --artifact default-handlers --group atomist-rugs --version latest
+
+@atomist register command --name InstallWebhook --artifact default-handlers --group atomist-rugs --version latest
+@atomist register command --name InstallOrgWebhook --artifact default-handlers --group atomist-rugs --version latest

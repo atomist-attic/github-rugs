@@ -64,7 +64,7 @@ atomist.on<TreeNode, TreeNode>("/Issue()[/resolvedBy::Commit()/author::GitHubId(
    reopen = message.actionRegistry().bindParameter(reopen, "repo", issue.belongsTo().name())
    reopen = message.actionRegistry().bindParameter(reopen, "owner", issue.belongsTo().owner())
    message.withAction(reopen)
-
+   
    let cid = "issue/" + issue.belongsTo().owner() + "/" + issue.belongsTo().name() + "/" + issue.number()
 
    message.withCorrelationId(cid).send()
