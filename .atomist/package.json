@@ -2,6 +2,10 @@
     "dependencies": {
         "@atomist/rug": "0.12.0",
         "@atomist/github": "0.2.0",
-        "@atomist/travis": "0.6.1"
+        "@atomist/travis": "0.6.1",
+        "mustache": "^2.3.0"
+    },
+    "devDependencies": {
+      "@types/mustache": "^0.8.29"
     }
 }

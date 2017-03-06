@@ -1,7 +1,6 @@
 group: "atomist-rugs"
-artifact: "default-handlers"
-version: "0.11.1"
-requires: "0.12.2"
+artifact: "beta-default-handlers"
+version: "0.10.2-SNAPSHOT"
+requires: "0.16.0"
 extensions:
-  - "com.atomist:github-commands:0.10.1"
-  - "com.atomist:travis-rug-type:0.9.1"
+  - "com.atomist.rug:rug-functions-github:0.2.3-SNAPSHOT"
