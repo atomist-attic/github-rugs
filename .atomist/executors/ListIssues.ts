@@ -22,37 +22,33 @@ export let listIssues: Executor = {
     ],
     execute(services: Services, p: Parameters): Result {
 
-        let _services: any = services
-        let githubService = _services.github() as GitHubService
-        let issues: Issue[] = githubService.listIssues(p.days, p.token)
+        let _services: any = services;
+        let githubService = _services.github() as GitHubService;
+        let issues: Issue[] = githubService.listIssues(p.days, p.token);
 
         if (issues.length > 0) {
             let attachments = `{"attachments": [` + issues.map(i => {
-                let text = JSON.stringify(`#${i.number()}: ${i.title()}`)
+                let text = JSON.stringify(`#${i.number()}: ${i.title()}`);
+                let icon = "open";
+                let color = "#6cc644";
                 if (i.state() == "closed") {
-                    return `{
+                    icon = "http://images.atomist.com/rug/issue-closed.png";
+                    color = "#bd2c00";
+                }
+                return `{
                   "fallback": ${text},
-                  "author_icon": "http://images.atomist.com/rug/issue-closed.png",
-                  "color": "#bd2c00",
+                  "author_icon": "http://images.atomist.com/rug/issue-${icon}.png",
+                  "color": "${color}",
                   "author_link": "${i.issueUrl()}",
-                  "author_name": ${text}
-               }`
-                }
-                else {
-                    return `{
-                "fallback": ${text},
-                "author_icon": "http://images.atomist.com/rug/issue-open.png",
-                "color": "#6cc644",
-                "author_link": "${i.issueUrl()}",
-                "author_name": ${text}
-             }`
-                }
-            }).join(",") + "]}"
-            _services.messageBuilder().say(attachments).send()
+                  "author_name": ${text},
+                  "footer": "<${i.url()}|${i.repo()}>"
+                }`;
+            }).join(",") + "]}";
+            _services.messageBuilder().say(attachments).send();
         }
         else {
-            _services.messageBuilder().say(`Looks like you really didn't crush it. No issues found for the last ${p.days} day(s)`).send()
+            _services.messageBuilder().say(`Looks like you really didn't crush it. No issues found for the last ${p.days} day(s)`).send();
         }
-        return new Result(Status.Success, "OK")
+        return new Result(Status.Success, "OK");
     }
 }
