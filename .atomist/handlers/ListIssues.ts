@@ -5,7 +5,7 @@ import * as slack from './SlackTemplates'
 
 @CommandHandler("ListIssues", "List user's GitHub issues")
 @Tags("github", "issues")
-@Secrets("user/github/token?scope=repo")
+@Secrets("github://user_token?scopes=repos")
 @Intent("list issues")
 class ListIssuesCommand implements HandleCommand {
     
@@ -25,17 +25,17 @@ class ListIssuesCommand implements HandleCommand {
 
 @CommandHandler("ListRepositoryIssues", "List a GitHub repo's issues")
 @Tags("github", "issues")
-@Secrets("user/github/token?scope=repo")
+@Secrets("github://user_token?scopes=repos")
 @Intent("open issues")
 class ListRepositoryIssuesCommand implements HandleCommand {
     
     @Parameter({description: "Issue search term", pattern: "^.*$", required: false})
     search: string = ""
 
-    @MappedParameter(MappedParameters.REPOSITORY)
+    @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
 
-    @MappedParameter(MappedParameters.REPO_OWNER)
+    @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
     handle(ctx: HandlerContext): Plan {

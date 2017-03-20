@@ -3,10 +3,11 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("InstallOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
-@Secrets("user/github/token?scope=repo")
+@Secrets("github://user_token?scopes=repos")
 @Intent("install org-webhook")
 class CreateOrgWebHookCommand implements HandleCommand {
-    @MappedParameter(MappedParameters.REPO_OWNER)
+
+    @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
     @Parameter({description: "Webhook URL", pattern: "@url"})
@@ -27,14 +28,14 @@ export let command = new CreateOrgWebHookCommand()
 
 @CommandHandler("InstallRepoWebhook", "Create a webhook for a repo")
 @Tags("github", "webhooks")
-@Secrets("user/github/token?scope=repo")
+@Secrets("github://user_token?scopes=repos")
 @Intent("install webhook")
 class InstallRepoWebhookCommand implements HandleCommand {
 
-    @MappedParameter(MappedParameters.REPOSITORY)
+    @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
 
-    @MappedParameter(MappedParameters.REPO_OWNER)
+    @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
     @Parameter({description: "Webhook URL", pattern: "@url"})

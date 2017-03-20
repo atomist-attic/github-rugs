@@ -3,17 +3,17 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("MergePullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
-@Secrets("user/github/token?scope=repo")
+@Secrets("github://user_token?scopes=repos")
 @Intent("merge pr", "merge pullrequest")
 class MergePullRequestCommand implements HandleCommand {
     
     @Parameter({description: "The pull request number", pattern: "^.*$"})
     issue: number
 
-    @MappedParameter(MappedParameters.REPOSITORY)
+    @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
 
-    @MappedParameter(MappedParameters.REPO_OWNER)
+    @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
     handle(ctx: HandlerContext): Plan {

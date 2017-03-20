@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("CreateRelease", "Create a release of a repo on GitHub")
 @Tags("github", "issues")
-@Secrets("user/github/token?scope=repo")
+@Secrets("github://user_token?scopes=repos")
 @Intent("create release")
 class CreateReleaseCommand implements HandleCommand {
 
@@ -13,10 +13,10 @@ class CreateReleaseCommand implements HandleCommand {
     @Parameter({description: "The release message", pattern: "@any"})
     message: string
 
-    @MappedParameter(MappedParameters.REPOSITORY)
+    @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
 
-    @MappedParameter(MappedParameters.REPO_OWNER)
+    @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
     handle(ctx: HandlerContext): Plan {

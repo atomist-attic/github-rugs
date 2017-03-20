@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("CommentIssue", "Comment on a GitHub issue")
 @Tags("github", "issues")
-@Secrets("user/github/token?scope=repo")
+@Secrets("github://user_token?scopes=repos")
 @Intent("comment issue")
 class CommentIssueCommand implements HandleCommand {
     
@@ -13,10 +13,10 @@ class CommentIssueCommand implements HandleCommand {
     @Parameter({description: "The comment", pattern: "@any"})
     comment: string
 
-    @MappedParameter(MappedParameters.REPOSITORY)
+    @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
 
-    @MappedParameter(MappedParameters.REPO_OWNER)
+    @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
     handle(ctx: HandlerContext): Plan {
