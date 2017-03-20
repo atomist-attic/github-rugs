@@ -15,7 +15,7 @@ class Push implements HandleEvent<GraphNode, GraphNode> {
         let push = event.root() as any
 
         let message = new Message("")
-        message.withTreeNode(push)
+        message.withNode(push)
 
         let cid = "commit_event/" + push.on().owner() + "/" + push.on().name() + "/" + push.after()
         message.withCorrelationId(cid)

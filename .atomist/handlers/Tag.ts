@@ -11,7 +11,7 @@ class Tag implements HandleEvent<GraphNode, GraphNode> {
         let tag = event.root() as any
 
         let message = new Message("")
-        message.withTreeNode(tag)
+        message.withNode(tag)
 
         return message
     }

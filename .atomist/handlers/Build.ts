@@ -19,7 +19,7 @@ class Build implements HandleEvent<GraphNode, GraphNode> {
         let build = event.root() as any
 
         let message = new Message("")
-        message.withTreeNode(build)
+        message.withNode(build)
 
         let cid = "commit_event/" + build.on().owner() + "/" + build.on().name() + "/" + build.hasBuild().sha()
         message.withCorrelationId(cid)
@@ -76,7 +76,7 @@ class BuildFromPR implements HandleEvent<GraphNode, GraphNode> {
         let build = event.root() as any
 
         let message = new Message("")
-        message.withTreeNode(build)
+        message.withNode(build)
 
         let cid = "commit_event/" + build.on().owner() + "/" + build.on().name() + "/" + build.hasBuild().sha()
         message.withCorrelationId(cid)

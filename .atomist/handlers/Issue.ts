@@ -14,7 +14,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
         }
 
         let message = new Message("New issue")
-        message.withTreeNode(issue)
+        message.withNode(issue)
 
         let cid = "issue/" + issue.belongsTo().owner() + "/" + issue.belongsTo().name() + "/" + issue.number()
         message.withCorrelationId(cid)
@@ -105,7 +105,7 @@ class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
         }
 
         let message = new Message("")
-        message.withTreeNode(issue)
+        message.withNode(issue)
 
         let cid = "issue/" + issue.belongsTo().owner() + "/" + issue.belongsTo().name() + "/" + issue.number()
         message.withCorrelationId(cid)
@@ -137,7 +137,7 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
         let comment = event.root() as any
 
         let message = new Message("")
-        message.withTreeNode(comment)
+        message.withNode(comment)
 
         let cid = "comment/" + comment.on().belongsTo().owner() + "/" + comment.on().belongsTo().name() + "/" + comment.on().number() + "/" + comment.id()
         message.withCorrelationId(cid)

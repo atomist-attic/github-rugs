@@ -21,7 +21,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
         }
 
         let message = new Message("")
-        message.withTreeNode(pr)
+        message.withNode(pr)
 
         let cid = "pr_event/" + pr.on().owner() + "/" + pr.on().name() + "/" + pr.number()
         message.withCorrelationId(cid)
@@ -61,7 +61,7 @@ class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
         }
 
         let message = new Message("")
-        message.withTreeNode(pr)
+        message.withNode(pr)
 
         let cid = "pr_event/" + pr.on().owner() + "/" + pr.on().name() + "/" + pr.number()
         message.withCorrelationId(cid)
