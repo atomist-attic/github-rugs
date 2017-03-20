@@ -6,14 +6,14 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 @Secrets("user/github/token?scope=repo")
 @Intent("close issue")
 class CloseIssueCommand implements HandleCommand {
-    
+
     @Parameter({description: "The issue number", pattern: "^.*$"})
     issue: number
 
-    @MappedParameter(MappedParameters.REPOSITORY)
+    @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
 
-    @MappedParameter(MappedParameters.REPO_OWNER)
+    @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
     handle(ctx: HandlerContext): Plan {
