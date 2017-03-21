@@ -3,7 +3,7 @@ import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpressi
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
 
-@EventHandler("Build", "Handle build events", 
+@EventHandler("Built", "Handle build events", 
     new PathExpression<GraphNode, GraphNode>(
         `/Build
             [/hasBuild::Commit()/author::GitHubId()
@@ -14,55 +14,65 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
                     [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
                 [/on::Repo()]]`))
 @Tags("ci")
-class Build implements HandleEvent<GraphNode, GraphNode> {
+class Built implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message {
         let build = event.root() as any
 
         let message = new Message("")
         message.withNode(build)
 
-        let cid = "commit_event/" + build.on().owner() + "/" + build.on().name() + "/" + build.hasBuild().sha()
+        let repo = build.on().name()
+
+        let cid = "commit_event/" + build.on().owner() + "/" + repo + "/" + build.hasBuild().sha()
         message.withCorrelationId(cid)
+
 
         // TODO split this into two handlers with proper tree expressions with predicates
         if (build.status() == "Passed" || build.status() == "Fixed") {
-            /*message.addAction({
+            if (build.status() == "Fixed") {
+                if (build.hasBuild().author().hasGithubIdentity() != null) {
+                    message.body = `Travis CI build ${build.name()} of repo ${repo} is now fixed`
+                    message.channelId = build.hasBuild().author().hasGitHubIdentity().hasChatIdentity().id()
+                }
+            }
+            message.addAction({
                 label: 'Release',
                 instruction: {
                     kind: "command", 
                     name: "CreateRelease", 
                     parameters: { 
-                        build_id: build.id(),
-                        build_no: build.name(),
                         owner: build.on().owner(),
-                        repo: build.on().name(),
+                        repo: build.on().name()
                     }
                 }
-            })*/
+            })
         }
         else if (build.status() == "Failed" || build.status() == "Broken" || build.status() == "Still Failing") {
-            /*message.addAction({
+            if (build.hasBuild().author().hasGithubIdentity() != null) {
+                let commit = "`" + build.hasBuild().sha() + "`"
+                message.body = `Travis CI build ${build.name()} of repo ${repo} failed after your last commit ${commit}: ${build.build_url()}`
+                message.channelId = build.hasBuild().author().hasGitHubIdentity().hasChatIdentity().id()
+            }
+            message.addAction({
                 label: 'Restart',
                 instruction: {
                     kind: "command", 
-                    name: "RestartBuild", 
+                    name: "RestartTravisBuild", 
                     parameters: { 
-                        build_id: build.id(),
-                        build_no: build.name(),
-                        owner: build.on().owner(),
-                        repo: build.on().name(),
+                        buildId: build.id(),
+                        org: build.on().owner()
                     }
                 }
-            })*/
+            })
         }
         
         return message
     }
 }
-export const build = new Build()
+export const built = new Built()
 
 
-@EventHandler("BuildFromPR", "Handle build events from pull-requests", 
+@EventHandler("PRBuilt", "Handle build events from pull-requests", 
     new PathExpression<GraphNode, GraphNode>(
         `/Build()
             [/on::Repo()/channel::ChatChannel()]
@@ -71,7 +81,7 @@ export const build = new Build()
                 [/contains::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
                 [/on::Repo()]]`))
 @Tags("ci")
-class BuildFromPR implements HandleEvent<GraphNode, GraphNode> {
+class PRBuilt implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message {
         let build = event.root() as any
 
@@ -83,37 +93,33 @@ class BuildFromPR implements HandleEvent<GraphNode, GraphNode> {
 
         // TODO split this into two handlers with proper tree expressions with predicates
         if (build.status() == "Passed" || build.status() == "Fixed") {
-            /*message.addAction({
+            message.addAction({
                 label: 'Release',
                 instruction: {
                     kind: "command", 
                     name: "CreateRelease", 
                     parameters: { 
-                        build_id: build.id(),
-                        build_no: build.name(),
                         owner: build.on().owner(),
-                        repo: build.on().name(),
+                        repo: build.on().name()
                     }
                 }
-            })*/
+            })
         }
         else if (build.status() == "Failed" || build.status() == "Broken" || build.status() == "Still Failing") {
-            /*message.addAction({
+            message.addAction({
                 label: 'Restart',
                 instruction: {
                     kind: "command", 
-                    name: "RestartBuild", 
+                    name: "RestartTravisBuild", 
                     parameters: { 
-                        build_id: build.id(),
-                        build_no: build.name(),
-                        owner: build.on().owner(),
-                        repo: build.on().name(),
+                        buildId: build.id(),
+                        org: build.on().owner()
                     }
                 }
-            })*/
+            })
         }
         
         return message
     }
 }
-export const buildFromPR = new BuildFromPR()
+export const prBuilt = new PRBuilt()
