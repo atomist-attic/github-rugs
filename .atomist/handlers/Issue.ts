@@ -23,9 +23,9 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Assign',
             instruction: {
-                kind: "command", 
-                name: "AssignIssue", 
-                parameters: { 
+                kind: "command",
+                name: "AssignIssue",
+                parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name()
@@ -36,9 +36,9 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Bug',
             instruction: {
-                kind: "command", 
-                name: "LabelIssue", 
-                parameters: { 
+                kind: "command",
+                name: "LabelIssue",
+                parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name(),
@@ -50,9 +50,9 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Enhancement',
             instruction: {
-                kind: "command", 
-                name: "LabelIssue", 
-                parameters: { 
+                kind: "command",
+                name: "LabelIssue",
+                parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name(),
@@ -64,9 +64,9 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Close',
             instruction: {
-                kind: "command", 
-                name: "CloseIssue", 
-                parameters: { 
+                kind: "command",
+                name: "CloseIssue",
+                parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name(),
@@ -78,16 +78,16 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Comment',
             instruction: {
-                kind: "command", 
-                name: "CommentIssue", 
-                parameters: { 
+                kind: "command",
+                name: "CommentIssue",
+                parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name(),
                 }
             }
         })
-    
+
         return message
     }
 }
@@ -113,16 +113,16 @@ class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Reopen',
             instruction: {
-                kind: "command", 
-                name: "AssignIssue", 
-                parameters: { 
+                kind: "command",
+                name: "ReopenIssue", 
+                parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name()
                 }
             }
         })
-    
+
         return message
     }
 }
@@ -146,9 +146,9 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Assign',
             instruction: {
-                kind: "command", 
-                name: "AssignIssue", 
-                parameters: { 
+                kind: "command",
+                name: "AssignIssue",
+                parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
                     repo: comment.belongsTo().name()
@@ -159,9 +159,9 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Bug',
             instruction: {
-                kind: "command", 
-                name: "LabelIssue", 
-                parameters: { 
+                kind: "command",
+                name: "LabelIssue",
+                parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
                     repo: comment.belongsTo().name(),
@@ -173,9 +173,9 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Enhancement',
             instruction: {
-                kind: "command", 
-                name: "LabelIssue", 
-                parameters: { 
+                kind: "command",
+                name: "LabelIssue",
+                parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
                     repo: comment.belongsTo().name(),
@@ -187,9 +187,9 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Close',
             instruction: {
-                kind: "command", 
-                name: "CloseIssue", 
-                parameters: { 
+                kind: "command",
+                name: "CloseIssue",
+                parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
                     repo: comment.belongsTo().name(),
@@ -201,16 +201,16 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
         message.addAction({
             label: 'Comment',
             instruction: {
-                kind: "command", 
-                name: "CommentIssue", 
-                parameters: { 
+                kind: "command",
+                name: "CommentIssue",
+                parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
                     repo: comment.belongsTo().name(),
                 }
             }
         })
-    
+
         return message
     }
 }

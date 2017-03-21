@@ -10,7 +10,7 @@ class CreateIssueCommand implements HandleCommand {
     @Parameter({description: "The issue title", pattern: "^.*$"})
     title: string
 
-    @Parameter({description: "The issue body", pattern: "^.*(?m)$", required: false})
+    @Parameter({description: "The issue body", pattern: "^.*(?m)$"})
     body: string
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
