@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("ReopenIssue", "Reopen a closed github issue")
 @Tags("github", "issues")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("reopen issue")
 class ReopenIssueCommand implements HandleCommand {
     

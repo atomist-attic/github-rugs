@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("LabelIssue", "Add a known label to an issue")
 @Tags("github", "issues")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("label issue")
 class LabelIssueCommand implements HandleCommand {
 

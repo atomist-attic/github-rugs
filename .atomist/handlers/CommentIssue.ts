@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("CommentIssue", "Comment on a GitHub issue")
 @Tags("github", "issues")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("comment issue")
 class CommentIssueCommand implements HandleCommand {
     

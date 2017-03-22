@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("AssignIssue", "Assign a github issue to a user")
 @Tags("github", "issues")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("assign issue")
 class AssignCommand implements HandleCommand {
     

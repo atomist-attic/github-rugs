@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("CreateTag", "Create a tag from a sha")
 @Tags("github", "issues")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("create tag")
 class CreateTagCommand implements HandleCommand {
 

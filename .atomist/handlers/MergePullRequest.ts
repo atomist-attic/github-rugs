@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 
 @CommandHandler("MergePullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("merge pr", "merge pullrequest")
 class MergePullRequestCommand implements HandleCommand {
     

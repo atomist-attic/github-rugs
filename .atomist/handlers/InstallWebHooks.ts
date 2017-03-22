@@ -4,7 +4,7 @@ import {renderSuccess, renderError} from './SlackTemplates'
 
 @CommandHandler("InstallOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=admin:org_hook")
 @Intent("install org-webhook")
 class CreateOrgWebHookCommand implements HandleCommand {
 
@@ -29,7 +29,7 @@ export let command = new CreateOrgWebHookCommand()
 
 @CommandHandler("InstallRepoWebhook", "Create a webhook for a repo")
 @Tags("github", "webhooks")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("install webhook")
 class InstallRepoWebhookCommand implements HandleCommand {
 

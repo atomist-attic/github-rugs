@@ -5,7 +5,7 @@ import * as slack from './SlackTemplates'
 
 @CommandHandler("RestartTravisBuild", "Restart a Travis CI build")
 @Tags("travis", "ci")
-@Secrets("github://user_token?scopes=repos")
+@Secrets("github://user_token?scopes=repo")
 @Intent("restart build")
 class RestartBuild implements HandleCommand {
     
