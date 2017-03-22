@@ -67,4 +67,26 @@ try{
   }
 }
 
-export {renderIssues, renderError}
+let success = `{
+  "attachments": [
+    {
+      "fallback": "{{{text}}}",
+      "mrkdwn_in": ["text", "pretext"],
+      "author_name": "Successfully ran command",
+      "author_icon": "https://images.atomist.com/rug/check-circle.gif?gif={{random}}",
+      "color": "#45B254",
+      "text": "{{{text}}}"
+    }
+  ]
+}`
+
+//generic success rendering
+function renderSuccess(msg: string): string {
+try{
+    return mustache.render(success, {text: msg})
+  }catch(ex) {
+    return `Failed to render message using template: ${ex}`
+  }
+}
+
+export {renderIssues, renderError, renderSuccess}
