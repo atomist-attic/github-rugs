@@ -11,7 +11,7 @@ class CreateOrgWebHookCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
-    @Parameter({description: "Webhook URL", pattern: "@url"})
+    @MappedParameter("atomist://github_webhook_url")
     url: string = "https://webhook.atomist.com/github"
 
     handle(ctx: HandlerContext): Plan {
@@ -39,7 +39,7 @@ class InstallRepoWebhookCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
-    @Parameter({description: "Webhook URL", pattern: "@url"})
+    @MappedParameter("atomist://github_webhook_url")
     url: string = "https://webhook.atomist.com/github"
 
     handle(ctx: HandlerContext): Plan {
