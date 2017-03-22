@@ -45,4 +45,26 @@ function renderIssues(issuesList: Issue[]): string {
   }
 }
 
-export {renderIssues}
+let failure = `{
+  "attachments": [
+    {
+      "fallback": "Unable to run command",
+      "mrkdwn_in": ["text", "pretext"],
+      "author_name": "Unable to run command",
+      "author_icon": "https://images.atomist.com/rug/error-circle.png",
+      "color": "#D94649",
+      "text" : "{{{text}}}"
+    }
+  ]
+}`
+
+//generic error rendering
+function renderError(msg: string): string {
+try{
+    return mustache.render(failure, {text: msg})
+  }catch(ex) {
+    return `Failed to render message using template: ${ex}`
+  }
+}
+
+export {renderIssues, renderError}

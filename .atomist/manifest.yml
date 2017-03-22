@@ -1,6 +1,6 @@
 group: "atomist-rugs"
 artifact: "beta-default-handlers"
-version: "0.14.0"
+version: "0.14.1"
 requires: "0.17.1"
 extensions:
   - "com.atomist.rug:rug-functions-github:0.6.0"
