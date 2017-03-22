@@ -74,10 +74,10 @@ class WebHookErrorHandler implements HandleResponse<any> {
     handle(@ParseJson response: Response<any>): Plan | Message {
         let errors = response.body().errors;
         try{
-            if(errors[0].message == "Hook already exists for this organization"){
+            if(errors[0].message == "Hook already exists on this organization"){
                 return new Message(renderSuccess(`Webook already installed for ${this.owner} (${this.url})`))
             }
-            if(errors[0].message == "Hook already exists for this repository"){
+            if(errors[0].message == "Hook already exists on this repository"){
                 return new Message(renderSuccess(`Webook already installed for ${this.owner}/${this.repo} (${this.url})`))
             }
             return new Message(renderError(`${response.msg()}: ${errors[0].message}`))    
