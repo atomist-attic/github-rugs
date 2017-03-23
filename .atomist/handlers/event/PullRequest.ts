@@ -1,4 +1,4 @@
-import { HandleEvent, Message } from '@atomist/rug/operations/Handlers'
+import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
@@ -13,11 +13,11 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr")
 class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message {
+    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let pr = event.root() as any
 
         if (pr.state() != "open") {
-            return
+            return new Plan()
         }
 
         let message = new Message("")
@@ -53,11 +53,11 @@ export const openedPullRequest = new OpenedPullRequest()
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr")
 class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message {
+    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let pr = event.root() as any
 
         if (pr.state() != "closed") {
-            return
+            return new Plan()
         }
 
         let message = new Message("")
