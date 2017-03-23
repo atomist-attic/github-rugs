@@ -1,7 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
-@CommandHandler("AssignIssue", "Assign a github issue to a user")
+@CommandHandler("AssignIssue", "Assign a GitHub issue to a user")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("assign issue")

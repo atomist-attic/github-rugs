@@ -1,7 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
-@CommandHandler("LabelIssue", "Add a known label to an issue")
+@CommandHandler("LabelIssue", "Add a known label to an GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("label issue")
