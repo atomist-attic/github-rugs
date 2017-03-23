@@ -1,17 +1,17 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
-@CommandHandler("LabelIssue", "Add a known label to an issue")
+@CommandHandler("AssignIssue", "Assign a GitHub issue to a user")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("label issue")
-class LabelIssueCommand implements HandleCommand {
-
+@Intent("assign issue")
+class AssignCommand implements HandleCommand {
+    
     @Parameter({description: "The issue number", pattern: "^.*$"})
     issue: number
 
-    @Parameter({description: "A known label to add to an issue", pattern: "^.*$"})
-    label: string
+    @Parameter({description: "The user to whom the issue should be assigned", pattern: "^.*$"})
+    assignee: string
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
@@ -22,12 +22,12 @@ class LabelIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "label-github-issue", parameters: this},
-        onSuccess: new Message(`Successfully labelled ${this.owner}/${this.repo}#${this.issue} with ${this.label}`),
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to label issue: "}}}
+        {kind: "execute", name: "assign-github-issue", parameters: this},
+        onSuccess: new Message(`${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`),
+        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to assign issue: "}}}
         plan.add(execute)
         return plan;
     }
 }
 
-export let command = new LabelIssueCommand()
+export let assignIssue = new AssignCommand()

@@ -1,4 +1,4 @@
-import { HandleEvent, Message } from '@atomist/rug/operations/Handlers'
+import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
@@ -6,11 +6,11 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 @EventHandler("OpenedIssue", "Handle created issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
 @Tags("github", "issue")
 class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message {
+    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let issue = event.root() as any
 
         if (issue.state() != "open") {
-            return
+            return new Plan()
         }
 
         let message = new Message("New issue")
@@ -97,11 +97,11 @@ export const openedIssue = new OpenedIssue()
 @EventHandler("ClosedIssue", "Handles closed issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
 @Tags("github", "issue")
 class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message {
+    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let issue = event.root() as any
 
         if (issue.state() != "closed") {
-            return
+            return new Plan()
         }
 
         let message = new Message("")

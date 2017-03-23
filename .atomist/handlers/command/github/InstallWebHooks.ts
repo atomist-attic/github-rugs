@@ -1,6 +1,6 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {renderSuccess, renderError} from './SlackTemplates'
+import {renderSuccess, renderError} from '../../SlackTemplates'
 
 @CommandHandler("InstallOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
