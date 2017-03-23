@@ -5,7 +5,7 @@ import {renderSuccess, renderError} from '../SlackTemplates'
 @CommandHandler("create-github-release", "Create a release of a repo on GitHub")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("create github release", "create release")
+@Intent("create release", "create github release")
 class CreateReleaseCommand implements HandleCommand {
 
     @Parameter({description: "The tag to release", pattern: "^.*$"})

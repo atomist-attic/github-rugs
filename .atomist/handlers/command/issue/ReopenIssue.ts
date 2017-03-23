@@ -5,7 +5,7 @@ import {renderSuccess, renderError} from '../../SlackTemplates'
 @CommandHandler("reopen-github-issue", "Reopen a closed GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("reopen github issue", "reopen issue")
+@Intent("reopen issue", "reopen github issue")
 class ReopenIssueCommand implements HandleCommand {
     
     @Parameter({description: "The issue number", pattern: "^.*$"})

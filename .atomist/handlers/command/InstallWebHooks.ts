@@ -5,7 +5,7 @@ import {renderSuccess, renderError} from '../SlackTemplates'
 @CommandHandler("install-github-org-webhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
 @Secrets("github://user_token?scopes=admin:org_hook")
-@Intent("install github org webhook", "install org-webhook")
+@Intent("install org-webhook", "install github org webhook")
 class CreateOrgWebHookCommand implements HandleCommand {
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
