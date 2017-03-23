@@ -52,6 +52,9 @@ let failure = `{
       "mrkdwn_in": ["text", "pretext"],
       "author_name": "Unable to run command",
       "author_icon": "https://images.atomist.com/rug/error-circle.png",
+      {{#hasCorrelationId}}
+      "footer": "Correlation ID: {{{corrid}}}",
+      {{/hasCorrelationId}}
       "color": "#D94649",
       "text" : "{{{text}}}"
     }
@@ -59,9 +62,14 @@ let failure = `{
 }`
 
 //generic error rendering
-function renderError(msg: string): string {
+function renderError(msg: string, corrid?: string): string {
 try{
-    return mustache.render(failure, {text: msg})
+    return mustache.render(failure, {text: msg, corrid: corrid,
+      hasCorrelationId: function () {
+        // Due to rug bug https://github.com/atomist/rug/issues/466
+        return this.corrid !== undefined && this.corrid != "null" && this.corrid != `{"className":"Undefined"}`
+      }
+    })
   }catch(ex) {
     return `Failed to render message using template: ${ex}`
   }

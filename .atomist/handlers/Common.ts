@@ -9,8 +9,11 @@ class GenericErrorHandler implements HandleResponse<any> {
     @Parameter({description: "Error description", pattern: "@any"})
     msg: string
 
+    @Parameter({description: "Correlation ID", pattern: "@any", required: false})
+    corrid: string
+
     handle(response: Response<any>): Message {
-        return new Message(renderError(`${this.msg}${response.msg()}`));
+        return new Message(renderError(`${this.msg}${response.msg()}`, this.corrid));
     }
 }
 export let errorHandler = new GenericErrorHandler()

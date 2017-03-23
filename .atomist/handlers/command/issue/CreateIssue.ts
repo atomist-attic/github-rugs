@@ -19,12 +19,15 @@ class CreateIssueCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
+    @MappedParameter("atomist://correlation_id")
+    corrid: string
+
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "create-github-issue", parameters: this},
         onSuccess: {kind: "respond", name: "generic-success-handler", parameters: {msg: `Successfully created a new issue on ${this.owner}/${this.repo}`}},
-        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to create issue: "}}}
+        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to create issue: ", corrid: this.corrid}}}
         plan.add(execute)
         return plan;
     }
