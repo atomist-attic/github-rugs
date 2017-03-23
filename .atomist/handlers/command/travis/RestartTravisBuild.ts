@@ -1,7 +1,7 @@
 import {HandleResponse, Execute, Respondable, MappedParameters, HandleCommand, Respond, Response, HandlerContext, Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import { Issue } from "@atomist/github/core/Core"
-import * as slack from './SlackTemplates'
+import * as slack from '../../SlackTemplates'
 
 @CommandHandler("RestartTravisBuild", "Restart a Travis CI build")
 @Tags("travis", "ci")
