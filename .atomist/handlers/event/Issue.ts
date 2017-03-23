@@ -2,8 +2,7 @@ import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
-
-@EventHandler("OpenedIssue", "Handle created issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
+@EventHandler("open-github-issues", "Handle created issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
 @Tags("github", "issue")
 class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
@@ -24,7 +23,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Assign',
             instruction: {
                 kind: "command",
-                name: "AssignIssue",
+                name: "assign-github-issues",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
@@ -37,7 +36,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Bug',
             instruction: {
                 kind: "command",
-                name: "LabelIssue",
+                name: "label-github-issue",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
@@ -51,7 +50,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Enhancement',
             instruction: {
                 kind: "command",
-                name: "LabelIssue",
+                name: "label-github-issue",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
@@ -65,7 +64,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Close',
             instruction: {
                 kind: "command",
-                name: "CloseIssue",
+                name: "close-github-issue",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
@@ -79,7 +78,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Comment',
             instruction: {
                 kind: "command",
-                name: "CommentIssue",
+                name: "comment-github-issue",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
@@ -94,7 +93,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
 export const openedIssue = new OpenedIssue()
 
 
-@EventHandler("ClosedIssue", "Handles closed issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
+@EventHandler("closed-github-issues", "Handles closed issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
 @Tags("github", "issue")
 class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
@@ -104,7 +103,7 @@ class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
             return new Plan()
         }
 
-        let message = new Message("")
+        let message = new Message()
         message.withNode(issue)
 
         let cid = "issue/" + issue.belongsTo().owner() + "/" + issue.belongsTo().name() + "/" + issue.number()
@@ -114,7 +113,7 @@ class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Reopen',
             instruction: {
                 kind: "command",
-                name: "ReopenIssue", 
+                name: "reopen-github-issue", 
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
@@ -130,13 +129,13 @@ export const closedIssue = new ClosedIssue()
 
 
 
-@EventHandler("CommentedIssue", "Handles issue comments events", new PathExpression<GraphNode, GraphNode>("/Comment()[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/on::Issue()[/belongsTo::Repo()/channel::ChatChannel()][/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?]"))
+@EventHandler("commented-github-issues", "Handles issue comments events", new PathExpression<GraphNode, GraphNode>("/Comment()[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/on::Issue()[/belongsTo::Repo()/channel::ChatChannel()][/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?]"))
 @Tags("github", "issue", "comment")
 class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message {
         let comment = event.root() as any
 
-        let message = new Message("")
+        let message = new Message()
         message.withNode(comment)
 
         let cid = "comment/" + comment.on().belongsTo().owner() + "/" + comment.on().belongsTo().name() + "/" + comment.on().number() + "/" + comment.id()
@@ -147,7 +146,7 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Assign',
             instruction: {
                 kind: "command",
-                name: "AssignIssue",
+                name: "assign-github-issue",
                 parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
@@ -160,7 +159,7 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Bug',
             instruction: {
                 kind: "command",
-                name: "LabelIssue",
+                name: "label-github-issue",
                 parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
@@ -174,7 +173,7 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Enhancement',
             instruction: {
                 kind: "command",
-                name: "LabelIssue",
+                name: "label-github-issue",
                 parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
@@ -188,7 +187,7 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Close',
             instruction: {
                 kind: "command",
-                name: "CloseIssue",
+                name: "close-github-issue",
                 parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),
@@ -202,7 +201,7 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Comment',
             instruction: {
                 kind: "command",
-                name: "CommentIssue",
+                name: "comment-github-issue",
                 parameters: {
                     issue: comment.number(),
                     owner: comment.belongsTo().owner(),

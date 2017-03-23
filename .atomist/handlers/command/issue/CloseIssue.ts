@@ -1,13 +1,13 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
-@CommandHandler("MergePullRequest", "Merge a GitHub pull request")
-@Tags("github", "pr")
+@CommandHandler("close-github-issue", "Close a GitHub issue")
+@Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("merge pr", "merge pullrequest")
-class MergePullRequestCommand implements HandleCommand {
-    
-    @Parameter({description: "The pull request number", pattern: "^.*$"})
+@Intent("close github issue","close issue")
+class CloseIssueCommand implements HandleCommand {
+
+    @Parameter({description: "The issue number", pattern: "^.*$"})
     issue: number
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
@@ -19,12 +19,12 @@ class MergePullRequestCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "merge-github-pull-request", parameters: this},
-        onSuccess: new Message(`${this.owner}/${this.repo}#${this.issue} successfully merged`),
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to merge pr: "}}}
+        {kind: "execute", name: "close-github-issue", parameters: this},
+        onSuccess: {kind: "respond", name: "generic-success-handler", parameters: {msg: `${this.owner}/${this.repo}#${this.issue} successfully closed`}},
+        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to close issue: "}}}
         plan.add(execute)
         return plan;
     }
 }
 
-export let command = new MergePullRequestCommand()
+export let command = new CloseIssueCommand()

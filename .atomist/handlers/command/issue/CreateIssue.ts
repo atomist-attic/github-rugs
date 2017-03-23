@@ -1,17 +1,17 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
-@CommandHandler("CommentIssue", "Comment on a GitHub issue")
+@CommandHandler("create-github-issue", "Create an issue on GitHub")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("comment issue")
-class CommentIssueCommand implements HandleCommand {
-    
-    @Parameter({description: "The issue number", pattern: "^.*$"})
-    issue: number
+@Intent("create github issue", "create issue")
+class CreateIssueCommand implements HandleCommand {
 
-    @Parameter({description: "The comment", pattern: "@any"})
-    comment: string
+    @Parameter({description: "The issue title", pattern: "^.*$"})
+    title: string
+
+    @Parameter({description: "The issue body", pattern: "^.*(?m)$"})
+    body: string
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
@@ -22,12 +22,12 @@ class CommentIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "comment-github-issue", parameters: this},
-        onSuccess: new Message(`Successfully labelled ${this.owner}/${this.repo}#${this.issue}`),
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to comment on issue: "}}}
+        {kind: "execute", name: "create-github-issue", parameters: this},
+        onSuccess: {kind: "respond", name: "generic-success-handler", parameters: {msg: `Successfully created a new issue on ${this.owner}/${this.repo}`}},
+        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to create issue: "}}}
         plan.add(execute)
         return plan;
     }
 }
 
-export let comment = new CommentIssueCommand()
+export let create = new CreateIssueCommand()

@@ -1,11 +1,11 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {renderSuccess, renderError} from '../../SlackTemplates'
+import {renderSuccess, renderError} from '../SlackTemplates'
 
-@CommandHandler("InstallOrgWebhook", "Create a webhook for a whole organization")
+@CommandHandler("install-github-org-webhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
 @Secrets("github://user_token?scopes=admin:org_hook")
-@Intent("install org-webhook")
+@Intent("install github org webhook", "install org-webhook")
 class CreateOrgWebHookCommand implements HandleCommand {
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
@@ -47,19 +47,19 @@ class InstallRepoWebhookCommand implements HandleCommand {
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "install-github-repo-webhook", parameters: this},
         onSuccess: success(this.owner, this.url, this.repo),
-        onError: {kind: "respond", name: "WebHookErrorHandler", parameters: this}}
+        onError: {kind: "respond", name: "githhub-webhook-errors", parameters: this}}
         plan.add(execute)
         return plan;
     }
 }
 
 //reusable creation of formatted success messages
-function success(owner: string, repo: string, url?: string) : Message {
+function success(owner: string, repo: string, url?: string) : Instruction<"respond"> {
     let repoStr = repo == null ? "" : `/${repo}` 
-    return new Message(renderSuccess(`Installed new webook for ${owner}${repoStr} (${url})`))
+    return {kind: "respond", name: "generic-success-handler", parameters: {msg: `Installed new webook for ${owner}${repoStr} (${url})`}}
 }
 
-@ResponseHandler("WebHookErrorHandler", "Custom error handling for some cases")
+@ResponseHandler("githhub-webhook-errors", "Custom error handling for some cases")
 class WebHookErrorHandler implements HandleResponse<any> {
 
     @Parameter({description: "Repo", pattern: "@any", required: false})

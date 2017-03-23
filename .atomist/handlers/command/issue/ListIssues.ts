@@ -1,12 +1,12 @@
 import {HandleResponse, Execute, Respondable, MappedParameters, HandleCommand, Respond, Response, HandlerContext, Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import { Issue } from "@atomist/github/core/Core"
-import * as slack from '../../../SlackTemplates'
+import * as slack from '../../SlackTemplates'
 
-@CommandHandler("ListIssues", "List user's GitHub issues")
+@CommandHandler("list-github-issues", "List user's GitHub issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("list issues")
+@Intent("list github issues", "list issues")
 class ListIssuesCommand implements HandleCommand {
     
     @Parameter({description: "Number of days to search", pattern: "^.*$"})
@@ -16,8 +16,8 @@ class ListIssuesCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "list-github-user-issues", parameters: this},
-        onSuccess: {kind: "respond", name: "DisplayIssues"},
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to list issues: "}}}
+        onSuccess: {kind: "respond", name: "display-github-issues"},
+        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to list issues: "}}}
         plan.add(execute)
         return plan;
     }
@@ -42,14 +42,14 @@ class ListRepositoryIssuesCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "search-github-issues", parameters: this},
-        onSuccess: {kind: "respond", name: "DisplayIssues"},
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to list issues: "}}}
+        onSuccess: {kind: "respond", name: "display-github-issues"},
+        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to list issues: "}}}
         plan.add(execute)
         return plan;
     }
 }
 
-@ResponseHandler("DisplayIssues", "Formats Github issues list for display in slack")
+@ResponseHandler("display-github-issues", "Formats Github issues list for display in slack")
 class ListIssuesRender implements HandleResponse<Issue[]> {
     
     @Parameter({description: "Number of days to search", pattern: "^.*$"})
@@ -62,7 +62,7 @@ class ListIssuesRender implements HandleResponse<Issue[]> {
           return new Message(rendered)
         }
         else {
-            return new Message(`Looks like you really didn't crush it. No issues found for the last ${this.days} day(s)`)
+            return new Message(`No issues found for the last ${this.days} day(s)`)
         }
     }
 }
