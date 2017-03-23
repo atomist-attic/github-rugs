@@ -3,7 +3,7 @@ import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpressi
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
 
-@EventHandler("OpenedPullRequest", "Handle new pull-request events", 
+@EventHandler("opened-github-pull-requests", "Handle new pull-request events", 
     new PathExpression<GraphNode, GraphNode>(
         `/PullRequest()
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
@@ -11,7 +11,7 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
             [/contains::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
             [/triggeredBy::Build()/on::Repo()]?
             [/on::Repo()/channel::ChatChannel()]`))
-@Tags("github", "pr")
+@Tags("github", "pr", "pull request")
 class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let pr = event.root() as any
@@ -20,7 +20,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
             return new Plan()
         }
 
-        let message = new Message("")
+        let message = new Message()
         message.withNode(pr)
 
         let cid = "pr_event/" + pr.on().owner() + "/" + pr.on().name() + "/" + pr.number()
@@ -30,7 +30,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
             label: 'Merge',
             instruction: {
                 kind: "command", 
-                name: "MergePullRequest", 
+                name: "merge-github-pull-request", 
                 parameters: { 
                     number: pr.number()
                 }
@@ -43,7 +43,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
 export const openedPullRequest = new OpenedPullRequest()
 
 
-@EventHandler("ClosedPullRequest", "Handle closed pull-request events", 
+@EventHandler("closed-github-pull-requests", "Handle closed pull-request events", 
     new PathExpression<GraphNode, GraphNode>(
         `/PullRequest()
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
@@ -51,7 +51,7 @@ export const openedPullRequest = new OpenedPullRequest()
             [/contains::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
             [/triggeredBy::Build()/on::Repo()]?
             [/on::Repo()/channel::ChatChannel()]`))
-@Tags("github", "pr")
+@Tags("github", "pr", "pull reuqest")
 class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let pr = event.root() as any
@@ -60,7 +60,7 @@ class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
             return new Plan()
         }
 
-        let message = new Message("")
+        let message = new Message()
         message.withNode(pr)
 
         let cid = "pr_event/" + pr.on().owner() + "/" + pr.on().name() + "/" + pr.number()

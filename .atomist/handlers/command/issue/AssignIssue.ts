@@ -1,10 +1,10 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
-@CommandHandler("AssignIssue", "Assign a GitHub issue to a user")
+@CommandHandler("assign-github-issue", "Assign a GitHub issue to a user")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("assign issue")
+@Intent("assign github issue","assign issue")
 class AssignCommand implements HandleCommand {
     
     @Parameter({description: "The issue number", pattern: "^.*$"})
@@ -23,8 +23,8 @@ class AssignCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "assign-github-issue", parameters: this},
-        onSuccess: new Message(`${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`),
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to assign issue: "}}}
+        onSuccess: {kind: "respond", name: "generic-success-handler", parameters: {msg: `${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`}},
+        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to assign issue: "}}}
         plan.add(execute)
         return plan;
     }
