@@ -19,7 +19,7 @@ class GenericErrorHandler implements HandleResponse<any> {
 export let errorHandler = new GenericErrorHandler()
 
 @ResponseHandler("generic-success-handler", "Displays a success message in slack")
-@Tags("errors")
+@Tags("success")
 class GenericSuccessHandler implements HandleResponse<any> {
 
     @Parameter({description: "Success msg", pattern: "@any"})
