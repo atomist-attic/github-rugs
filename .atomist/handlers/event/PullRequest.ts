@@ -3,7 +3,7 @@ import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpressi
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
 
-@EventHandler("opened-github-pull-requests", "Handle new pull-request events", 
+@EventHandler("OpenedGithubPullRequests", "Handle new pull-request events", 
     new PathExpression<GraphNode, GraphNode>(
         `/PullRequest()
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
@@ -30,7 +30,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
             label: 'Merge',
             instruction: {
                 kind: "command", 
-                name: "merge-github-pull-request", 
+                name: "MergeGithubPullRequest", 
                 parameters: { 
                     number: pr.number()
                 }
@@ -43,7 +43,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
 export const openedPullRequest = new OpenedPullRequest()
 
 
-@EventHandler("closed-github-pull-requests", "Handle closed pull-request events", 
+@EventHandler("ClosedGithubPullRequests", "Handle closed pull-request events", 
     new PathExpression<GraphNode, GraphNode>(
         `/PullRequest()
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]

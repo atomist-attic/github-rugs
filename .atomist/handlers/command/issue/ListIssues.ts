@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 import { Issue } from "@atomist/github/core/Core"
 import * as slack from '../../SlackTemplates'
 
-@CommandHandler("list-github-issues", "List user's GitHub issues")
+@CommandHandler("ListGithubIssues", "List user's GitHub issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("list github issues", "list issues")
@@ -16,8 +16,8 @@ class ListIssuesCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "list-github-user-issues", parameters: this},
-        onSuccess: {kind: "respond", name: "display-github-issues"},
-        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to list issues: "}}}
+        onSuccess: {kind: "respond", name: "DisplayGithubIssues"},
+        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to list issues: "}}}
         plan.add(execute)
         return plan;
     }
@@ -42,14 +42,14 @@ class ListRepositoryIssuesCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "search-github-issues", parameters: this},
-        onSuccess: {kind: "respond", name: "display-github-issues"},
-        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to list issues: "}}}
+        onSuccess: {kind: "respond", name: "DisplayGithubIssues"},
+        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to list issues: "}}}
         plan.add(execute)
         return plan;
     }
 }
 
-@ResponseHandler("display-github-issues", "Formats Github issues list for display in slack")
+@ResponseHandler("DisplayGithubIssues", "Formats Github issues list for display in slack")
 class ListIssuesRender implements HandleResponse<Issue[]> {
     
     @Parameter({description: "Number of days to search", pattern: "^.*$"})

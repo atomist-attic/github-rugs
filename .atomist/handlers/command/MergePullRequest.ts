@@ -2,7 +2,7 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {renderSuccess, renderError} from '../SlackTemplates'
 
-@CommandHandler("merge-github-pull-request", "Merge a GitHub pull request")
+@CommandHandler("MergeGithubPullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
 @Secrets("github://user_token?scopes=repo")
 @Intent("merge github pull request","merge pr", "merge pullrequest")
@@ -22,7 +22,7 @@ class MergePullRequestCommand implements HandleCommand {
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "merge-github-pull-request", parameters: this},
         onSuccess: new Message(renderSuccess(`${this.owner}/${this.repo}#${this.issue} successfully merged`)),
-        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to merge pr: "}}}
+        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to merge pr: "}}}
         plan.add(execute)
         return plan;
     }

@@ -2,7 +2,7 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {renderSuccess, renderError} from '../SlackTemplates'
 
-@CommandHandler("create-github-release", "Create a release of a repo on GitHub")
+@CommandHandler("CreateGithubRelease", "Create a release of a repo on GitHub")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("create github release", "create release")
@@ -24,8 +24,8 @@ class CreateReleaseCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "create-github-release", parameters: this},
-        onSuccess: {kind: "respond", name: "generic-success-handler", parameters: {msg: `Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`}},
-        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to create release: "}}}
+        onSuccess: {kind: "respond", name: "GenericSuccessHandler", parameters: {msg: `Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`}},
+        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to create release: "}}}
         plan.add(execute)
         return plan;
     }

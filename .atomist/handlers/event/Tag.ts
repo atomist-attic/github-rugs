@@ -3,7 +3,7 @@ import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpressi
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
 
-@EventHandler("github-tags", "Handle tag events", 
+@EventHandler("GithubTags", "Handle tag events", 
     new PathExpression<GraphNode, GraphNode>("/Tag()"))
 @Tags("github", "tag")
 class Tag implements HandleEvent<GraphNode, GraphNode> {
