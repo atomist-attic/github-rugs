@@ -5,7 +5,7 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
 @EventHandler("OpenedGithubPullRequests", "Handle new pull-request events", 
     new PathExpression<GraphNode, GraphNode>(
-        `/PullRequest()
+        `/PullRequest()[@state='open']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
             [/mergedBy::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
             [/contains::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
@@ -15,10 +15,6 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let pr = event.root() as any
-
-        if (pr.state() != "open") {
-            return new Plan()
-        }
 
         let message = new Message()
         message.withNode(pr)
@@ -45,7 +41,7 @@ export const openedPullRequest = new OpenedPullRequest()
 
 @EventHandler("ClosedGithubPullRequests", "Handle closed pull-request events", 
     new PathExpression<GraphNode, GraphNode>(
-        `/PullRequest()
+        `/PullRequest()[@state='closed']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
             [/mergedBy::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
             [/contains::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
@@ -55,10 +51,6 @@ export const openedPullRequest = new OpenedPullRequest()
 class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let pr = event.root() as any
-
-        if (pr.state() != "closed") {
-            return new Plan()
-        }
 
         let message = new Message()
         message.withNode(pr)
