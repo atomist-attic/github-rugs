@@ -1,6 +1,7 @@
 group: "atomist-rugs"
 artifact: "github-handlers"
-version: "0.18.4"
+version: "0.18.5"
 requires: "0.17.3"
 extensions:
   - "com.atomist.rug:rug-functions-github:0.8.0"
+  - "com.atomist.rug:rug-functions-github:0.9.0"

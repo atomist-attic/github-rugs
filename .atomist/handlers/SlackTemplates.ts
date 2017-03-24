@@ -5,7 +5,7 @@ let list_issues = `{
   "attachments": [
     {{#issues}}
     {
-      "fallback": "#{{number}}: {{title}}",
+      "fallback": "#{{number}}: {{{title}}}",
       {{#closed}}
       "footer_icon": "http://images.atomist.com/rug/issue-closed.png",
       "color": "#bd2c00",
