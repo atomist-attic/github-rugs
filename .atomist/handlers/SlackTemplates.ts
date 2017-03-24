@@ -23,13 +23,14 @@ let list_issues = `{
       "text": "<{{{issueUrl}}}|#{{number}}: {{{title}}}>",
       "footer": "<{{{url}}}|{{{repo}}}>",
       "ts": "{{ts}}"
-    }
+    }{{^last}}, {{/last}}
     {{/issues}}
   ]
 }`
 
 //render github issues for slack
-function renderIssues(issuesList: Issue[]): string {
+function renderIssues(issuesList: any[]): string {
+  issuesList[issuesList.length - 1 ].last = true;
   try{
     return mustache.render(list_issues, 
   {issues: issuesList, 
