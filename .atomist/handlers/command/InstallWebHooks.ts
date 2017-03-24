@@ -2,7 +2,7 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {renderSuccess, renderError} from '../SlackTemplates'
 
-@CommandHandler("install-github-org-webhook", "Create a webhook for a whole organization")
+@CommandHandler("InstallGithubOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
 @Secrets("github://user_token?scopes=admin:org_hook")
 @Intent("install github org webhook", "install org-webhook")
@@ -47,7 +47,7 @@ class InstallRepoWebhookCommand implements HandleCommand {
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "install-github-repo-webhook", parameters: this},
         onSuccess: success(this.owner, this.url, this.repo),
-        onError: {kind: "respond", name: "githhub-webhook-errors", parameters: this}}
+        onError: {kind: "respond", name: "GithubWebhookErrors", parameters: this}}
         plan.add(execute)
         return plan;
     }
@@ -56,10 +56,10 @@ class InstallRepoWebhookCommand implements HandleCommand {
 //reusable creation of formatted success messages
 function success(owner: string, repo: string, url?: string) : Instruction<"respond"> {
     let repoStr = repo == null ? "" : `/${repo}` 
-    return {kind: "respond", name: "generic-success-handler", parameters: {msg: `Installed new webook for ${owner}${repoStr} (${url})`}}
+    return {kind: "respond", name: "GenericSuccessHandler", parameters: {msg: `Installed new webook for ${owner}${repoStr} (${url})`}}
 }
 
-@ResponseHandler("githhub-webhook-errors", "Custom error handling for some cases")
+@ResponseHandler("GithubWebhookErrors", "Custom error handling for some cases")
 class WebHookErrorHandler implements HandleResponse<any> {
 
     @Parameter({description: "Repo", pattern: "@any", required: false})

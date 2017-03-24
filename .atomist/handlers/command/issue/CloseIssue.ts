@@ -1,7 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
-@CommandHandler("close-github-issue", "Close a GitHub issue")
+@CommandHandler("CloseGithubIssue", "Close a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("close github issue","close issue")
@@ -20,8 +20,8 @@ class CloseIssueCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "close-github-issue", parameters: this},
-        onSuccess: {kind: "respond", name: "generic-success-handler", parameters: {msg: `${this.owner}/${this.repo}#${this.issue} successfully closed`}},
-        onError: {kind: "respond", name: "generic-error-handler", parameters: {msg: "Failed to close issue: "}}}
+        onSuccess: {kind: "respond", name: "GenericSuccessHandler", parameters: {msg: `${this.owner}/${this.repo}#${this.issue} successfully closed`}},
+        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to close issue: "}}}
         plan.add(execute)
         return plan;
     }
