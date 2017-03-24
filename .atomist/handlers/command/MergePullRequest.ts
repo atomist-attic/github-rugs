@@ -5,7 +5,7 @@ import {renderSuccess, renderError} from '../SlackTemplates'
 @CommandHandler("MergeGithubPullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
 @Secrets("github://user_token?scopes=repo")
-@Intent("merge github pull request","merge pr", "merge pullrequest")
+@Intent("merge pr", "merge pullrequest")
 class MergePullRequestCommand implements HandleCommand {
     
     @Parameter({description: "The pull request number", pattern: "^.*$"})

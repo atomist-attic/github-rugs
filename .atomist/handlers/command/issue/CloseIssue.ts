@@ -4,7 +4,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 @CommandHandler("CloseGithubIssue", "Close a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("close github issue","close issue")
+@Intent("close issue")
 class CloseIssueCommand implements HandleCommand {
 
     @Parameter({description: "The issue number", pattern: "^.*$"})

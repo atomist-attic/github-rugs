@@ -6,7 +6,7 @@ import * as slack from '../../SlackTemplates'
 @CommandHandler("ListGithubIssues", "List user's GitHub issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("list github issues", "list issues")
+@Intent("list issues")
 class ListIssuesCommand implements HandleCommand {
     
     @Parameter({description: "Number of days to search", pattern: "^.*$"})
@@ -23,7 +23,7 @@ class ListIssuesCommand implements HandleCommand {
     }
 }
 
-@CommandHandler("ListRepositoryIssues", "List a GitHub repo's issues")
+@CommandHandler("ListGithubRepositoryIssues", "List a GitHub repo's issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("open issues")

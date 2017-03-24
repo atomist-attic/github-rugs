@@ -4,7 +4,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 @CommandHandler("CommentGithubIssue", "Comment on a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("comment github issue", "comment issue")
+@Intent("comment issue")
 class CommentIssueCommand implements HandleCommand {
     
     @Parameter({description: "The issue number", pattern: "^.*$"})

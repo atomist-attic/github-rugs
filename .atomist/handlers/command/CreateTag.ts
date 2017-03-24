@@ -5,7 +5,7 @@ import {renderSuccess, renderError} from '../SlackTemplates'
 @CommandHandler("CreateGithubTag", "Create a tag from a sha")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("create github tag","create tag")
+@Intent("create tag")
 class CreateTagCommand implements HandleCommand {
 
     @Parameter({description: "The tag to release", pattern: "^.*$"})
