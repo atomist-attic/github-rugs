@@ -1,6 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {renderSuccess, renderError} from '../SlackTemplates'
+import {wrap, exec} from '../Common'
 
 @CommandHandler("InstallGithubOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
@@ -13,13 +14,15 @@ class CreateOrgWebHookCommand implements HandleCommand {
 
     @MappedParameter("atomist://github_webhook_url")
     url: string = "https://webhook.atomist.com/github"
+  
+    @MappedParameter("atomist://correlation_id")
+    corrid: string
 
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "install-github-org-webhook", parameters: this},
-        onSuccess: success(this.owner, this.url),
-        onError: {kind: "respond", name: "WebHookErrorHandler", parameters: this}}
+        let execute = exec("install-github-org-webhook",this)
+        execute.onSuccess = success(this.owner, this.url),
+        execute.onError = {kind: "respond", name: "WebHookErrorHandler", parameters: this}
         plan.add(execute)
         return plan;
     }
@@ -71,6 +74,9 @@ class WebHookErrorHandler implements HandleResponse<any> {
     @Parameter({description: "Webhook URL", pattern: "@url"})
     url: string
 
+    @MappedParameter("atomist://correlation_id")
+    corrid: string
+    
     handle(@ParseJson response: Response<any>): Plan | Message {
         let errors = response.body().errors;
         try{

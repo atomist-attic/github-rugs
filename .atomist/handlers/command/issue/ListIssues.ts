@@ -2,6 +2,7 @@ import {HandleResponse, Execute, Respondable, MappedParameters, HandleCommand, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import { Issue } from "@atomist/github/core/Core"
 import * as slack from '../../SlackTemplates'
+import {handleErrors, exec} from '../../Common'
 
 @CommandHandler("ListGithubIssues", "List user's GitHub issues")
 @Tags("github", "issues")
@@ -12,13 +13,14 @@ class ListIssuesCommand implements HandleCommand {
     @Parameter({description: "Number of days to search", pattern: "^.*$"})
     days: number = 1
 
+    @MappedParameter("atomist://correlation_id")
+    corrid: string
+    
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "list-github-user-issues", parameters: this},
-        onSuccess: {kind: "respond", name: "DisplayGithubIssues"},
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to list issues: "}}}
-        plan.add(execute)
+        let execute = exec("list-github-user-issues", this)
+        execute.onSuccess = {kind: "respond", name: "DisplayGithubIssues"}
+        plan.add(handleErrors(execute, this))
         return plan;
     }
 }

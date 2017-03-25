@@ -1,6 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {renderSuccess, renderError} from '../../SlackTemplates'
+import {wrap, exec} from '../../Common'
 
 @CommandHandler("ReopenGithubIssue", "Reopen a closed GitHub issue")
 @Tags("github", "issues")
@@ -17,13 +18,13 @@ class ReopenIssueCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
+    @MappedParameter("atomist://correlation_id")
+    corrid: string
+    
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "reopen-github-issue", parameters: this},
-        onSuccess: {kind: "respond", name: "GenericSuccessHandler", parameters: {msg: `${this.owner}/${this.repo}#${this.issue} successfully reopened`}},
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to reopen issue: "}}}
-        plan.add(execute)
+        let execute = exec( "reopen-github-issue", this)
+        plan.add(wrap(execute,`${this.owner}/${this.repo}#${this.issue} successfully reopened`, this))
         return plan;
     }
 }

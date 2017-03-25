@@ -1,5 +1,6 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
+import {wrap, exec} from '../../Common'
 
 @CommandHandler("CreateGithubIssue", "Create an issue on GitHub")
 @Tags("github", "issues")
@@ -24,11 +25,8 @@ class CreateIssueCommand implements HandleCommand {
 
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "create-github-issue", parameters: this},
-        onSuccess: {kind: "respond", name: "GenericSuccessHandler", parameters: {msg: `Successfully created a new issue on ${this.owner}/${this.repo}`}},
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to create issue: ", corrid: this.corrid}}}
-        plan.add(execute)
+        let execute = exec( "create-github-issue", this)
+        plan.add(wrap(execute, `Successfully created a new issue on ${this.owner}/${this.repo}`,  this))
         return plan;
     }
 }

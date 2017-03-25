@@ -1,6 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {renderSuccess, renderError} from '../SlackTemplates'
+import {wrap, exec} from '../Common'
 
 @CommandHandler("CreateGithubTag", "Create a tag from a sha")
 @Tags("github", "issues")
@@ -23,13 +24,13 @@ class CreateTagCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     owner: string
 
+    @MappedParameter("atomist://correlation_id")
+    corrid: string
+    
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute: Respondable<Execute> = {instruction:
-        {kind: "execute", name: "create-github-tag", parameters: this},
-        onSuccess: {kind: "respond", name: "GenericSuccessHandler", parameters: {msg: `Successfully created a new tag on ${this.owner}/${this.repo}#${this.sha}`}},
-        onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to create tag: "}}}
-        plan.add(execute)
+        let execute = exec("create-github-tag", this)
+        plan.add(wrap(execute,`Successfully created a new tag on ${this.owner}/${this.repo}#${this.sha}`,this))
         return plan;
     }
 }
