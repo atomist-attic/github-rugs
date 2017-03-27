@@ -6,7 +6,7 @@ import {wrap, exec} from '../../Common'
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("assign issue")
-class AssignCommand implements HandleCommand {
+class AssignIssueCommand implements HandleCommand {
     
     @Parameter({description: "The issue number", pattern: "^.*$"})
     issue: number
@@ -31,4 +31,4 @@ class AssignCommand implements HandleCommand {
     }
 }
 
-export let assignIssue = new AssignCommand()
+export let assignIssue = new AssignIssueCommand()
