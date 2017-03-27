@@ -6,7 +6,7 @@ import {wrap, exec} from '../../Common'
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("label issue")
-class LabelIssueCommand implements HandleCommand {
+class AddLabelIssueCommand implements HandleCommand {
 
     @Parameter({description: "The issue number", pattern: "^.*$"})
     issue: number
@@ -25,10 +25,10 @@ class LabelIssueCommand implements HandleCommand {
     
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute = exec("label-github-issue", this)
+        let execute = exec("add-label-github-issue", this)
         plan.add(wrap(execute,`Successfully labelled ${this.owner}/${this.repo}#${this.issue} with ${this.label}`, this))
         return plan;
     }
 }
 
-export let command = new LabelIssueCommand()
+export let command = new AddLabelIssueCommand()
