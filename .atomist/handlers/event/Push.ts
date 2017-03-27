@@ -3,7 +3,7 @@ import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpressi
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
 
-@EventHandler("GithubPushes", "Handle push events", 
+@EventHandler("GitHubPushes", "Handle push events",
     new PathExpression<GraphNode, GraphNode>(
         `/Push()
             [/on::Repo()/channel::ChatChannel()]

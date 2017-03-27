@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 import {renderSuccess, renderError} from '../../SlackTemplates'
 import {wrap, exec} from '../../Common'
 
-@CommandHandler("ReopenGithubIssue", "Reopen a closed GitHub issue")
+@CommandHandler("ReopenGitHubIssue", "Reopen a closed GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("reopen issue")

@@ -2,7 +2,7 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {wrap, exec} from '../../Common'
 
-@CommandHandler("CloseGithubIssue", "Close a GitHub issue")
+@CommandHandler("CloseGitHubIssue", "Close a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("close issue")

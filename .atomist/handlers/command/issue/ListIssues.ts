@@ -4,7 +4,7 @@ import { Issue } from "@atomist/github/core/Core"
 import * as slack from '../../SlackTemplates'
 import {handleErrors, exec} from '../../Common'
 
-@CommandHandler("ListGithubIssues", "List user's GitHub issues")
+@CommandHandler("ListGitHubIssues", "List user's GitHub issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("list issues")
@@ -19,13 +19,13 @@ class ListIssuesCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let execute = exec("list-github-user-issues", this)
-        execute.onSuccess = {kind: "respond", name: "DisplayGithubIssues"}
+        execute.onSuccess = {kind: "respond", name: "DisplayGitHubIssues"}
         plan.add(handleErrors(execute, this))
         return plan;
     }
 }
 
-@CommandHandler("ListGithubRepositoryIssues", "List a GitHub repo's issues")
+@CommandHandler("ListGitHubRepositoryIssues", "List a GitHub repo's issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("open issues")
@@ -44,14 +44,14 @@ class ListRepositoryIssuesCommand implements HandleCommand {
         let plan = new Plan();
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "search-github-issues", parameters: this},
-        onSuccess: {kind: "respond", name: "DisplayGithubIssues"},
+        onSuccess: {kind: "respond", name: "DisplayGitHubIssues"},
         onError: {kind: "respond", name: "GenericErrorHandler", parameters: {msg: "Failed to list issues: "}}}
         plan.add(execute)
         return plan;
     }
 }
 
-@ResponseHandler("DisplayGithubIssues", "Formats Github issues list for display in slack")
+@ResponseHandler("DisplayGitHubIssues", "Formats GitHub issues list for display in slack")
 class ListIssuesRender implements HandleResponse<Issue[]> {
     
     @Parameter({description: "Number of days to search", pattern: "^.*$"})

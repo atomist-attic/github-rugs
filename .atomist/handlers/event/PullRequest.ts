@@ -26,7 +26,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
             label: 'Merge',
             instruction: {
                 kind: "command", 
-                name: "MergeGithubPullRequest", 
+                name: "MergeGitHubPullRequest",
                 parameters: { 
                     number: pr.number()
                 }
@@ -39,7 +39,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
 export const openedPullRequest = new OpenedPullRequest()
 
 
-@EventHandler("ClosedGithubPullRequests", "Handle closed pull-request events", 
+@EventHandler("ClosedGitHubPullRequests", "Handle closed pull-request events",
     new PathExpression<GraphNode, GraphNode>(
         `/PullRequest()[@state='closed']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]

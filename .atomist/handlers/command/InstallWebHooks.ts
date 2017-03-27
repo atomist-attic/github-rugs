@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 import {renderSuccess, renderError} from '../SlackTemplates'
 import {wrap, exec} from '../Common'
 
-@CommandHandler("InstallGithubOrgWebhook", "Create a webhook for a whole organization")
+@CommandHandler("InstallGitHubOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
 @Secrets("github://user_token?scopes=admin:org_hook")
 @Intent("install org-webhook")
@@ -50,7 +50,7 @@ class InstallRepoWebhookCommand implements HandleCommand {
         let execute: Respondable<Execute> = {instruction:
         {kind: "execute", name: "install-github-repo-webhook", parameters: this},
         onSuccess: success(this.owner, this.url, this.repo),
-        onError: {kind: "respond", name: "GithubWebhookErrors", parameters: this}}
+        onError: {kind: "respond", name: "GitHubWebhookErrors", parameters: this}}
         plan.add(execute)
         return plan;
     }
@@ -62,7 +62,7 @@ function success(owner: string, repo: string, url?: string) : Instruction<"respo
     return {kind: "respond", name: "GenericSuccessHandler", parameters: {msg: `Installed new webook for ${owner}${repoStr} (${url})`}}
 }
 
-@ResponseHandler("GithubWebhookErrors", "Custom error handling for some cases")
+@ResponseHandler("GitHubWebhookErrors", "Custom error handling for some cases")
 class WebHookErrorHandler implements HandleResponse<any> {
 
     @Parameter({description: "Repo", pattern: "@any", required: false})

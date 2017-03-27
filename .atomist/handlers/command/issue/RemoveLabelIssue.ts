@@ -2,11 +2,11 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {wrap, exec} from '../../Common'
 
-@CommandHandler("LabelGithubIssue", "Add a known label to an GitHub issue")
+@CommandHandler("RemoveLabelGitHubIssue", "Remove a known label from an GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("remove label issue")
-class LabelIssueCommand implements HandleCommand {
+class RemoveLabelIssueCommand implements HandleCommand {
 
     @Parameter({description: "The issue number", pattern: "^.*$"})
     issue: number
@@ -31,4 +31,4 @@ class LabelIssueCommand implements HandleCommand {
     }
 }
 
-export let command = new LabelIssueCommand()
+export let command = new RemoveLabelIssueCommand()

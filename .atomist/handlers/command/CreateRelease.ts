@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 import {renderSuccess, renderError} from '../SlackTemplates'
 import {wrap, exec} from '../Common'
 
-@CommandHandler("CreateGithubRelease", "Create a release of a repo on GitHub")
+@CommandHandler("CreateGitHubRelease", "Create a release of a repo on GitHub")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("create release")

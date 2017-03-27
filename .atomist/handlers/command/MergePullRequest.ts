@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 import {renderSuccess, renderError} from '../SlackTemplates'
 import {wrap, exec} from '../Common'
 
-@CommandHandler("MergeGithubPullRequest", "Merge a GitHub pull request")
+@CommandHandler("MergeGitHubPullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
 @Secrets("github://user_token?scopes=repo")
 @Intent("merge pr", "merge pullrequest")
