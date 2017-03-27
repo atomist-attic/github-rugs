@@ -5,7 +5,7 @@ import {wrap, exec} from '../../Common'
 @CommandHandler("LabelGithubIssue", "Add a known label to an GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("label issue")
+@Intent("add label issue")
 class AddLabelIssueCommand implements HandleCommand {
 
     @Parameter({description: "The issue number", pattern: "^.*$"})
