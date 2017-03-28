@@ -22,7 +22,7 @@ class CloseIssueCommand implements HandleCommand {
 
     @MappedParameter("atomist://correlation_id")
     corrid: string
-    
+
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let ex = execute("close-github-issue",this)

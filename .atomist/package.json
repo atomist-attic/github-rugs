@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@atomist/rugs": "^0.0.10"
+    "@atomist/rugs": "^0.0.11"
   },
   "devDependencies": {
     "@types/mustache": "^0.8.29"
