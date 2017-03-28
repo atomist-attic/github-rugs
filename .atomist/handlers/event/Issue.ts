@@ -19,7 +19,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'Assign',
             instruction: {
                 kind: "command",
-                name: "AssignGiHubIssue",
+                name: "AssignGitHubIssue",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
