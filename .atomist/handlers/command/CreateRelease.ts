@@ -1,7 +1,8 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {renderSuccess, renderError} from '../SlackTemplates'
-import {wrap, exec} from '../Common'
+import {execute} from '@atomist/rugs/operations/PlanUtils'
+import {wrap} from '@atomist/rugs/operations/CommonHandlers'
+import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
 
 @CommandHandler("CreateGitHubRelease", "Create a release of a repo on GitHub")
 @Tags("github", "issues")
@@ -26,8 +27,8 @@ class CreateReleaseCommand implements HandleCommand {
     
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute = exec("create-github-release",this)
-        plan.add(wrap(execute,`Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`, this))
+        let ex = execute("create-github-release",this)
+        plan.add(wrap(ex,`Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`, this))
         return plan;
     }
 }

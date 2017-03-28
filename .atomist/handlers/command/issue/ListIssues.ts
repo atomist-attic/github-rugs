@@ -1,8 +1,9 @@
 import {HandleResponse, Execute, Respondable, MappedParameters, HandleCommand, Respond, Response, HandlerContext, Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import { Issue } from "@atomist/github/core/Core"
-import * as slack from '../../SlackTemplates'
-import {handleErrors, exec} from '../../Common'
+import {Issue} from '@atomist/cortex/Issue'
+import {execute} from '@atomist/rugs/operations/PlanUtils'
+import {wrap, handleErrors} from '@atomist/rugs/operations/CommonHandlers'
+import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations/messages/MessageRendering'
 
 @CommandHandler("ListGitHubIssues", "List user's GitHub issues")
 @Tags("github", "issues")
@@ -18,9 +19,9 @@ class ListIssuesCommand implements HandleCommand {
     
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute = exec("list-github-user-issues", this)
-        execute.onSuccess = {kind: "respond", name: "DisplayGitHubIssues"}
-        plan.add(handleErrors(execute, this))
+        let exec = execute("list-github-user-issues", this)
+        exec.onSuccess = {kind: "respond", name: "DisplayGitHubIssues"}
+        plan.add(handleErrors(exec, this))
         return plan;
     }
 }
@@ -60,7 +61,7 @@ class ListIssuesRender implements HandleResponse<Issue[]> {
     handle(@ParseJson response: Response<Issue[]>): Message {
         let issues = response.body();
         if(issues.length >= 1){
-          let rendered = slack.renderIssues(issues)
+          let rendered = renderIssues(issues)
           return new Message(rendered)
         }
         else {

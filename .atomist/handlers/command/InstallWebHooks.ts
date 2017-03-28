@@ -1,7 +1,8 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {renderSuccess, renderError} from '../SlackTemplates'
-import {wrap, exec} from '../Common'
+import {execute} from '@atomist/rugs/operations/PlanUtils'
+import {wrap} from '@atomist/rugs/operations/CommonHandlers'
+import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
 
 @CommandHandler("InstallGitHubOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
@@ -20,10 +21,10 @@ class CreateOrgWebHookCommand implements HandleCommand {
 
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute = exec("install-github-org-webhook",this)
-        execute.onSuccess = success(this.owner, this.url),
-        execute.onError = {kind: "respond", name: "WebHookErrorHandler", parameters: this}
-        plan.add(execute)
+        let ex = execute("install-github-org-webhook",this)
+        ex.onSuccess = success(this.owner, this.url),
+        ex.onError = {kind: "respond", name: "WebHookErrorHandler", parameters: this}
+        plan.add(ex)
         return plan;
     }
 }

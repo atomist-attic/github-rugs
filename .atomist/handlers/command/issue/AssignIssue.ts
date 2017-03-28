@@ -1,6 +1,9 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {wrap, exec} from '../../Common'
+import {Issue} from '@atomist/cortex/Issue'
+import {execute} from '@atomist/rugs/operations/PlanUtils'
+import {wrap, handleErrors} from '@atomist/rugs/operations/CommonHandlers'
+import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations/messages/MessageRendering'
 
 @CommandHandler("AssignGitHubIssue", "Assign a GitHub issue to a user")
 @Tags("github", "issues")
@@ -25,8 +28,8 @@ class AssignIssueCommand implements HandleCommand {
     
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute = exec("assign-github-issue",this)
-        plan.add(wrap(execute, `${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`, this))
+        let exec = execute("assign-github-issue",this)
+        plan.add(wrap(exec, `${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`, this))
         return plan;
     }
 }

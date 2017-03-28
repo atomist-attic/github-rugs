@@ -1,6 +1,9 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {wrap, exec} from '../../Common'
+import {Issue} from '@atomist/cortex/Issue'
+import {execute} from '@atomist/rugs/operations/PlanUtils'
+import {wrap, handleErrors} from '@atomist/rugs/operations/CommonHandlers'
+import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations/messages/MessageRendering'
 
 @CommandHandler("CloseGitHubIssue", "Close a GitHub issue")
 @Tags("github", "issues")
@@ -22,8 +25,8 @@ class CloseIssueCommand implements HandleCommand {
     
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute = exec("close-github-issue",this)
-        plan.add(wrap(execute,`${this.owner}/${this.repo}#${this.issue} successfully closed`,this))
+        let ex = execute("close-github-issue",this)
+        plan.add(wrap(ex,`${this.owner}/${this.repo}#${this.issue} successfully closed`,this))
         return plan;
     }
 }

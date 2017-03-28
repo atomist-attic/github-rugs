@@ -62,3 +62,30 @@ class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
     }
 }
 export const closedPullRequest = new ClosedPullRequest()
+
+@EventHandler("AutoMergePullRequests", "Auto-merge PRs if they are approved", 
+    new PathExpression<GraphNode, GraphNode>(
+        `/PullRequest()[@state='open']
+            [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
+            [/mergedBy::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
+            [/contains::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
+            [/triggeredBy::Build()/on::Repo()]?
+            [/on::Repo()/channel::ChatChannel()]`))
+@Tags("github", "pr", "pull reuqest")
+class AutoMergePullRequests implements HandleEvent<GraphNode, GraphNode> {
+    handle(event: Match<GraphNode, GraphNode>): Message {
+        let pr = event.root() as any
+        //TODO get all this from nodes above!
+        let num: number = pr.number
+        let repo: string = pr.repo
+        let owner: string = pr.owner
+
+        let msg = new Message();
+        
+        msg.addAction({
+            instruction: {kind: "command", name: "MergeGithubPullRequest", parameters: {issue: num, repo: repo, owner: owner}}
+        })
+        return msg;
+    }
+}
+export const auto = new AutoMergePullRequests()
