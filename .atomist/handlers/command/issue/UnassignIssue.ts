@@ -1,6 +1,9 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {wrap, exec} from '../../Common'
+import {execute} from '@atomist/rugs/operations/PlanUtils'
+import {wrap} from '@atomist/rugs/operations/CommonHandlers'
+import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
+
 
 @CommandHandler("UnassignGitHubIssue", "Unassign a GitHub issue to a user")
 @Tags("github", "issues")
@@ -25,8 +28,8 @@ class UnassignIssueCommand implements HandleCommand {
     
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let execute = exec("unassign-github-issue",this)
-        plan.add(wrap(execute, `${this.owner}/${this.repo}#${this.issue} successfully unassigned from ${this.assignee}`, this))
+        let exec = execute("unassign-github-issue", this)
+        plan.add(wrap(exec, `${this.owner}/${this.repo}#${this.issue} successfully unassigned from ${this.assignee}`, this))
         return plan;
     }
 }
