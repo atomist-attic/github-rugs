@@ -7,6 +7,7 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
         let issue = event.root() as any
+        console.log(issue);
 
         let message = new Message("New issue")
         message.withNode(issue)
@@ -76,6 +77,34 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
                 kind: "command",
                 name: "CommentGitHubIssue",
                 parameters: {
+                    issue: issue.number(),
+                    owner: issue.belongsTo().owner(),
+                    repo: issue.belongsTo().name(),
+                }
+            }
+        })
+
+        // the reaction will be asked by the bot
+        message.addAction({
+            label: 'React',
+            instruction: {
+                kind: "command",
+                name: "ReactIssueCommand",
+                parameters: {
+                    issue: issue.number(),
+                    owner: issue.belongsTo().owner(),
+                    repo: issue.belongsTo().name(),
+                }
+            }
+        })
+
+        message.addAction({
+            label: ':+1:',
+            instruction: {
+                kind: "command",
+                name: "ReactIssueCommand",
+                parameters: {
+                    reaction: "+1",
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name(),
