@@ -2,9 +2,11 @@ import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
+import { PullRequest } from '@atomist/cortex/PullRequest'
+
 
 @EventHandler("OpenedGithubPullRequests", "Handle new pull-request events", 
-    new PathExpression<GraphNode, GraphNode>(
+    new PathExpression<PullRequest, PullRequest>(
         `/PullRequest()[@state='open']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
             [/mergedBy::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
@@ -12,9 +14,9 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
             [/triggeredBy::Build()/on::Repo()]?
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr", "pull request")
-class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
-        let pr = event.root() as any
+class OpenedPullRequest implements HandleEvent<PullRequest, PullRequest> {
+    handle(event: Match<PullRequest, PullRequest>): Message | Plan {
+        let pr = event.root()
 
         let message = new Message()
         message.withNode(pr)
@@ -28,7 +30,7 @@ class OpenedPullRequest implements HandleEvent<GraphNode, GraphNode> {
                 kind: "command", 
                 name: "MergeGitHubPullRequest",
                 parameters: { 
-                    number: pr.number()
+                    issue: pr.number()
                 }
             }
         })
@@ -40,7 +42,7 @@ export const openedPullRequest = new OpenedPullRequest()
 
 
 @EventHandler("ClosedGitHubPullRequests", "Handle closed pull-request events",
-    new PathExpression<GraphNode, GraphNode>(
+    new PathExpression<PullRequest, PullRequest>(
         `/PullRequest()[@state='closed']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
             [/mergedBy::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
@@ -48,8 +50,8 @@ export const openedPullRequest = new OpenedPullRequest()
             [/triggeredBy::Build()/on::Repo()]?
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr", "pull reuqest")
-class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
+class ClosedPullRequest implements HandleEvent<PullRequest, PullRequest> {
+    handle(event: Match<PullRequest, PullRequest>): Message | Plan {
         let pr = event.root() as any
 
         let message = new Message()
@@ -64,7 +66,7 @@ class ClosedPullRequest implements HandleEvent<GraphNode, GraphNode> {
 export const closedPullRequest = new ClosedPullRequest()
 
 @EventHandler("AutoMergePullRequests", "Auto-merge PRs if they are approved", 
-    new PathExpression<GraphNode, GraphNode>(
+    new PathExpression<PullRequest, PullRequest>(
         `/PullRequest()[@state='open']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
             [/mergedBy::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
@@ -72,8 +74,8 @@ export const closedPullRequest = new ClosedPullRequest()
             [/triggeredBy::Build()/on::Repo()]?
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr", "pull reuqest")
-class AutoMergePullRequests implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message {
+class AutoMergePullRequests implements HandleEvent<PullRequest, PullRequest> {
+    handle(event: Match<PullRequest, PullRequest>): Message {
         let pr = event.root() as any
         //TODO get all this from nodes above!
         let num: number = pr.number
@@ -88,4 +90,5 @@ class AutoMergePullRequests implements HandleEvent<GraphNode, GraphNode> {
         return msg;
     }
 }
-export const auto = new AutoMergePullRequests()
+
+//export const auto = new AutoMergePullRequests()
