@@ -2,7 +2,7 @@ import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
-@EventHandler("OpenGitHubIssues", "Handle created issue events", 
+@EventHandler("OpenGitHubIssues", "Handle created issue events",
     new PathExpression<GraphNode, GraphNode>(
         `/Issue()[@state='open']
             [/resolvedBy::Commit()/author::GitHubId()
@@ -91,13 +91,41 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             }
         })
 
+        // the reaction will be asked by the bot
+        message.addAction({
+            label: 'React',
+            instruction: {
+                kind: "command",
+                name: "ReactIssueCommand",
+                parameters: {
+                    issue: issue.number(),
+                    owner: issue.belongsTo().owner(),
+                    repo: issue.belongsTo().name(),
+                }
+            }
+        })
+
+        message.addAction({
+            label: ':+1:',
+            instruction: {
+                kind: "command",
+                name: "ReactIssueCommand",
+                parameters: {
+                    reaction: "+1",
+                    issue: issue.number(),
+                    owner: issue.belongsTo().owner(),
+                    repo: issue.belongsTo().name(),
+                }
+            }
+        })
+
         return message
     }
 }
 export const openedIssue = new OpenedIssue()
 
 
-@EventHandler("ClosedGitHubIssues", "Handles closed issue events", 
+@EventHandler("ClosedGitHubIssues", "Handles closed issue events",
     new PathExpression<GraphNode, GraphNode>(
         `/Issue()[@state='closed']
             [/resolvedBy::Commit()/author::GitHubId()
@@ -137,7 +165,7 @@ export const closedIssue = new ClosedIssue()
 
 
 
-@EventHandler("CommentedGitHubIssues", "Handles issue comments events", 
+@EventHandler("CommentedGitHubIssues", "Handles issue comments events",
     new PathExpression<GraphNode, GraphNode>(
         `/Comment()
             [/by::GitHubId()
