@@ -5,7 +5,7 @@ import {wrap} from '@atomist/rugs/operations/CommonHandlers'
 import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
 
 
-@CommandHandler("RemoveLabelGitHubIssue", "Remove a known label from an GitHub issue")
+@CommandHandler("RemoveLabelGitHubIssue", "Remove a known label from a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("remove label issue")
