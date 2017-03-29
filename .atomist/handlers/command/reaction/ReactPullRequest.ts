@@ -11,8 +11,8 @@ class ReactGitHubPullRequest implements HandleCommand {
     @Parameter({description: "The reaction to add", pattern: "^\\+1|\\-1|laugh|confused|heart|hooray$"})
     reaction: string
 
-    @Parameter({description: "The pull request ID", pattern: "^.*$"})
-    pullRequestId: string
+    @Parameter({description: "The pull request number", pattern: "^.*$"})
+    pullRequest: string
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
@@ -27,7 +27,7 @@ class ReactGitHubPullRequest implements HandleCommand {
         let plan = new Plan();
         let execute = {instruction: {kind: "execute", name: "react-github-pull-request", parameters: this}};
         handleErrors(execute, this);
-        handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/pulls/#${this.pullRequestId}`);
+        handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/pulls/#${this.pullRequest}`);
         plan.add(execute);
         return plan;
     }

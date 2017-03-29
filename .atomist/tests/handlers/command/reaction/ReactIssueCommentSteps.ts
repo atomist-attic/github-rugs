@@ -6,8 +6,8 @@ When("ReactIssueComment is invoked with valid input", (world: HandlerScenarioWor
     let handler = w.commandHandler("ReactGitHubIssueComment");
     w.invokeHandler(handler, {
       reaction: "+1",
-      issueId: "1",
-      commentId: "7",
+      issue: "1",
+      comment: "7",
       repo: "testRepo",
       owner: "testOwner",
       corrid: "123"

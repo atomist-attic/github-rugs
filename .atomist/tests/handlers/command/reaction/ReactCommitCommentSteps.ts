@@ -7,7 +7,7 @@ When("ReactCommitComment is invoked with valid input", (world: HandlerScenarioWo
     w.invokeHandler(handler, {
       reaction: "+1",
       sha1: "asdf",
-      commentId: "7",
+      comment: "7",
       repo: "testRepo",
       owner: "testOwner",
       corrid: "123"

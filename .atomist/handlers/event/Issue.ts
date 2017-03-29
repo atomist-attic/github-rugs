@@ -100,7 +100,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
-                    repo: issue.belongsTo().name(),
+                    repo: issue.belongsTo().name()
                 }
             }
         })
@@ -114,7 +114,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
                     reaction: "+1",
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
-                    repo: issue.belongsTo().name(),
+                    repo: issue.belongsTo().name()
                 }
             }
         })

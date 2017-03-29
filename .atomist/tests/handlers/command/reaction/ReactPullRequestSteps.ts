@@ -6,7 +6,7 @@ When("ReactPullRequest is invoked with valid input", (world: HandlerScenarioWorl
     let handler = w.commandHandler("ReactGitHubPullRequest");
     w.invokeHandler(handler, {
       reaction: "+1",
-      pullRequestId: "2",
+      pullRequest: "2",
       repo: "testRepo",
       owner: "testOwner",
       corrid: "123"

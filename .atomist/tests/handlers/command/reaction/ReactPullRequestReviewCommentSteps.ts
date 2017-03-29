@@ -6,8 +6,8 @@ When("ReactPullRequestReviewComment is invoked with valid input", (world: Handle
     let handler = w.commandHandler("ReactGitHubPullRequestComment");
     w.invokeHandler(handler, {
       reaction: "+1",
-      pullRequestId: "2",
-      commentId: "7",
+      pullRequest: "2",
+      comment: "7",
       repo: "testRepo",
       owner: "testOwner",
       corrid: "123"

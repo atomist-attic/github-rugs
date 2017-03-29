@@ -11,11 +11,11 @@ class ReactGitHubPullRequestCommentCommand implements HandleCommand {
     @Parameter({description: "The reaction to add", pattern: "^\\+1|\\-1|laugh|confused|heart|hooray$"})
     reaction: string
 
-    @Parameter({description: "The pull request ID", pattern: "^.*$"})
-    pullRequestId: string
+    @Parameter({description: "The pull request number", pattern: "^.*$"})
+    pullRequest: string
 
-    @Parameter({description: "The comment ID", pattern: "^.*$"})
-    commentId: string
+    @Parameter({description: "The comment number", pattern: "^.*$"})
+    comment: string
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
@@ -30,7 +30,7 @@ class ReactGitHubPullRequestCommentCommand implements HandleCommand {
         let plan = new Plan();
         let execute = {instruction: {kind: "execute", name: "react-github-pull-request-review-comment", parameters: this}};
         handleErrors(execute, this);
-        handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/pulls/#${this.pullRequestId}/comments/${this.commentId}`);
+        handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/pulls/#${this.pullRequest}/comments/${this.comment}`);
         plan.add(execute);
         return plan;
     }

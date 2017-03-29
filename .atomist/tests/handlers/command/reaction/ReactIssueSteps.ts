@@ -6,7 +6,7 @@ When("ReactIssue is invoked with valid input", (world: HandlerScenarioWorld) => 
     let handler = w.commandHandler("ReactGitHubIssue");
     w.invokeHandler(handler, {
       reaction: "+1",
-      issueId: "1",
+      issue: "1",
       repo: "testRepo",
       owner: "testOwner",
       corrid: "123"

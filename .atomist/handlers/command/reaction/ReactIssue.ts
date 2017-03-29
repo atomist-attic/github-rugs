@@ -11,8 +11,8 @@ class ReactIssueCommand implements HandleCommand {
     @Parameter({description: "The reaction to add", pattern: "^\\+1|\\-1|laugh|confused|heart|hooray$"})
     reaction: string
 
-    @Parameter({description: "The issue ID", pattern: "^\\d+$"})
-    issueId: string
+    @Parameter({description: "The issue number", pattern: "^\\d+$"})
+    issue: string
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     repo: string
@@ -27,7 +27,7 @@ class ReactIssueCommand implements HandleCommand {
         let plan = new Plan();
         let execute = {instruction: {kind: "execute", name: "react-github-issue", parameters: this}};
         handleErrors(execute, this);
-        handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/issues/#${this.issueId}`);
+        handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/issues/#${this.issue}`);
         plan.add(execute);
         return plan;
     }
