@@ -5,7 +5,7 @@ import {execute} from '@atomist/rugs/operations/PlanUtils'
 import {wrap, handleErrors} from '@atomist/rugs/operations/CommonHandlers'
 import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations/messages/MessageRendering'
 
-@CommandHandler("AddLabelGitHubIssue", "Add a known label to an GitHub issue")
+@CommandHandler("AddLabelGitHubIssue", "Add a known label to a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("add label issue")
