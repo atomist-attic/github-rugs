@@ -37,29 +37,14 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
         })
 
         message.addAction({
-            label: 'Bug',
+            label: 'Label',
             instruction: {
                 kind: "command",
                 name: "AddLabelGitHubIssue",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
-                    repo: issue.belongsTo().name(),
-                    label: 'Bug'
-                }
-            }
-        })
-
-        message.addAction({
-            label: 'Enhancement',
-            instruction: {
-                kind: "command",
-                name: "AddLabelGitHubIssue",
-                parameters: {
-                    issue: issue.number(),
-                    owner: issue.belongsTo().owner(),
-                    repo: issue.belongsTo().name(),
-                    label: 'Enhancement'
+                    repo: issue.belongsTo().name()
                 }
             }
         })
@@ -87,20 +72,6 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
                     repo: issue.belongsTo().name(),
-                }
-            }
-        })
-
-        // the reaction will be asked by the bot
-        message.addAction({
-            label: 'React',
-            instruction: {
-                kind: "command",
-                name: "ReactGitHubIssue",
-                parameters: {
-                    issue: issue.number(),
-                    owner: issue.belongsTo().owner(),
-                    repo: issue.belongsTo().name()
                 }
             }
         })
