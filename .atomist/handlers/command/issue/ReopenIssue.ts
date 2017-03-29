@@ -1,7 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {wrap} from '@atomist/rugs/operations/CommonHandlers'
+import {handleErrors} from '@atomist/rugs/operations/CommonHandlers'
 import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
 
 @CommandHandler("ReopenGitHubIssue", "Reopen a closed GitHub issue")
@@ -25,7 +25,7 @@ class ReopenIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let exec = execute( "reopen-github-issue", this)
-        plan.add(wrap(exec,`${this.owner}/${this.repo}#${this.issue} successfully reopened`, this))
+        plan.add(handleErrors(exec,this))
         return plan;
     }
 }

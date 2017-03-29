@@ -29,7 +29,7 @@ class AddLabelIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let ex = execute("add-label-github-issue", this)
-        plan.add(wrap(ex,`Successfully labelled ${this.owner}/${this.repo}#${this.issue} with ${this.label}`, this))
+        plan.add(handleErrors(ex, this))
         return plan;
     }
 }

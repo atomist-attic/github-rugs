@@ -26,7 +26,7 @@ class CloseIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let ex = execute("close-github-issue",this)
-        plan.add(wrap(ex,`${this.owner}/${this.repo}#${this.issue} successfully closed`,this))
+        plan.add(handleErrors(ex,this))
         return plan;
     }
 }

@@ -1,7 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {wrap} from '@atomist/rugs/operations/CommonHandlers'
+import {handleErrors} from '@atomist/rugs/operations/CommonHandlers'
 import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
 
 
@@ -29,7 +29,7 @@ class RemoveLabelIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let exec = execute("remove-label-github-issue", this)
-        plan.add(wrap(exec,`Successfully removed label from ${this.owner}/${this.repo}#${this.issue}`, this))
+        plan.add(handleErrors(exec, this))
         return plan;
     }
 }

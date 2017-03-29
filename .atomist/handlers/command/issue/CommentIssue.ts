@@ -29,7 +29,7 @@ class CommentIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let exec = execute("comment-github-issue", this)
-        plan.add(wrap(exec,`Successfully labelled ${this.owner}/${this.repo}#${this.issue}`,this))
+        plan.add(handleErrors(exec,this))
         return plan;
     }
 }

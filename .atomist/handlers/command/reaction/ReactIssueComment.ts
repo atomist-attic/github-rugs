@@ -5,7 +5,6 @@ import {handleErrors, handleSuccess} from '@atomist/rugs/operations/CommonHandle
 @CommandHandler("ReactGitHubIssueComment", "React to a GitHub issue comment")
 @Tags("github", "issues", "comments", "reactions")
 @Secrets("github://user_token?scopes=repo")
-@Intent("react issue comment")
 class ReactIssueCommentCommand implements HandleCommand {
 
     @Parameter({description: "The reaction to add", pattern: "^\\+1|\\-1|laugh|confused|heart|hooray$"})

@@ -29,7 +29,7 @@ class CreateIssueCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let exec = execute( "create-github-issue", this)
-        plan.add(wrap(exec, `Successfully created a new issue on ${this.owner}/${this.repo}`,  this))
+        plan.add(handleErrors(exec, this))
         return plan;
     }
 }

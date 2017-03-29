@@ -2,7 +2,7 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
 import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {wrap} from '@atomist/rugs/operations/CommonHandlers'
+import {handleErrors} from '@atomist/rugs/operations/CommonHandlers'
 
 @CommandHandler("MergeGitHubPullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
@@ -25,7 +25,7 @@ class MergePullRequestCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let ex = execute("merge-github-pull-request", this)
-        plan.add(wrap(ex, `${this.owner}/${this.repo}#${this.issue} successfully merged`, this))
+        plan.add(handleErrors(ex, this))
         return plan;
     }
 }
