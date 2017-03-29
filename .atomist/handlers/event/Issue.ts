@@ -96,7 +96,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: 'React',
             instruction: {
                 kind: "command",
-                name: "ReactIssueCommand",
+                name: "ReactGitHubIssue",
                 parameters: {
                     issue: issue.number(),
                     owner: issue.belongsTo().owner(),
@@ -109,7 +109,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             label: ':+1:',
             instruction: {
                 kind: "command",
-                name: "ReactIssueCommand",
+                name: "ReactGitHubIssue",
                 parameters: {
                     reaction: "+1",
                     issue: issue.number(),
