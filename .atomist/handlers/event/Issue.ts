@@ -2,6 +2,8 @@ import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
+import { Comment } from '@atomist/cortex/Comment'
+
 @EventHandler("OpenGitHubIssues", "Handle created issue events",
     new PathExpression<GraphNode, GraphNode>(
         `/Issue()[@state='open']
@@ -148,9 +150,9 @@ export const closedIssue = new ClosedIssue()
                 [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?]
             [/labelled::Label()]?`))
 @Tags("github", "issue", "comment")
-class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message {
-        let comment = event.root() as any
+class CommentedIssue implements HandleEvent<Comment, Comment> {
+    handle(event: Match<Comment, Comment>): Message {
+        let comment = event.root()
 
         let message = new Message()
         message.withNode(comment)
@@ -165,37 +167,22 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
                 kind: "command",
                 name: "AssignGitHubIssue",
                 parameters: {
-                    issue: comment.number(),
-                    owner: comment.belongsTo().owner(),
-                    repo: comment.belongsTo().name()
+                    issue: comment.on().number(),
+                    owner: comment.on().belongsTo().owner(),
+                    repo: comment.on().belongsTo().name()
                 }
             }
         })
 
         message.addAction({
-            label: 'Bug',
+            label: 'Label',
             instruction: {
                 kind: "command",
                 name: "AddLabelGitHubIssue",
                 parameters: {
-                    issue: comment.number(),
-                    owner: comment.belongsTo().owner(),
-                    repo: comment.belongsTo().name(),
-                    label: 'Bug'
-                }
-            }
-        })
-
-        message.addAction({
-            label: 'Enhancement',
-            instruction: {
-                kind: "command",
-                name: "AddLabelGitHubIssue",
-                parameters: {
-                    issue: comment.number(),
-                    owner: comment.belongsTo().owner(),
-                    repo: comment.belongsTo().name(),
-                    label: 'Enhancement'
+                    issue: comment.on().number(),
+                    owner: comment.on().belongsTo().owner(),
+                    repo: comment.on().belongsTo().name()
                 }
             }
         })
@@ -206,9 +193,9 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
                 kind: "command",
                 name: "CloseGitHubIssue",
                 parameters: {
-                    issue: comment.number(),
-                    owner: comment.belongsTo().owner(),
-                    repo: comment.belongsTo().name(),
+                    issue: comment.on().number(),
+                    owner: comment.on().belongsTo().owner(),
+                    repo: comment.on().belongsTo().name(),
                 }
             }
         })
@@ -220,9 +207,23 @@ class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
                 kind: "command",
                 name: "CommentGitHubIssue",
                 parameters: {
-                    issue: comment.number(),
-                    owner: comment.belongsTo().owner(),
-                    repo: comment.belongsTo().name(),
+                    issue: comment.on().number(),
+                    owner: comment.on().belongsTo().owner(),
+                    repo: comment.on().belongsTo().name(),
+                }
+            }
+        })
+
+         message.addAction({
+            label: ':+1:',
+            instruction: {
+                kind: "command",
+                name: "ReactGitHubIssue",
+                parameters: {
+                    reaction: "+1",
+                    issue: comment.on().number(),
+                    owner: comment.on().belongsTo().owner(),
+                    repo: comment.on().belongsTo().name()
                 }
             }
         })

@@ -27,7 +27,7 @@ class CreateReleaseCommand implements HandleCommand {
     
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
-        let ex = execute("create-github-release",this)
+        let ex = execute("create-github-release", this)
         plan.add(wrap(ex,`Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`, this))
         return plan;
     }
