@@ -2,7 +2,15 @@ import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
-@EventHandler("OpenGitHubIssues", "Handle created issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[@state='open'][/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
+@EventHandler("OpenGitHubIssues", "Handle created issue events", 
+    new PathExpression<GraphNode, GraphNode>(
+        `/Issue()[@state='open']
+            [/resolvedBy::Commit()/author::GitHubId()
+                [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
+            [/by::GitHubId()
+                [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
+            [/belongsTo::Repo()/channel::ChatChannel()]
+            [/labelled::Label()]?`))
 @Tags("github", "issue")
 class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
@@ -89,7 +97,15 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
 export const openedIssue = new OpenedIssue()
 
 
-@EventHandler("ClosedGitHubIssues", "Handles closed issue events", new PathExpression<GraphNode, GraphNode>("/Issue()[@state='closed'][/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/belongsTo::Repo()/channel::ChatChannel()]"))
+@EventHandler("ClosedGitHubIssues", "Handles closed issue events", 
+    new PathExpression<GraphNode, GraphNode>(
+        `/Issue()[@state='closed']
+            [/resolvedBy::Commit()/author::GitHubId()
+                [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?
+            [/by::GitHubId()
+                [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
+            [/belongsTo::Repo()/channel::ChatChannel()]
+            [/labelled::Label()]?`))
 @Tags("github", "issue")
 class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message | Plan {
@@ -121,7 +137,17 @@ export const closedIssue = new ClosedIssue()
 
 
 
-@EventHandler("CommentedGitHubIssues", "Handles issue comments events", new PathExpression<GraphNode, GraphNode>("/Comment()[/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/on::Issue()[/belongsTo::Repo()/channel::ChatChannel()][/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?][/resolvedBy::Commit()/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?]"))
+@EventHandler("CommentedGitHubIssues", "Handles issue comments events", 
+    new PathExpression<GraphNode, GraphNode>(
+        `/Comment()
+            [/by::GitHubId()
+                [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
+            [/on::Issue()
+                [/belongsTo::Repo()/channel::ChatChannel()]
+            [/by::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
+            [/resolvedBy::Commit()/author::GitHubId()
+                [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]?]
+            [/labelled::Label()]?`))
 @Tags("github", "issue", "comment")
 class CommentedIssue implements HandleEvent<GraphNode, GraphNode> {
     handle(event: Match<GraphNode, GraphNode>): Message {
