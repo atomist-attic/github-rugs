@@ -1,4 +1,4 @@
-import { HandleEvent, Message } from '@atomist/rug/operations/Handlers'
+import { HandleEvent, Message, Plan } from '@atomist/rug/operations/Handlers'
 import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
 import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 
@@ -11,7 +11,7 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
                 [/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]`))
 @Tags("github", "push")
 class Push implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message {
+    handle(event: Match<GraphNode, GraphNode>): Plan {
         let push = event.root() as any
 
         let message = new Message()
@@ -20,8 +20,7 @@ class Push implements HandleEvent<GraphNode, GraphNode> {
         let cid = "commit_event/" + push.on().owner() + "/" + push.on().name() + "/" + push.after()
         message.withCorrelationId(cid)
 
-        return message
+        return Plan.ofMessage(message);
     }
 }
-export const push = new Push()
-
+export const push = new Push();

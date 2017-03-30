@@ -5,7 +5,7 @@ import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
 import { PullRequest } from '@atomist/cortex/PullRequest'
 
 
-@EventHandler("OpenedGithubPullRequests", "Handle new pull-request events", 
+@EventHandler("OpenedGithubPullRequests", "Handle new pull-request events",
     new PathExpression<PullRequest, PullRequest>(
         `/PullRequest()[@state='open']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
@@ -15,7 +15,7 @@ import { PullRequest } from '@atomist/cortex/PullRequest'
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr", "pull request")
 class OpenedPullRequest implements HandleEvent<PullRequest, PullRequest> {
-    handle(event: Match<PullRequest, PullRequest>): Message | Plan {
+    handle(event: Match<PullRequest, PullRequest>): Plan {
         let pr = event.root()
 
         let message = new Message()
@@ -27,15 +27,15 @@ class OpenedPullRequest implements HandleEvent<PullRequest, PullRequest> {
         message.addAction({
             label: 'Merge',
             instruction: {
-                kind: "command", 
+                kind: "command",
                 name: "MergeGitHubPullRequest",
-                parameters: { 
+                parameters: {
                     issue: pr.number()
                 }
             }
         })
 
-        return message
+        return Plan.ofMessage(message);
     }
 }
 export const openedPullRequest = new OpenedPullRequest()
@@ -51,7 +51,7 @@ export const openedPullRequest = new OpenedPullRequest()
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr", "pull reuqest")
 class ClosedPullRequest implements HandleEvent<PullRequest, PullRequest> {
-    handle(event: Match<PullRequest, PullRequest>): Message | Plan {
+    handle(event: Match<PullRequest, PullRequest>): Plan {
         let pr = event.root() as any
 
         let message = new Message()
@@ -60,12 +60,12 @@ class ClosedPullRequest implements HandleEvent<PullRequest, PullRequest> {
         let cid = "pr_event/" + pr.on().owner() + "/" + pr.on().name() + "/" + pr.number()
         message.withCorrelationId(cid)
 
-        return message
+        return Plan.ofMessage(message);
     }
 }
 export const closedPullRequest = new ClosedPullRequest()
 
-@EventHandler("AutoMergePullRequests", "Auto-merge PRs if they are approved", 
+@EventHandler("AutoMergePullRequests", "Auto-merge PRs if they are approved",
     new PathExpression<PullRequest, PullRequest>(
         `/PullRequest()[@state='open']
             [/author::GitHubId()[/hasGithubIdentity::Person()/hasChatIdentity::ChatId()]?]
@@ -75,7 +75,7 @@ export const closedPullRequest = new ClosedPullRequest()
             [/on::Repo()/channel::ChatChannel()]`))
 @Tags("github", "pr", "pull reuqest")
 class AutoMergePullRequests implements HandleEvent<PullRequest, PullRequest> {
-    handle(event: Match<PullRequest, PullRequest>): Message {
+    handle(event: Match<PullRequest, PullRequest>): Plan {
         let pr = event.root() as any
         //TODO get all this from nodes above!
         let num: number = pr.number
@@ -83,11 +83,11 @@ class AutoMergePullRequests implements HandleEvent<PullRequest, PullRequest> {
         let owner: string = pr.owner
 
         let msg = new Message();
-        
+
         msg.addAction({
-            instruction: {kind: "command", name: "MergeGithubPullRequest", parameters: {issue: num, repo: repo, owner: owner}}
+            instruction: { kind: "command", name: "MergeGithubPullRequest", parameters: { issue: num, repo: repo, owner: owner } }
         })
-        return msg;
+        return Plan.ofMessage(msg);
     }
 }
 

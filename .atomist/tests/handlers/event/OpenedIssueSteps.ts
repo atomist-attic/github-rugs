@@ -19,6 +19,6 @@ When("an OpenedIssue is received", (world: HandlerScenarioWorld) => {
 
 Then("the event handler should have instructions", (world: HandlerScenarioWorld) => {
     let w: EventHandlerScenarioWorld = world as EventHandlerScenarioWorld;
-    let message = w.message();
+    let message = w.plan().messages[0];
     return message.instructions.length == 5;
 });

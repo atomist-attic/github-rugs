@@ -15,7 +15,7 @@ import { Comment } from '@atomist/cortex/Comment'
             [/labelled::Label()]?`))
 @Tags("github", "issue")
 class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
+    handle(event: Match<GraphNode, GraphNode>): Plan {
         let issue = event.root() as any
 
         let message = new Message("New issue")
@@ -92,7 +92,7 @@ class OpenedIssue implements HandleEvent<GraphNode, GraphNode> {
             }
         })
 
-        return message
+        return Plan.ofMessage(message);
     }
 }
 export const openedIssue = new OpenedIssue()
@@ -109,7 +109,7 @@ export const openedIssue = new OpenedIssue()
             [/labelled::Label()]?`))
 @Tags("github", "issue")
 class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
-    handle(event: Match<GraphNode, GraphNode>): Message | Plan {
+    handle(event: Match<GraphNode, GraphNode>): Plan {
         let issue = event.root() as any
 
         let message = new Message()
@@ -131,7 +131,7 @@ class ClosedIssue implements HandleEvent<GraphNode, GraphNode> {
             }
         })
 
-        return message
+        return Plan.ofMessage(message);
     }
 }
 export const closedIssue = new ClosedIssue()
@@ -151,7 +151,7 @@ export const closedIssue = new ClosedIssue()
             [/labelled::Label()]?`))
 @Tags("github", "issue", "comment")
 class CommentedIssue implements HandleEvent<Comment, Comment> {
-    handle(event: Match<Comment, Comment>): Message {
+    handle(event: Match<Comment, Comment>): Plan {
         let comment = event.root()
 
         let message = new Message()
@@ -214,7 +214,7 @@ class CommentedIssue implements HandleEvent<Comment, Comment> {
             }
         })
 
-         message.addAction({
+        message.addAction({
             label: ':+1:',
             instruction: {
                 kind: "command",
@@ -228,7 +228,7 @@ class CommentedIssue implements HandleEvent<Comment, Comment> {
             }
         })
 
-        return message
+        return Plan.ofMessage(message);
     }
 }
 export const commentedIssue = new CommentedIssue()
