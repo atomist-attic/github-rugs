@@ -4,7 +4,6 @@ import {execute} from '@atomist/rugs/operations/PlanUtils'
 import {wrap} from '@atomist/rugs/operations/CommonHandlers'
 import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
 
-
 @CommandHandler("UnassignGitHubIssue", "Unassign a GitHub issue to a user")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
