@@ -14,12 +14,6 @@ When("ReactIssueComment is invoked with valid input", (world: HandlerScenarioWor
     });
 });
 
-Then("execute react-github-issue-comment instruction", (world: HandlerScenarioWorld) => {
-  let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
-  let instruction = w.plan().instructions[0].instruction.detail
-  return instruction.name == "react-github-issue-comment"
-});
-
 Then("on success send a react-github-issue-comment confirmation message", (world: HandlerScenarioWorld) => {
     let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
     let expected = "Successfully reacted with :+1: to testOwner/testRepo/issues/#1/comments/7";
