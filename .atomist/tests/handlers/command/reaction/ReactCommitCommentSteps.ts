@@ -19,10 +19,11 @@ Then("respond with a single instruction", (world: HandlerScenarioWorld) => {
   return w.plan().instructions.length == 1;
 });
 
-Then("execute react-github-commit-comment instruction", (world: HandlerScenarioWorld) => {
+Then("execute ([a-z\\-]+) instruction", (world: HandlerScenarioWorld, chsw: String, instructionName: String) => {
   let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
   let instruction = w.plan().instructions[0].instruction.detail
-  return instruction.name == "react-github-commit-comment"
+  console.log(instruction.name + " == " + instructionName)
+  return instruction.name == instructionName
 });
 
 Then("on success send a react-github-commit-comment confirmation message", (world: HandlerScenarioWorld) => {

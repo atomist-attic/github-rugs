@@ -18,12 +18,6 @@ Then("respond with a single instruction", (world: HandlerScenarioWorld) => {
   return w.plan().instructions.length == 1;
 });
 
-Then("execute react-github-issue instruction", (world: HandlerScenarioWorld) => {
-  let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
-  let instruction = w.plan().instructions[0].instruction.detail
-  return instruction.name == "react-github-issue"
-});
-
 Then("on success send a react-github-issue confirmation message", (world: HandlerScenarioWorld) => {
     let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
     let expected = "Successfully reacted with :+1: to testOwner/testRepo/issues/#1";

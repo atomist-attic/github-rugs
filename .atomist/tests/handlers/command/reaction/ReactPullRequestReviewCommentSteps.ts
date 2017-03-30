@@ -14,12 +14,6 @@ When("ReactPullRequestReviewComment is invoked with valid input", (world: Handle
     });
 });
 
-Then("execute react-github-pull-request-review-comment instruction", (world: HandlerScenarioWorld) => {
-  let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
-  let instruction = w.plan().instructions[0].instruction.detail
-  return instruction.name == "react-github-pull-request-review-comment"
-});
-
 Then("on success send a react-github-pull-request-review-comment confirmation message", (world: HandlerScenarioWorld) => {
     let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
     let expected = "Successfully reacted with :+1: to testOwner/testRepo/pulls/#2/comments/7";
