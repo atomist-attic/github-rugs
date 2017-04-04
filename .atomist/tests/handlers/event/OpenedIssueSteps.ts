@@ -13,7 +13,7 @@ When("an OpenedIssue is received", (world: HandlerScenarioWorld) => {
     let w: EventHandlerScenarioWorld = world as EventHandlerScenarioWorld;
     let event: Issue = new Issue().withState("open")
         .withBy(new GitHubId().withName("developer"))
-        .withBelongsTo(new Repo().withName("repo1").withChannel([new ChatChannel().withName("repoX")]));
+        .withBelongsTo(new Repo().withName("repo1").addChannel(new ChatChannel().withName("repoX")));
     w.sendEvent(event);
 });
 
