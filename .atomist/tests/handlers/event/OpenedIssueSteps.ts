@@ -11,9 +11,9 @@ Given("the OpenedIssue Handler is registered", (world: HandlerScenarioWorld) => 
 
 When("an OpenedIssue is received", (world: HandlerScenarioWorld) => {
     let w: EventHandlerScenarioWorld = world as EventHandlerScenarioWorld;
-    let event: Issue = new Issue().withState("open")
+    let event: Issue = new Issue().withNumber(1).withState("open")
         .withBy(new GitHubId().withName("developer"))
-        .withBelongsTo(new Repo().withName("repo1").addChannel(new ChatChannel().withName("repoX")));
+        .withBelongsTo(new Repo().withName("repo1").withOwner("owner1").addChannel(new ChatChannel().withName("repoX")));
     w.sendEvent(event);
 });
 

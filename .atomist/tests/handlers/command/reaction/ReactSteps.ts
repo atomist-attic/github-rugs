@@ -1,13 +1,13 @@
 import { Given, When, Then, HandlerScenarioWorld, CommandHandlerScenarioWorld } from "@atomist/rug/test/handler/Core"
 import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext, Plan, Message } from '@atomist/rug/operations/Handlers'
 
-When("([a-zA-Z]+) on ([a-zA-Z0-9]+) ([a-zA-Z0-9]+) is invoked with valid input", (world: HandlerScenarioWorld, chsw, handlerName: string, reactableType: string, id: string) => {
+When("([a-zA-Z]+) on ([a-zA-Z0-9]+) ([a-zA-Z0-9]+) is invoked with valid input", (world: HandlerScenarioWorld, handlerName: string, reactableType: string, id: string) => {
     let parameters = {}
     parameters[reactableType] = id
     invokeReactHandler(world, handlerName, parameters)
 });
 
-When("([a-zA-Z]+) on ([a-zA-Z0-9]+) ([a-zA-Z0-9]+) comment is invoked with valid input", (world: HandlerScenarioWorld, chsw, handlerName: string, reactableType: string, id: string) => {
+When("([a-zA-Z]+) on ([a-zA-Z0-9]+) ([a-zA-Z0-9]+) comment is invoked with valid input", (world: HandlerScenarioWorld, handlerName: string, reactableType: string, id: string) => {
     let parameters = { comment: "7" }
     parameters[reactableType] = id
     invokeReactHandler(world, handlerName, parameters)
@@ -31,7 +31,7 @@ Then("respond with a single instruction", (world: HandlerScenarioWorld) => {
     return w.plan().instructions.length == 1;
 });
 
-Then("execute ([a-z\\-]+) instruction", (world: HandlerScenarioWorld, chsw: String, expectedInstructionName: string) => {
+Then("execute ([a-z\\-]+) instruction", (world: HandlerScenarioWorld, expectedInstructionName: string) => {
     const w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
     const respondable = w.plan().instructions[0] as Respondable<Execute>;
     const instruction = respondable.instruction as Execute;
@@ -39,7 +39,7 @@ Then("execute ([a-z\\-]+) instruction", (world: HandlerScenarioWorld, chsw: Stri
     return name == expectedInstructionName
 });
 
-Then("on success send '(.+)'", (world: HandlerScenarioWorld, chsw: String, expectedSuccessMessage: string) => {
+Then("on success send '(.+)'", (world: HandlerScenarioWorld, expectedSuccessMessage: string) => {
     let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
     const respondable = w.plan().instructions[0] as Respondable<Execute>;
     const onSuccessMessage = respondable.onSuccess as any;
