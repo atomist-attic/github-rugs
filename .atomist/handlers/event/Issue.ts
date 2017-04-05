@@ -218,10 +218,11 @@ class CommentedIssue implements HandleEvent<Comment, Comment> {
             label: ':+1:',
             instruction: {
                 kind: "command",
-                name: "ReactGitHubIssue",
+                name: "ReactGitHubIssueComment",
                 parameters: {
                     reaction: "+1",
                     issue: comment.on().number(),
+                    comment: comment.id(),
                     owner: comment.on().belongsTo().owner(),
                     repo: comment.on().belongsTo().name()
                 }
