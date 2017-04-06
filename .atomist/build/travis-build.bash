@@ -99,7 +99,7 @@ function main () {
         err "failed to extract archive version: $archive_version"
         return 1
     fi
-    local project_version cli_yml project_group
+    local project_version cli_yml
     if [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         if [[ $archive_version != $TRAVIS_TAG ]]; then
             err "archive version ($archive_version) does not match git tag ($TRAVIS_TAG)"
@@ -117,15 +117,8 @@ function main () {
         project_version=$archive_version-$timestamp
         cli_yml=$build_dir/cli-dev.yml
     fi
-    project_group=$(echo "$TRAVIS_REPO_SLUG" | sed -n -E 's/(.*)\/.*/\1/p')
-    if [[ $? -ne 0 || ! $project_group ]]; then
-        err "failed to extract archive group: $project_group"
-        return 1
-    fi
-
     msg "branch: $TRAVIS_BRANCH"
     msg "archive version: $project_version"
-    msg "archive group: $project_group"
 
     if [[ $TRAVIS_BRANCH == master || $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         if ! install --mode=0600 "$cli_yml" "$cli_user"; then
@@ -134,7 +127,7 @@ function main () {
         fi
 
         msg "publishing archive"
-        if ! $rug publish --archive-version "$project_version" --archive-group "$project_group"; then
+        if ! $rug publish -a "$project_version"; then
             err "failed to publish archive $project_version"
             return 1
         fi
