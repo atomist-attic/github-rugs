@@ -39,6 +39,14 @@ Then("execute ([a-z\\-]+) instruction", (world: HandlerScenarioWorld, expectedIn
     return name == expectedInstructionName
 });
 
+Then("execute http instruction", (world: HandlerScenarioWorld) => {
+    const w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
+    const respondable = w.plan().instructions[0] as Respondable<Execute>;
+    const instruction = respondable.instruction as Execute;
+    const http = instruction.parameters;
+    return instruction.name == "http" && http["method"] == "POST" && http["url"] == "/repos/testOwner/testRepo/issues/1/reactions"
+});
+
 Then("on success send '(.+)'", (world: HandlerScenarioWorld, expectedSuccessMessage: string) => {
     let w: CommandHandlerScenarioWorld = world as CommandHandlerScenarioWorld;
     const respondable = w.plan().instructions[0] as Respondable<Execute>;

@@ -4,3 +4,4 @@ version: "0.25.0"
 requires: "0.24.0"
 extensions:
   - "com.atomist.rug:rug-functions-github:0.14.0"
+  - "com.atomist.rug:rug-function-http:0.2.0"
