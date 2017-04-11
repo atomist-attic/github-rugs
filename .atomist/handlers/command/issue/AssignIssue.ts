@@ -1,4 +1,4 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
+import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {Issue} from '@atomist/cortex/Issue'
 import {execute} from '@atomist/rugs/operations/PlanUtils'
@@ -30,6 +30,10 @@ class AssignIssueCommand implements HandleCommand {
         let plan = new Plan();
         let exec = execute("assign-github-issue",this)
         plan.add(wrap(exec, `${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`, this))
+
+        let message = new ResponseMessage("this is a test")
+        plan.add(message)
+
         return plan;
     }
 }

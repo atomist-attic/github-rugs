@@ -1,5 +1,5 @@
 import { Given, When, Then, HandlerScenarioWorld, CommandHandlerScenarioWorld } from "@atomist/rug/test/handler/Core"
-import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext, Plan, Message } from '@atomist/rug/operations/Handlers'
+import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext, Plan } from '@atomist/rug/operations/Handlers'
 
 When("([a-zA-Z]+) on ([a-zA-Z0-9]+) ([a-zA-Z0-9]+) is invoked with valid input", (world: HandlerScenarioWorld, handlerName: string, reactableType: string, id: string) => {
     let parameters = {}

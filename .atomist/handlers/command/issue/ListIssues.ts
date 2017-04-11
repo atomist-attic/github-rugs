@@ -1,4 +1,4 @@
-import { HandleResponse, Execute, Respondable, MappedParameters, HandleCommand, Respond, Response, HandlerContext, Plan, Message } from '@atomist/rug/operations/Handlers';
+import { HandleResponse, Execute, Respondable, MappedParameters, HandleCommand, Respond, Response, HandlerContext, Plan, ResponseMessage, MessageMimeTypes } from '@atomist/rug/operations/Handlers';
 import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent } from '@atomist/rug/operations/Decorators';
 import { Issue } from '@atomist/cortex/Issue';
 import { execute } from '@atomist/rugs/operations/PlanUtils';
@@ -63,11 +63,10 @@ class ListIssuesRender implements HandleResponse<Issue[]> {
     handle( @ParseJson response: Response<Issue[]>): Plan {
         let issues = response.body();
         if (issues.length >= 1) {
-            let rendered = renderIssues(issues)
-            return Plan.ofMessage(new Message(rendered));
+            return Plan.ofMessage(renderIssues(issues));
         }
         else {
-            return Plan.ofMessage(new Message(`No issues found for the last ${this.days} day(s)`));
+            return Plan.ofMessage(new ResponseMessage(`No issues found for the last ${this.days} day(s)`));
         }
     }
 }

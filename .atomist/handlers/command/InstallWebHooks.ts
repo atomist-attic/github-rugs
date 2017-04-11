@@ -1,4 +1,4 @@
-import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext, Plan, Message } from '@atomist/rug/operations/Handlers'
+import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext, Plan, ResponseMessage, MessageMimeTypes} from '@atomist/rug/operations/Handlers'
 import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent } from '@atomist/rug/operations/Decorators'
 import { execute } from '@atomist/rugs/operations/PlanUtils'
 import { wrap } from '@atomist/rugs/operations/CommonHandlers'
@@ -84,14 +84,14 @@ class WebHookErrorHandler implements HandleResponse<any> {
         let errors = response.body().errors;
         try {
             if (errors[0].message == "Hook already exists on this organization") {
-                return Plan.ofMessage(new Message(renderSuccess(`Webook already installed for ${this.owner} (${this.url})`)));
+                return Plan.ofMessage(renderSuccess(`Webook already installed for ${this.owner} (${this.url})`));
             }
             if (errors[0].message == "Hook already exists on this repository") {
-                return Plan.ofMessage(new Message(renderSuccess(`Webook already installed for ${this.owner}/${this.repo} (${this.url})`)));
+                return Plan.ofMessage(renderSuccess(`Webook already installed for ${this.owner}/${this.repo} (${this.url})`));
             }
-            return Plan.ofMessage(new Message(renderError(`${response.msg()}: ${errors[0].message}`)));
+            return Plan.ofMessage(renderError(`${response.msg()}: ${errors[0].message}`));
         } catch (ex) {
-            return Plan.ofMessage(new Message(renderError(`Failed to install webhook: ${response.body().message}`)));
+            return Plan.ofMessage(renderError(`Failed to install webhook: ${response.body().message}`));
         }
     }
 }
