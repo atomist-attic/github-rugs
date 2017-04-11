@@ -1,6 +1,9 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan} from '@atomist/rug/operations/Handlers'
-import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {handleErrors, handleSuccess} from '@atomist/rugs/operations/CommonHandlers'
+import {CommandHandler, Intent, MappedParameter, Parameter, ParseJson, ResponseHandler, Secrets,
+    Tags} from "@atomist/rug/operations/Decorators";
+import {Execute, HandleCommand, HandlerContext, HandleResponse, Instruction, MappedParameters, Plan, Respond,
+    Respondable, Response} from "@atomist/rug/operations/Handlers";
+import {handleErrors, handleSuccess} from "@atomist/rugs/operations/CommonHandlers";
+import {ReactionContent, Repository} from "../../GitHubApi";
 
 @CommandHandler("ReactGitHubIssue", "React to a GitHub issue")
 @Tags("github", "issues", "reactions")
@@ -8,25 +11,35 @@ import {handleErrors, handleSuccess} from '@atomist/rugs/operations/CommonHandle
 class ReactIssueCommand implements HandleCommand {
 
     @Parameter({description: "The reaction to add", pattern: "^\\+1|\\-1|laugh|confused|heart|hooray$"})
-    reaction: string
+    public reaction: string;
 
     @Parameter({description: "The issue number", pattern: "^\\d+$"})
-    issue: string
+    public issue: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string
+    public repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    public owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
+    public corrid: string;
 
-    handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let execute = {instruction: {kind: "execute", name: "react-github-issue", parameters: this}};
+    public handle(ctx: HandlerContext): Plan {
+        const ghRepo = new Repository(this.owner, this.repo, `#{github://user_token?scopes=repo}`);
+        const ghIssue = ghRepo.issue(Number(this.issue));
+        const http = ghIssue.react({ content: this.reaction as ReactionContent});
+
+        const plan = new Plan();
+        const execute = { instruction: {
+            kind: "execute",
+            name: "http",
+            parameters: http,
+        }};
+
         handleErrors(execute, this);
-        handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/issues/#${this.issue}`);
+        const msg = `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/issues/#${this.issue}`;
+        handleSuccess(execute, msg);
         plan.add(execute);
         return plan;
     }
