@@ -1,6 +1,7 @@
 import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {handleErrors, handleSuccess} from '@atomist/rugs/operations/CommonHandlers'
+import {Repository, ReactionContent} from '../../GithubApi'
 
 @CommandHandler("ReactGitHubIssue", "React to a GitHub issue")
 @Tags("github", "issues", "reactions")
@@ -23,8 +24,16 @@ class ReactIssueCommand implements HandleCommand {
     corrid: string
 
     handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let execute = {instruction: {kind: "execute", name: "react-github-issue", parameters: this}};
+        const ghRepo = new Repository(this.owner, this.repo)
+        const ghIssue = ghRepo.issue(Number(this.issue))
+        const http = ghIssue.react({ "content": <ReactionContent> this.reaction })
+
+        const plan = new Plan();
+        const execute = { instruction: {
+            name: "http",
+            kind: "execute",
+            parameters: http
+        }}
         handleErrors(execute, this);
         handleSuccess(execute, `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/issues/#${this.issue}`);
         plan.add(execute);
