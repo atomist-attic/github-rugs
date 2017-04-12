@@ -61,7 +61,7 @@ class ListIssuesRender implements HandleResponse<Issue[]> {
     days: number = 1
 
     handle( @ParseJson response: Response<Issue[]>): Plan {
-        let issues = response.body();
+        let issues = response.body;
         if (issues.length >= 1) {
             return Plan.ofMessage(renderIssues(issues));
         }

@@ -1,9 +1,8 @@
-import { HandleEvent, LifecycleMessage, Plan } from '@atomist/rug/operations/Handlers'
-import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
-import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
+import { EventHandler, Tags } from "@atomist/rug/operations/Decorators";
+import { HandleEvent, LifecycleMessage, Plan } from "@atomist/rug/operations/Handlers";
+import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpression";
 
-import { PullRequest } from '@atomist/cortex/PullRequest'
-
+import { PullRequest } from "@atomist/cortex/PullRequest";
 
 @EventHandler("OpenedGithubPullRequests", "Handle new pull-request events",
     new PathExpression<PullRequest, PullRequest>(
@@ -16,27 +15,26 @@ import { PullRequest } from '@atomist/cortex/PullRequest'
 @Tags("github", "pr", "pull request")
 class OpenedPullRequest implements HandleEvent<PullRequest, PullRequest> {
     handle(event: Match<PullRequest, PullRequest>): Plan {
-        let pr = event.root()
-    
-        let cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number
-        let message = new LifecycleMessage(pr, cid)
-        
+        const pr = event.root();
+
+        const cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number;
+        const message = new LifecycleMessage(pr, cid);
+
         message.addAction({
-            label: 'Merge',
+            label: "Merge",
             instruction: {
                 kind: "command",
                 name: "MergeGitHubPullRequest",
                 parameters: {
-                    issue: pr.number
-                }
-            }
-        })
+                    issue: pr.number,
+                },
+            },
+        });
 
         return Plan.ofMessage(message);
     }
 }
-export const openedPullRequest = new OpenedPullRequest()
-
+export const openedPullRequest = new OpenedPullRequest();
 
 @EventHandler("ClosedGitHubPullRequests", "Handle closed pull-request events",
     new PathExpression<PullRequest, PullRequest>(
@@ -49,12 +47,12 @@ export const openedPullRequest = new OpenedPullRequest()
 @Tags("github", "pr", "pull reuqest")
 class ClosedPullRequest implements HandleEvent<PullRequest, PullRequest> {
     handle(event: Match<PullRequest, PullRequest>): Plan {
-        let pr = event.root()
-        
-        let cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number
-        let message = new LifecycleMessage(pr, cid)
-        
+        const pr = event.root();
+
+        const cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number;
+        const message = new LifecycleMessage(pr, cid);
+
         return Plan.ofMessage(message);
     }
 }
-export const closedPullRequest = new ClosedPullRequest()
+export const closedPullRequest = new ClosedPullRequest();

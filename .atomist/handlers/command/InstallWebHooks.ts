@@ -1,8 +1,8 @@
-import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext, Plan, ResponseMessage, MessageMimeTypes} from '@atomist/rug/operations/Handlers'
-import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent } from '@atomist/rug/operations/Decorators'
-import { execute } from '@atomist/rugs/operations/PlanUtils'
-import { wrap } from '@atomist/rugs/operations/CommonHandlers'
-import { renderError, renderSuccess } from '@atomist/rugs/operations/messages/MessageRendering'
+import { CommandHandler, Intent, MappedParameter, Parameter, ParseJson, ResponseHandler, Secrets, Tags } from "@atomist/rug/operations/Decorators";
+import { Execute, HandleCommand, HandlerContext, HandleResponse, Instruction, MappedParameters, MessageMimeTypes, Plan, Respond, Respondable, Response, ResponseMessage} from "@atomist/rug/operations/Handlers";
+import { wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { renderError, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
+import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("InstallGitHubOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
@@ -11,25 +11,25 @@ import { renderError, renderSuccess } from '@atomist/rugs/operations/messages/Me
 class CreateOrgWebHookCommand implements HandleCommand {
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    owner: string;
 
     @MappedParameter("atomist://github_webhook_url")
-    url: string = "https://webhook.atomist.com/github"
+    url: string = "https://webhook.atomist.com/github";
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
+    corrid: string;
 
     handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let ex = execute("install-github-org-webhook", this)
+        const plan = new Plan();
+        const ex = execute("install-github-org-webhook", this);
         ex.onSuccess = success(this.owner, this.url),
-            ex.onError = { kind: "respond", name: "WebHookErrorHandler", parameters: this }
-        plan.add(ex)
+            ex.onError = { kind: "respond", name: "WebHookErrorHandler", parameters: this };
+        plan.add(ex);
         return plan;
     }
 }
 
-export let command = new CreateOrgWebHookCommand()
+export let command = new CreateOrgWebHookCommand();
 
 @CommandHandler("InstallRepoWebhook", "Create a webhook for a repo")
 @Tags("github", "webhooks")
@@ -38,31 +38,31 @@ export let command = new CreateOrgWebHookCommand()
 class InstallRepoWebhookCommand implements HandleCommand {
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string
+    repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    owner: string;
 
     @MappedParameter("atomist://github_webhook_url")
-    url: string = "https://webhook.atomist.com/github"
+    url: string = "https://webhook.atomist.com/github";
 
     handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let execute: Respondable<Execute> = {
+        const plan = new Plan();
+        const execute: Respondable<Execute> = {
             instruction:
             { kind: "execute", name: "install-github-repo-webhook", parameters: this },
             onSuccess: success(this.owner, this.url, this.repo),
-            onError: { kind: "respond", name: "GitHubWebhookErrors", parameters: this }
-        }
-        plan.add(execute)
+            onError: { kind: "respond", name: "GitHubWebhookErrors", parameters: this },
+        };
+        plan.add(execute);
         return plan;
     }
 }
 
 //reusable creation of formatted success messages
 function success(owner: string, repo: string, url?: string): Instruction<"respond"> {
-    let repoStr = repo == null ? "" : `/${repo}`
-    return { kind: "respond", name: "GenericSuccessHandler", parameters: { msg: `Installed new webook for ${owner}${repoStr} (${url})` } }
+    const repoStr = repo == null ? "" : `/${repo}`;
+    return { kind: "respond", name: "GenericSuccessHandler", parameters: { msg: `Installed new webook for ${owner}${repoStr} (${url})` } };
 }
 
 @ResponseHandler("GitHubWebhookErrors", "Custom error handling for some cases")
@@ -72,16 +72,16 @@ class WebHookErrorHandler implements HandleResponse<any> {
     repo: string;
 
     @Parameter({ description: "Owner", pattern: "@any" })
-    owner: string
+    owner: string;
 
     @Parameter({ description: "Webhook URL", pattern: "@url" })
-    url: string
+    url: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
+    corrid: string;
 
     handle( @ParseJson response: Response<any>): Plan {
-        let errors = response.body().errors;
+        const errors = response.body().errors;
         try {
             if (errors[0].message == "Hook already exists on this organization") {
                 return Plan.ofMessage(renderSuccess(`Webook already installed for ${this.owner} (${this.url})`));
@@ -89,12 +89,12 @@ class WebHookErrorHandler implements HandleResponse<any> {
             if (errors[0].message == "Hook already exists on this repository") {
                 return Plan.ofMessage(renderSuccess(`Webook already installed for ${this.owner}/${this.repo} (${this.url})`));
             }
-            return Plan.ofMessage(renderError(`${response.msg()}: ${errors[0].message}`));
+            return Plan.ofMessage(renderError(`${response.msg}: ${errors[0].message}`));
         } catch (ex) {
-            return Plan.ofMessage(renderError(`Failed to install webhook: ${response.body().message}`));
+            return Plan.ofMessage(renderError(`Failed to install webhook: ${response.body.message}`));
         }
     }
 }
 
-export let errors = new WebHookErrorHandler()
-export let repo = new InstallRepoWebhookCommand()
+export let errors = new WebHookErrorHandler();
+export let repo = new InstallRepoWebhookCommand();

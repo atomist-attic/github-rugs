@@ -1,8 +1,8 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan} from '@atomist/rug/operations/Handlers'
-import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {wrap} from '@atomist/rugs/operations/CommonHandlers'
-import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/MessageRendering'
+import {CommandHandler, Intent, MappedParameter, Parameter, ParseJson, ResponseHandler, Secrets, Tags} from "@atomist/rug/operations/Decorators";
+import {Execute, HandleCommand, HandlerContext, HandleResponse, Instruction, MappedParameters, Plan, Respond, Respondable , Response} from "@atomist/rug/operations/Handlers";
+import {wrap} from "@atomist/rugs/operations/CommonHandlers";
+import {renderError, renderSuccess} from "@atomist/rugs/operations/messages/MessageRendering";
+import {execute} from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("CreateGitHubRelease", "Create a release of a repo on GitHub")
 @Tags("github", "issues")
@@ -11,26 +11,26 @@ import {renderError, renderSuccess} from '@atomist/rugs/operations/messages/Mess
 class CreateReleaseCommand implements HandleCommand {
 
     @Parameter({description: "The tag to release", pattern: "^.*$"})
-    tag: string
+    tag: string;
 
     @Parameter({description: "The release message", pattern: "@any"})
-    message: string
+    message: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string
+    repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
-    
+    corrid: string;
+
     handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let ex = execute("create-github-release", this)
-        plan.add(wrap(ex,`Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`, this))
+        const plan = new Plan();
+        const ex = execute("create-github-release", this);
+        plan.add(wrap(ex, `Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`, this));
         return plan;
     }
 }
 
-export let command = new CreateReleaseCommand()
+export let command = new CreateReleaseCommand();

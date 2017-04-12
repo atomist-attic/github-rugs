@@ -1,33 +1,33 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan} from '@atomist/rug/operations/Handlers'
-import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
+import {CommandHandler, Intent, MappedParameter, Parameter, ParseJson, ResponseHandler, Secrets, Tags} from "@atomist/rug/operations/Decorators";
+import {Execute, HandleCommand, HandlerContext, HandleResponse, Instruction, MappedParameters, Plan, Respond, Respondable , Response} from "@atomist/rug/operations/Handlers";
 
-import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {handleErrors} from '@atomist/rugs/operations/CommonHandlers'
+import {handleErrors} from "@atomist/rugs/operations/CommonHandlers";
+import {execute} from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("MergeGitHubPullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
 @Secrets("github://user_token?scopes=repo")
 @Intent("merge pr", "merge pullrequest")
 class MergePullRequestCommand implements HandleCommand {
-    
+
     @Parameter({description: "The pull request number", pattern: "^.*$"})
-    issue: number
+    issue: number;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string
+    repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
-    
+    corrid: string;
+
     handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let ex = execute("merge-github-pull-request", this)
-        plan.add(handleErrors(ex, this))
+        const plan = new Plan();
+        const ex = execute("merge-github-pull-request", this);
+        plan.add(handleErrors(ex, this));
         return plan;
     }
 }
 
-export let command = new MergePullRequestCommand()
+export let command = new MergePullRequestCommand();

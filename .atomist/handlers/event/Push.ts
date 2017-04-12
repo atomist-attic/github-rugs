@@ -1,8 +1,8 @@
-import { HandleEvent, LifecycleMessage, Plan } from '@atomist/rug/operations/Handlers'
-import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
-import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
+import { EventHandler, Tags } from "@atomist/rug/operations/Decorators";
+import { HandleEvent, LifecycleMessage, Plan } from "@atomist/rug/operations/Handlers";
+import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpression";
 
-import { Push } from '@atomist/cortex/Push'
+import { Push } from "@atomist/cortex/Push";
 
 @EventHandler("GitHubPushes", "Handle push events",
     new PathExpression<Push, Push>(
@@ -13,10 +13,10 @@ import { Push } from '@atomist/cortex/Push'
 @Tags("github", "push")
 class NewPush implements HandleEvent<Push, Push> {
     handle(event: Match<Push, Push>): Plan {
-        let push = event.root()
-        let cid = "commit_event/" + push.repo.owner + "/" + push.repo.name + "/" + push.after
+        const push = event.root();
+        const cid = "commit_event/" + push.repo.owner + "/" + push.repo.name + "/" + push.after;
 
-        let message = new LifecycleMessage(push, cid)
+        const message = new LifecycleMessage(push, cid);
 
         return Plan.ofMessage(message);
     }

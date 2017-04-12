@@ -1,9 +1,9 @@
-import { HandleEvent, Plan, LifecycleMessage } from '@atomist/rug/operations/Handlers'
-import { GraphNode, Match, PathExpression } from '@atomist/rug/tree/PathExpression'
-import { EventHandler, Tags } from '@atomist/rug/operations/Decorators'
+import { EventHandler, Tags } from "@atomist/rug/operations/Decorators";
+import { HandleEvent, LifecycleMessage, Plan } from "@atomist/rug/operations/Handlers";
+import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpression";
 
-import { Comment } from '@atomist/cortex/Comment'
-import { Issue } from '@atomist/cortex/Issue'
+import { Comment } from "@atomist/cortex/Comment";
+import { Issue } from "@atomist/cortex/Issue";
 
 @EventHandler("OpenGitHubIssues", "Handle created issue events",
     new PathExpression<Issue, Issue>(
@@ -18,69 +18,69 @@ import { Issue } from '@atomist/cortex/Issue'
 class OpenedIssue implements HandleEvent<Issue, Issue> {
     handle(event: Match<Issue, Issue>): Plan {
 
-        console.log("This is a debugging message from OpenedIssue")
+        console.log("This is a debugging message from OpenedIssue");
 
-        let issue = event.root()
+        const issue = event.root();
 
-        let cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number
-        let message = new LifecycleMessage(issue, cid)
+        const cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number;
+        const message = new LifecycleMessage(issue, cid);
 
         // the assignee will be asked by the bot
         message.addAction({
-            label: 'Assign',
+            label: "Assign",
             instruction: {
                 kind: "command",
                 name: "AssignGitHubIssue",
                 parameters: {
                     issue: issue.number,
                     owner: issue.repo.owner,
-                    repo: issue.repo.name
-                }
-            }
-        })
+                    repo: issue.repo.name,
+                },
+            },
+        });
 
         message.addAction({
-            label: 'Label',
+            label: "Label",
             instruction: {
                 kind: "command",
                 name: "AddLabelGitHubIssue",
                 parameters: {
                     issue: issue.number,
                     owner: issue.repo.owner,
-                    repo: issue.repo.name
-                }
-            }
-        })
+                    repo: issue.repo.name,
+                },
+            },
+        });
 
         message.addAction({
-            label: 'Close',
+            label: "Close",
             instruction: {
                 kind: "command",
                 name: "CloseGitHubIssue",
                 parameters: {
                     issue: issue.number,
                     owner: issue.repo.owner,
-                    repo: issue.repo.name
-                }
-            }
-        })
+                    repo: issue.repo.name,
+                },
+            },
+        });
 
         // the comment will be asked by the bot
         message.addAction({
-            label: 'Comment',
+            label: "Comment",
             instruction: {
                 kind: "command",
                 name: "CommentGitHubIssue",
                 parameters: {
                     issue: issue.number,
                     owner: issue.repo.owner,
-                    repo: issue.repo.name
-                }
-            }
-        })
+                    repo: issue.repo.name,
+                },
+            },
+        });
 
         message.addAction({
-            label: ':+1:',
+            label: ":+1:",
             instruction: {
                 kind: "command",
                 name: "ReactGitHubIssue",
@@ -88,16 +88,15 @@ class OpenedIssue implements HandleEvent<Issue, Issue> {
                     reaction: "+1",
                     issue: issue.number,
                     owner: issue.repo.owner,
-                    repo: issue.repo.name
-                }
-            }
-        })
+                    repo: issue.repo.name,
+                },
+            },
+        });
 
         return Plan.ofMessage(message);
     }
 }
-export const openedIssue = new OpenedIssue()
-
+export const openedIssue = new OpenedIssue();
 
 @EventHandler("ClosedGitHubIssues", "Handles closed issue events",
     new PathExpression<Issue, Issue>(
@@ -111,30 +110,28 @@ export const openedIssue = new OpenedIssue()
 @Tags("github", "issue")
 class ClosedIssue implements HandleEvent<Issue, Issue> {
     handle(event: Match<Issue, Issue>): Plan {
-        let issue = event.root()
-        
-        let cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number
-        let message = new LifecycleMessage(issue, cid)
+        const issue = event.root();
+
+        const cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number;
+        const message = new LifecycleMessage(issue, cid);
 
         message.addAction({
-            label: 'Reopen',
+            label: "Reopen",
             instruction: {
                 kind: "command",
                 name: "ReopenGitHubIssue",
                 parameters: {
                     issue: issue.number,
                     owner: issue.repo.owner,
-                    repo: issue.repo.name
-                }
-            }
-        })
+                    repo: issue.repo.name,
+                },
+            },
+        });
 
         return Plan.ofMessage(message);
     }
 }
-export const closedIssue = new ClosedIssue()
-
-
+export const closedIssue = new ClosedIssue();
 
 @EventHandler("CommentedGitHubIssues", "Handles issue comments events",
     new PathExpression<Comment, Comment>(
@@ -150,67 +147,67 @@ export const closedIssue = new ClosedIssue()
 @Tags("github", "issue", "comment")
 class CommentedIssue implements HandleEvent<Comment, Comment> {
     handle(event: Match<Comment, Comment>): Plan {
-        let comment = event.root()
-        let cid = "comment/" + comment.issue.repo.owner + "/" + comment.issue.repo.name + "/" + comment.issue.number + "/" + comment.id
+        const comment = event.root();
+        const cid = "comment/" + comment.issue.repo.owner + "/" + comment.issue.repo.name + "/" + comment.issue.number + "/" + comment.id;
 
-        let message = new LifecycleMessage(comment, cid)
-        
+        const message = new LifecycleMessage(comment, cid);
+
         // the assignee will be asked by the bot
         message.addAction({
-            label: 'Assign',
+            label: "Assign",
             instruction: {
                 kind: "command",
                 name: "AssignGitHubIssue",
                 parameters: {
                     issue: comment.issue.number,
                     owner: comment.issue.repo.owner,
-                    repo: comment.issue.repo.name
-                }
-            }
-        })
+                    repo: comment.issue.repo.name,
+                },
+            },
+        });
 
         message.addAction({
-            label: 'Label',
+            label: "Label",
             instruction: {
                 kind: "command",
                 name: "AddLabelGitHubIssue",
                 parameters: {
                     issue: comment.issue.number,
                     owner: comment.issue.repo.owner,
-                    repo: comment.issue.repo.name
-                }
-            }
-        })
+                    repo: comment.issue.repo.name,
+                },
+            },
+        });
 
         message.addAction({
-            label: 'Close',
+            label: "Close",
             instruction: {
                 kind: "command",
                 name: "CloseGitHubIssue",
                 parameters: {
                     issue: comment.issue.number,
                     owner: comment.issue.repo.owner,
-                    repo: comment.issue.repo.name
-                }
-            }
-        })
+                    repo: comment.issue.repo.name,
+                },
+            },
+        });
 
         // the comment will be asked by the bot
         message.addAction({
-            label: 'Comment',
+            label: "Comment",
             instruction: {
                 kind: "command",
                 name: "CommentGitHubIssue",
                 parameters: {
                     issue: comment.issue.number,
                     owner: comment.issue.repo.owner,
-                    repo: comment.issue.repo.name
-                }
-            }
-        })
+                    repo: comment.issue.repo.name,
+                },
+            },
+        });
 
         message.addAction({
-            label: ':+1:',
+            label: ":+1:",
             instruction: {
                 kind: "command",
                 name: "ReactGitHubIssueComment",
@@ -219,12 +216,12 @@ class CommentedIssue implements HandleEvent<Comment, Comment> {
                     issue: comment.issue.number,
                     comment: comment.id,
                     owner: comment.issue.repo.owner,
-                    repo: comment.issue.repo.name
-                }
-            }
-        })
+                    repo: comment.issue.repo.name,
+                },
+            },
+        });
 
         return Plan.ofMessage(message);
     }
 }
-export const commentedIssue = new CommentedIssue()
+export const commentedIssue = new CommentedIssue();
