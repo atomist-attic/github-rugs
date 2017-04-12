@@ -1,5 +1,21 @@
-import {CommandHandler, Intent, MappedParameter, Parameter, ParseJson, ResponseHandler, Secrets, Tags} from "@atomist/rug/operations/Decorators";
-import {Execute, HandleCommand, HandlerContext, HandleResponse, Instruction, MappedParameters, Plan, Respond, Respondable , Response} from "@atomist/rug/operations/Handlers";
+import {CommandHandler,
+    Intent,
+    MappedParameter,
+    Parameter,
+    ParseJson,
+    ResponseHandler,
+    Secrets,
+    Tags} from "@atomist/rug/operations/Decorators";
+import {Execute,
+    HandleCommand,
+    HandlerContext,
+    HandleResponse,
+    Instruction,
+    MappedParameters,
+    Plan,
+    Respond,
+    Respondable,
+    Response} from "@atomist/rug/operations/Handlers";
 import {wrap} from "@atomist/rugs/operations/CommonHandlers";
 import {renderError, renderSuccess} from "@atomist/rugs/operations/messages/MessageRendering";
 import {execute} from "@atomist/rugs/operations/PlanUtils";
@@ -11,21 +27,21 @@ import {execute} from "@atomist/rugs/operations/PlanUtils";
 class CreateReleaseCommand implements HandleCommand {
 
     @Parameter({description: "The tag to release", pattern: "^.*$"})
-    tag: string;
+    public tag: string;
 
     @Parameter({description: "The release message", pattern: "@any"})
-    message: string;
+    public message: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string;
+    public repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string;
+    public owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string;
+    public corrid: string;
 
-    handle(ctx: HandlerContext): Plan {
+    public handle(ctx: HandlerContext): Plan {
         const plan = new Plan();
         const ex = execute("create-github-release", this);
         plan.add(wrap(ex, `Successfully created a new release on ${this.owner}/${this.repo}#${this.tag}`, this));

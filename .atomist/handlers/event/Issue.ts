@@ -18,8 +18,6 @@ import { Issue } from "@atomist/cortex/Issue";
 class OpenedIssue implements HandleEvent<Issue, Issue> {
     handle(event: Match<Issue, Issue>): Plan {
 
-        console.log("This is a debugging message from OpenedIssue");
-
         const issue = event.root();
 
         const cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number;
