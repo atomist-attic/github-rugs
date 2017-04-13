@@ -103,6 +103,8 @@ export const openedIssue = new OpenedIssue();
                 [/person::Person()/chatId::ChatId()]?]?
             [/openedBy::GitHubId()
                 [/person::Person()/chatId::ChatId()]?]
+            [/closedBy::GitHubId()
+                [/person::Person()/chatId::ChatId()]?]?
             [/repo::Repo()/channels::ChatChannel()]
             [/labels::Label()]?`))
 @Tags("github", "issue")
