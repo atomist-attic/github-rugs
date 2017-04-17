@@ -31,7 +31,7 @@ class AssignIssueCommand implements HandleCommand {
         let exec = execute("assign-github-issue",this)
         plan.add(wrap(exec, `${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`, this))
 
-        let message = new ResponseMessage("this is a test")
+        let message = new ResponseMessage(`Assigning issue to ${this.assignee}`)
         plan.add(message)
 
         return plan;
