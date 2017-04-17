@@ -78,3 +78,18 @@ executor:
     - "maven_user": "t***************y"
     - "maven_token": "z**************7"
 
+---
+kind: "operation"
+client: "rug-cli 0.32.0"
+editor:
+  name: "BumpVersion"
+  group: "satellite-of-love"
+  artifact: "rest-service-generator"
+  version: "0.11.5"
+  origin:
+    repo: "git@github.com:satellite-of-love/rest-service-generator"
+    branch: "master"
+    sha: "caa346c"
+  parameters:
+    - "component": "patch"
+
