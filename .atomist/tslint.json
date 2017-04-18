@@ -5,7 +5,10 @@
     ],
     "jsRules": {},
     "rules": {
-        "max-classes-per-file": false
+        "max-classes-per-file": false,
+        "ordered-imports": false,
+        "quotemark": false,
+        "object-literal-sort-keys": false
     },
     "rulesDirectory": []
 }
