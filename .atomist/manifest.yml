@@ -1,4 +1,4 @@
-group: "atomist-rugs"
+group: "atomist"
 artifact: "github-handlers"
 version: "0.33.1"
 requires: "0.25.2"
