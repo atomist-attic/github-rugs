@@ -20,7 +20,7 @@ class ListIssuesCommand implements HandleCommand {
     handle(ctx: HandlerContext): Plan {
         let plan = new Plan();
         let exec = execute("list-github-user-issues", this)
-        exec.onSuccess = { kind: "respond", name: "DisplayGitHubIssues" }
+        exec.onSuccess = { kind: "respond", name: "DisplayGitHubIssues", parameters: {days: this.days} }
         plan.add(handleErrors(exec, this))
         return plan;
     }
@@ -42,6 +42,11 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     owner: string
 
     handle(ctx: HandlerContext): Plan {
+        // Bot sends null for search if it is no specified
+        if (!this.search) {
+            this.search = ""
+        }
+
         let plan = new Plan();
         let execute: Respondable<Execute> = {
             instruction:
