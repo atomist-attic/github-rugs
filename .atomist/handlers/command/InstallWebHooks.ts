@@ -6,20 +6,19 @@ import {
     ParseJson,
     ResponseHandler,
     Secrets,
-    Tags } from "@atomist/rug/operations/Decorators";
+    Tags,
+} from "@atomist/rug/operations/Decorators";
 import {
-    Execute,
+    CommandPlan,
     HandleCommand,
     HandlerContext,
     HandleResponse,
-    Instruction,
     MappedParameters,
     MessageMimeTypes,
-    Plan,
     Respond,
-    Respondable,
     Response,
-    ResponseMessage } from "@atomist/rug/operations/Handlers";
+    ResponseMessage,
+} from "@atomist/rug/operations/Handlers";
 import { wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { renderError, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
@@ -39,8 +38,8 @@ class CreateOrgWebHookCommand implements HandleCommand {
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
-    public handle(ctx: HandlerContext): Plan {
-        const plan = new Plan();
+    public handle(ctx: HandlerContext): CommandPlan {
+        const plan = new CommandPlan();
         const ex = execute("install-github-org-webhook", this);
         ex.onSuccess = success(this.owner, this.url),
             ex.onError = { kind: "respond", name: "GitHubWebhookErrors", parameters: this };
@@ -66,25 +65,33 @@ class InstallRepoWebhookCommand implements HandleCommand {
     @MappedParameter("atomist://github_webhook_url")
     public url: string = "https://webhook.atomist.com/github";
 
-    public handle(ctx: HandlerContext): Plan {
-        const plan = new Plan();
-        const execute: Respondable<Execute> = {
-            instruction:
-            { kind: "execute", name: "install-github-repo-webhook", parameters: this },
-              onError: { kind: "respond", name: "GitHubWebhookErrors", parameters: this },
-              onSuccess: success(this.owner, this.url, this.repo),
-        };
-        plan.add(execute);
+    public handle(ctx: HandlerContext): CommandPlan {
+        const plan = new CommandPlan();
+        plan.add({
+            instruction: {
+                kind: "execute",
+                name: "install-github-repo-webhook",
+                parameters: this,
+            },
+            onError: {
+                kind: "respond",
+                name: "GitHubWebhookErrors",
+                parameters: this,
+            },
+            onSuccess: success(this.owner, this.url, this.repo),
+        });
         return plan;
     }
 }
 
 // Reusable creation of formatted success messages
-function success(owner: string, url: string, repo?: string): Instruction<"respond"> {
+function success(owner: string, url: string, repo?: string): Respond {
     const repoStr = repo == null ? "" : `/${repo}`;
-    return { kind: "respond",
-             name: "GenericSuccessHandler",
-             parameters: { msg: `Installed new webhook for ${owner}${repoStr} (${url})` } };
+    return {
+        kind: "respond",
+        name: "GenericSuccessHandler",
+        parameters: { msg: `Installed new webhook for ${owner}${repoStr} (${url})` },
+    };
 }
 
 @ResponseHandler("GitHubWebhookErrors", "Custom error handling for some cases")
@@ -102,19 +109,20 @@ class WebHookErrorHandler implements HandleResponse<any> {
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
-    public handle( @ParseJson response: Response<any>): Plan {
+    public handle( @ParseJson response: Response<any>): CommandPlan {
         const errors = response.body.errors;
         try {
             if (errors[0].message === "Hook already exists on this organization") {
-                return Plan.ofMessage(renderSuccess(`Webhook already installed for ${this.owner} (${this.url})`));
+                return CommandPlan.ofMessage(
+                    renderSuccess(`Webhook already installed for ${this.owner} (${this.url})`));
             }
             if (errors[0].message === "Hook already exists on this repository") {
-                return Plan.ofMessage(
+                return CommandPlan.ofMessage(
                     renderSuccess(`Webhook already installed for ${this.owner}/${this.repo} (${this.url})`));
             }
-            return Plan.ofMessage(renderError(`${response.msg}: ${errors[0].message}`));
+            return CommandPlan.ofMessage(renderError(`${response.msg}: ${errors[0].message}`));
         } catch (ex) {
-            return Plan.ofMessage(renderError(`Failed to install webhook: ${response.body.message}`));
+            return CommandPlan.ofMessage(renderError(`Failed to install webhook: ${response.body.message}`));
         }
     }
 }

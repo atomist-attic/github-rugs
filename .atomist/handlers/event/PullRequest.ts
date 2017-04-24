@@ -1,5 +1,5 @@
 import { EventHandler, Tags } from "@atomist/rug/operations/Decorators";
-import { HandleEvent, LifecycleMessage, Plan } from "@atomist/rug/operations/Handlers";
+import { EventPlan, HandleEvent, LifecycleMessage } from "@atomist/rug/operations/Handlers";
 import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpression";
 
 import { PullRequest } from "@atomist/cortex/PullRequest";
@@ -14,7 +14,7 @@ import { PullRequest } from "@atomist/cortex/PullRequest";
             [/repo::Repo()/channels::ChatChannel()]`))
 @Tags("github", "pr", "pull request")
 class OpenedPullRequest implements HandleEvent<PullRequest, PullRequest> {
-    handle(event: Match<PullRequest, PullRequest>): Plan {
+    public handle(event: Match<PullRequest, PullRequest>): EventPlan {
         const pr = event.root();
 
         const cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number;
@@ -31,7 +31,7 @@ class OpenedPullRequest implements HandleEvent<PullRequest, PullRequest> {
             },
         });
 
-        return Plan.ofMessage(message);
+        return EventPlan.ofMessage(message);
     }
 }
 export const openedPullRequest = new OpenedPullRequest();
@@ -46,13 +46,13 @@ export const openedPullRequest = new OpenedPullRequest();
             [/repo::Repo()/channels::ChatChannel()]`))
 @Tags("github", "pr", "pull reuqest")
 class ClosedPullRequest implements HandleEvent<PullRequest, PullRequest> {
-    handle(event: Match<PullRequest, PullRequest>): Plan {
+    public handle(event: Match<PullRequest, PullRequest>): EventPlan {
         const pr = event.root();
 
         const cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number;
         const message = new LifecycleMessage(pr, cid);
 
-        return Plan.ofMessage(message);
+        return EventPlan.ofMessage(message);
     }
 }
 export const closedPullRequest = new ClosedPullRequest();

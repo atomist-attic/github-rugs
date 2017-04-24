@@ -1,9 +1,28 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan} from '@atomist/rug/operations/Handlers'
-import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {Issue} from '@atomist/cortex/Issue'
-import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {wrap, handleErrors} from '@atomist/rugs/operations/CommonHandlers'
-import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations/messages/MessageRendering'
+import { Issue } from "@atomist/cortex/Issue";
+import {
+    CommandHandler,
+    Intent,
+    MappedParameter,
+    Parameter,
+    ParseJson,
+    ResponseHandler,
+    Secrets,
+    Tags,
+} from "@atomist/rug/operations/Decorators";
+import {
+    CommandPlan,
+    Execute,
+    HandleCommand,
+    HandlerContext,
+    HandleResponse,
+    Instruction,
+    MappedParameters,
+    Respond,
+    Response,
+} from "@atomist/rug/operations/Handlers";
+import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { renderError, renderIssues, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
+import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("AddLabelGitHubIssue", "Add a known label to a GitHub issue")
 @Tags("github", "issues")
@@ -11,27 +30,27 @@ import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations
 @Intent("add label issue")
 class AddLabelIssueCommand implements HandleCommand {
 
-    @Parameter({description: "The issue number", pattern: "^.*$"})
-    issue: number
+    @Parameter({ description: "The issue number", pattern: "^.*$" })
+    public issue: number;
 
-    @Parameter({description: "A known label to add to an issue", pattern: "^.*$"})
-    label: string
+    @Parameter({ description: "A known label to add to an issue", pattern: "^.*$" })
+    public label: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string
+    public repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    public owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
-    
-    handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let ex = execute("add-label-github-issue", this)
-        plan.add(handleErrors(ex, this))
+    public corrid: string;
+
+    public handle(ctx: HandlerContext): CommandPlan {
+        const plan = new CommandPlan();
+        const ex = execute("add-label-github-issue", this);
+        plan.add(handleErrors(ex, this));
         return plan;
     }
 }
 
-export let command = new AddLabelIssueCommand()
+export let command = new AddLabelIssueCommand();

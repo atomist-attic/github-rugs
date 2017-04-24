@@ -1,9 +1,27 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan} from '@atomist/rug/operations/Handlers'
-import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {Issue} from '@atomist/cortex/Issue'
-import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {wrap, handleErrors} from '@atomist/rugs/operations/CommonHandlers'
-import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations/messages/MessageRendering'
+import {
+    CommandHandler,
+    Intent,
+    MappedParameter,
+    Parameter,
+    ParseJson,
+    ResponseHandler,
+    Secrets,
+    Tags,
+} from "@atomist/rug/operations/Decorators";
+import {
+    CommandPlan,
+    HandleCommand,
+    HandlerContext,
+    HandleResponse,
+    MappedParameters,
+    Response,
+} from "@atomist/rug/operations/Handlers";
+
+import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { renderError, renderIssues, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
+import { execute } from "@atomist/rugs/operations/PlanUtils";
+
+import { Issue } from "@atomist/cortex/Issue";
 
 @CommandHandler("CloseGitHubIssue", "Close a GitHub issue")
 @Tags("github", "issues")
@@ -11,24 +29,24 @@ import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations
 @Intent("close issue")
 class CloseIssueCommand implements HandleCommand {
 
-    @Parameter({description: "The issue number", pattern: "^.*$"})
-    issue: number
+    @Parameter({ description: "The issue number", pattern: "^.*$" })
+    public issue: number;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string
+    public repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    public owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
+    public corrid: string;
 
-    handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let ex = execute("close-github-issue",this)
-        plan.add(handleErrors(ex,this))
+    public handle(ctx: HandlerContext): CommandPlan {
+        const plan = new CommandPlan();
+        const ex = execute("close-github-issue", this);
+        plan.add(handleErrors(ex, this));
         return plan;
     }
 }
 
-export let command = new CloseIssueCommand()
+export let command = new CloseIssueCommand();

@@ -1,5 +1,5 @@
 import { EventHandler, Tags } from "@atomist/rug/operations/Decorators";
-import { HandleEvent, LifecycleMessage, Plan } from "@atomist/rug/operations/Handlers";
+import { EventPlan, HandleEvent, LifecycleMessage } from "@atomist/rug/operations/Handlers";
 import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpression";
 
 import { Comment } from "@atomist/cortex/Comment";
@@ -16,7 +16,7 @@ import { Issue } from "@atomist/cortex/Issue";
             [/labels::Label()]?`))
 @Tags("github", "issue")
 class OpenedIssue implements HandleEvent<Issue, Issue> {
-    handle(event: Match<Issue, Issue>): Plan {
+    public handle(event: Match<Issue, Issue>): EventPlan {
 
         const issue = event.root();
 
@@ -91,7 +91,7 @@ class OpenedIssue implements HandleEvent<Issue, Issue> {
             },
         });
 
-        return Plan.ofMessage(message);
+        return EventPlan.ofMessage(message);
     }
 }
 export const openedIssue = new OpenedIssue();
@@ -109,7 +109,7 @@ export const openedIssue = new OpenedIssue();
             [/labels::Label()]?`))
 @Tags("github", "issue")
 class ClosedIssue implements HandleEvent<Issue, Issue> {
-    handle(event: Match<Issue, Issue>): Plan {
+    public handle(event: Match<Issue, Issue>): EventPlan {
         const issue = event.root();
 
         const cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number;
@@ -128,7 +128,7 @@ class ClosedIssue implements HandleEvent<Issue, Issue> {
             },
         });
 
-        return Plan.ofMessage(message);
+        return EventPlan.ofMessage(message);
     }
 }
 export const closedIssue = new ClosedIssue();
@@ -146,10 +146,10 @@ export const closedIssue = new ClosedIssue();
                 [/labels::Label()]?]`))
 @Tags("github", "issue", "comment")
 class CommentedIssue implements HandleEvent<Comment, Comment> {
-    handle(event: Match<Comment, Comment>): Plan {
+    public handle(event: Match<Comment, Comment>): EventPlan {
         const comment = event.root();
-        const cid = "comment/" + comment.issue.repo.owner + "/" + comment.issue.repo.name + "/" + comment.issue.number + "/" + comment.id;
-
+        const cid =
+            `comment/${comment.issue.repo.owner}/${comment.issue.repo.name}/${comment.issue.number}/${comment.id}`;
         const message = new LifecycleMessage(comment, cid);
 
         // the assignee will be asked by the bot
@@ -221,7 +221,7 @@ class CommentedIssue implements HandleEvent<Comment, Comment> {
             },
         });
 
-        return Plan.ofMessage(message);
+        return EventPlan.ofMessage(message);
     }
 }
 export const commentedIssue = new CommentedIssue();

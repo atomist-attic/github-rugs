@@ -1,8 +1,25 @@
-import {CommandHandler, Intent, MappedParameter, Parameter, ParseJson, ResponseHandler, Secrets, Tags} from "@atomist/rug/operations/Decorators";
-import {Execute, HandleCommand, HandlerContext, HandleResponse, Instruction, MappedParameters, Plan, Respond, Respondable , Response} from "@atomist/rug/operations/Handlers";
+import {
+    CommandHandler,
+    Intent,
+    MappedParameter,
+    Parameter,
+    ParseJson,
+    ResponseHandler,
+    Secrets,
+    Tags,
+} from "@atomist/rug/operations/Decorators";
 
-import {handleErrors} from "@atomist/rugs/operations/CommonHandlers";
-import {execute} from "@atomist/rugs/operations/PlanUtils";
+import {
+    CommandPlan,
+    HandleCommand,
+    HandlerContext,
+    HandleResponse,
+    MappedParameters,
+    Response,
+} from "@atomist/rug/operations/Handlers";
+
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
+import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("MergeGitHubPullRequest", "Merge a GitHub pull request")
 @Tags("github", "pr")
@@ -10,20 +27,20 @@ import {execute} from "@atomist/rugs/operations/PlanUtils";
 @Intent("merge pr", "merge pullrequest")
 class MergePullRequestCommand implements HandleCommand {
 
-    @Parameter({description: "The pull request number", pattern: "^.*$"})
-    issue: number;
+    @Parameter({ description: "The pull request number", pattern: "^.*$" })
+    public issue: number;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string;
+    public repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string;
+    public owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string;
+    public corrid: string;
 
-    handle(ctx: HandlerContext): Plan {
-        const plan = new Plan();
+    public handle(ctx: HandlerContext): CommandPlan {
+        const plan = new CommandPlan();
         const ex = execute("merge-github-pull-request", this);
         plan.add(handleErrors(ex, this));
         return plan;

@@ -1,9 +1,27 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan} from '@atomist/rug/operations/Handlers'
-import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
-import {Issue} from '@atomist/cortex/Issue'
-import {execute} from '@atomist/rugs/operations/PlanUtils'
-import {wrap, handleErrors} from '@atomist/rugs/operations/CommonHandlers'
-import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations/messages/MessageRendering'
+import {
+    CommandHandler,
+    Intent,
+    MappedParameter,
+    Parameter,
+    ParseJson,
+    ResponseHandler,
+    Secrets,
+    Tags,
+} from "@atomist/rug/operations/Decorators";
+import {
+    CommandPlan,
+    HandleCommand,
+    HandlerContext,
+    HandleResponse,
+    MappedParameters,
+    Response,
+} from "@atomist/rug/operations/Handlers";
+
+import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { renderError, renderIssues, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
+import { execute } from "@atomist/rugs/operations/PlanUtils";
+
+import { Issue } from "@atomist/cortex/Issue";
 
 @CommandHandler("CreateGitHubIssue", "Create an issue on GitHub")
 @Tags("github", "issues")
@@ -11,27 +29,27 @@ import {renderError, renderSuccess, renderIssues} from '@atomist/rugs/operations
 @Intent("create issue")
 class CreateIssueCommand implements HandleCommand {
 
-    @Parameter({description: "The issue title", pattern: "^.*$"})
-    title: string
+    @Parameter({ description: "The issue title", pattern: "^.*$" })
+    public title: string;
 
-    @Parameter({description: "The issue body", pattern: "^.*(?m)$"})
-    body: string
+    @Parameter({ description: "The issue body", pattern: "^.*(?m)$" })
+    public body: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
-    repo: string
+    public repo: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
-    owner: string
+    public owner: string;
 
     @MappedParameter("atomist://correlation_id")
-    corrid: string
+    public corrid: string;
 
-    handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let exec = execute( "create-github-issue", this)
-        plan.add(handleErrors(exec, this))
+    public handle(ctx: HandlerContext): CommandPlan {
+        const plan = new CommandPlan();
+        const exec = execute("create-github-issue", this);
+        plan.add(handleErrors(exec, this));
         return plan;
     }
 }
 
-export let create = new CreateIssueCommand()
+export let create = new CreateIssueCommand();
