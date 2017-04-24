@@ -3,5 +3,5 @@ artifact: "github-handlers"
 version: "0.34.0"
 requires: "0.26.1"
 extensions:
-  - "com.atomist.rug:rug-functions-github:0.14.2"
+  - "com.atomist.rug:rug-functions-github:[0.14.2,1.0.0)"
   - "com.atomist.rug:rug-function-http:[0.6.1,1.0.0)"
