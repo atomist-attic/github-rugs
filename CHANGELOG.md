@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.34.0] - 2017-04-25
 
-[0.34.0]: https://github.com/atomist/github-rugs/compare/0.6.0...0.34.0
+[0.34.0]: https://github.com/atomist/github-rugs/compare/0.33.1...0.34.0
 
 New name release
 
