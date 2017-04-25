@@ -4,7 +4,7 @@
 set -o pipefail
 
 declare Pkg=travis-build
-declare Version=0.3.0
+declare Version=0.4.0
 
 function msg() {
     echo "$Pkg: $*"
@@ -33,6 +33,11 @@ function main () {
     fi
     msg "rug CLI version: $version"
 
+    if ! ( cd .atomist && tslint **/*.ts ); then
+        err "tslint failed"
+        return 1
+    fi
+
     local rug=$HOME/.atomist/rug-cli-$version/bin/rug
     if [[ ! -x $rug ]]; then
         msg "downloading rug CLI"
@@ -53,20 +58,13 @@ function main () {
             return 1
         fi
     fi
-    rug="$rug -qurX"
-
-    local build_dir=.atomist/build
-    local cli_user=$HOME/.atomist/cli.yml
-    if ! install --mode=0600 "$build_dir/cli-build.yml" "$cli_user"; then
-        err "failed to install build cli.yml"
-        return 1
-    fi
-    trap "rm -f $cli_user" RETURN
+    rug="$rug --timer --quiet --update --resolver-report --error --settings=$PWD/.atomist/build/cli.yml"
+    export TEAM_ID=T1L0VDKJP
 
     if [[ -f .atomist/package.json ]]; then
-        msg "running npm install"
-        if ! ( cd .atomist && npm install ); then
-            err "npm install failed"
+        msg "running yarn"
+        if ! ( cd .atomist && yarn ); then
+            err "yarn failed"
             return 1
         fi
     fi
@@ -86,27 +84,25 @@ function main () {
     [[ $TRAVIS_PULL_REQUEST == false ]] || return 0
 
     local archive_version
-    local manifest=.atomist/manifest.yml package=.atomist/package.json
+    local manifest=.atomist/manifest.yml
     if [[ -f $manifest ]]; then
         archive_version=$(awk -F: '$1 == "version" { print $2 }' "$manifest" | sed 's/[^.0-9]//g')
-    elif [[ -f $package ]]; then
-        archive_version=$(jq --raw-output --exit-status .version "$package")
     else
-        err "no manifest.yml or package.json in archive"
+        err "no manifest.yml in archive"
         return 1
     fi
     if [[ $? -ne 0 || ! $archive_version ]]; then
         err "failed to extract archive version: $archive_version"
         return 1
     fi
-    local project_version cli_yml
+    local project_version
     if [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         if [[ $archive_version != $TRAVIS_TAG ]]; then
             err "archive version ($archive_version) does not match git tag ($TRAVIS_TAG)"
             return 1
         fi
         project_version=$TRAVIS_TAG
-        cli_yml=$build_dir/cli-release.yml
+        TEAM_ID=rugs-release
     else
         local timestamp
         timestamp=$(date +%Y%m%d%H%M%S)
@@ -115,22 +111,17 @@ function main () {
             return 1
         fi
         project_version=$archive_version-$timestamp
-        cli_yml=$build_dir/cli-dev.yml
     fi
     msg "branch: $TRAVIS_BRANCH"
     msg "archive version: $project_version"
 
     if [[ $TRAVIS_BRANCH == master || $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        if ! install --mode=0600 "$cli_yml" "$cli_user"; then
-            err "failed to install $cli_yml"
-            return 1
-        fi
-
-        msg "publishing archive"
+        msg "publishing archive to $TEAM_ID"
         if ! $rug publish -a "$project_version"; then
             err "failed to publish archive $project_version"
             return 1
         fi
+
         if ! git config --global user.email "travis-ci@atomist.com"; then
             err "failed to set git user email"
             return 1

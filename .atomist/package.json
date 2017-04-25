@@ -4,5 +4,8 @@
   },
   "devDependencies": {
     "@types/mustache": "^0.8.29"
+  },
+  "scripts": {
+    "test": "rug test"
   }
 }
