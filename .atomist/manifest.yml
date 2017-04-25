@@ -1,5 +1,5 @@
 group: "atomist"
-artifact: "github-handlers"
+artifact: "github-rugs"
 version: "0.34.0"
 requires: "[0.26.1,0.27.0)"
 extensions:
