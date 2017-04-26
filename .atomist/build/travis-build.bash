@@ -25,7 +25,7 @@ function main () {
     fi
 
     local version
-    version=$(echo "$formula" | sed -n '/^ *url /s,.*/\([0-9]*\.[0-9]*\.[0-9]*\)/.*,\1,p')
+    version=$(echo "$formula" | sed -n '/^ *url /s,.*/\([0-9]*\.[0-9]*\.[0-9]*(-(m|rc)\.[0-9]+)?\)/.*,\1,p')
     if [[ $? -ne 0 || ! $version ]]; then
         err "failed to parse brew formula for version: $version"
         err "$formula"
