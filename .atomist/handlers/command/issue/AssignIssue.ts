@@ -62,4 +62,4 @@ class AssignIssueCommand implements HandleCommand {
     }
 }
 
-export let assignIssue = new AssignIssueCommand();
+export let command = new AssignIssueCommand();

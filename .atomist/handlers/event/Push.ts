@@ -13,7 +13,7 @@ import { Push } from "@atomist/cortex/Push";
 @Tags("github", "push")
 class NewPush implements HandleEvent<Push, Push> {
     public handle(event: Match<Push, Push>): EventPlan {
-        const push = event.root();
+        const push = event.root;
         const cid = "commit_event/" + push.repo.owner + "/" + push.repo.name + "/" + push.after;
         const message = new LifecycleMessage(push, cid);
         return EventPlan.ofMessage(message);

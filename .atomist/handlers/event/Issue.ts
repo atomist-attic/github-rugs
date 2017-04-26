@@ -18,7 +18,7 @@ import { Issue } from "@atomist/cortex/Issue";
 class OpenedIssue implements HandleEvent<Issue, Issue> {
     public handle(event: Match<Issue, Issue>): EventPlan {
 
-        const issue = event.root();
+        const issue = event.root;
 
         const cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number;
         const message = new LifecycleMessage(issue, cid);
@@ -110,7 +110,7 @@ export const openedIssue = new OpenedIssue();
 @Tags("github", "issue")
 class ClosedIssue implements HandleEvent<Issue, Issue> {
     public handle(event: Match<Issue, Issue>): EventPlan {
-        const issue = event.root();
+        const issue = event.root;
 
         const cid = "issue/" + issue.repo.owner + "/" + issue.repo.name + "/" + issue.number;
         const message = new LifecycleMessage(issue, cid);
@@ -147,7 +147,7 @@ export const closedIssue = new ClosedIssue();
 @Tags("github", "issue", "comment")
 class CommentedIssue implements HandleEvent<Comment, Comment> {
     public handle(event: Match<Comment, Comment>): EventPlan {
-        const comment = event.root();
+        const comment = event.root;
         const cid =
             `comment/${comment.issue.repo.owner}/${comment.issue.repo.name}/${comment.issue.number}/${comment.id}`;
         const message = new LifecycleMessage(comment, cid);
