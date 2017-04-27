@@ -40,7 +40,7 @@ class ListIssuesCommand implements HandleCommand {
         const exec = execute("list-github-user-issues", this);
         exec.onSuccess = { kind: "respond", name: "DisplayGitHubIssues", parameters: { days: this.days } };
         plan.add(handleErrors(exec, this));
-        return plan
+        return plan;
     }
 }
 
