@@ -36,11 +36,14 @@ our [code of conduct][code].
 ## Developing
 
 You can build, test, and install the project locally with
-the [Rug CLI][cli].
+the [Rug CLI][cli].  First, install the TypeScript dependencies
+using [yarn][].
 
 [cli]: https://github.com/atomist/rug-cli
+[yarn]: https://yarnpkg.com/
 
 ```
+$ ( cd .atomist && yarn )
 $ rug test
 $ rug install
 ```
