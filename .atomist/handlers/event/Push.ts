@@ -7,6 +7,7 @@ import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpressi
     new PathExpression<Push, Push>(
         `/Push()
             [/repo::Repo()/channels::ChatChannel()]
+            [/after::Commit()]
             [/commits::Commit()/author::GitHubId()
                 [/person::Person()/chatId::ChatId()]?]`))
 @Tags("github", "push")
