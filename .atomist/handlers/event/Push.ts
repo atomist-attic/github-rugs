@@ -3,7 +3,6 @@ import { EventHandler, Tags } from "@atomist/rug/operations/Decorators";
 import { EventPlan, HandleEvent, LifecycleMessage } from "@atomist/rug/operations/Handlers";
 import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpression";
 
-
 @EventHandler("GitHubPushes", "Handle push events",
     new PathExpression<Push, Push>(
         `/Push()
