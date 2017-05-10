@@ -1,4 +1,29 @@
-import { Issue } from "@atomist/cortex/Issue";
+import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { execute } from "@atomist/rugs/operations/PlanUtils";
+/*
+ * Copyright © 2017 Atomist, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {
+    Attachment,
+    emptyString,
+    escape,
+    render,
+    url,
+} from "@atomist/slack-messages/SlackMessages";
+
 import {
     CommandHandler,
     Intent,
@@ -9,6 +34,7 @@ import {
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
+
 import {
     CommandPlan,
     HandleCommand,
@@ -19,9 +45,6 @@ import {
     Response,
     ResponseMessage,
 } from "@atomist/rug/operations/Handlers";
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
-import { renderError, renderIssues, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
-import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("ListGitHubIssues", "List user's GitHub issues")
 @Tags("github", "issues")
@@ -89,13 +112,62 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     }
 }
 
+interface GitHubUser {
+    html_url: string;
+    login: string;
+    avatar_url: string;
+}
+
+interface GitHubIssue {
+    number: string;
+    title: string;
+    state: string;
+    assignee: GitHubUser;
+    issueUrl: string;
+    url: string;
+    repo: string;
+    ts: number;
+}
+
+function renderIssues(issues: GitHubIssue[]): ResponseMessage {
+    try {
+        const attachments = issues.map((issue, idx) => {
+            const issueTitle = `#${issue.number}: ${issue.title}`;
+            const attachment: Attachment = {
+                fallback: escape(issueTitle),
+                mrkdwn_in: ["text"],
+                text: `${url(issue.issueUrl, issueTitle)}`,
+                footer: `${url(issue.url, issue.repo)}`,
+                ts: issue.ts,
+            };
+            if (issue.assignee !== undefined) {
+                attachment.author_link = issue.assignee.html_url;
+                attachment.author_name = `@${issue.assignee.login}`;
+                attachment.author_icon = issue.assignee.avatar_url;
+            }
+            if (issue.state === "closed") {
+                attachment.footer_icon = "http://images.atomist.com/rug/issue-closed.png";
+                attachment.color = "#bd2c00";
+            } else {
+                attachment.footer_icon = "http://images.atomist.com/rug/issue-open.png";
+                attachment.color = "#6cc644";
+            }
+            return attachment;
+        });
+        const msg = render({ attachments });
+        return new ResponseMessage(msg, MessageMimeTypes.SLACK_JSON);
+    } catch (ex) {
+        return new ResponseMessage(`Error rendering issues ${ex}`);
+    }
+}
+
 @ResponseHandler("DisplayGitHubIssues", "Formats GitHub issues list for display in slack")
-class ListIssuesRender implements HandleResponse<Issue[]> {
+class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
 
     @Parameter({ description: "Number of days to search", pattern: "^.*$" })
     public days: number = 1;
 
-    public handle( @ParseJson response: Response<Issue[]>): CommandPlan {
+    public handle( @ParseJson response: Response<GitHubIssue[]>): CommandPlan {
         const issues = response.body;
         if (issues.length >= 1) {
             return CommandPlan.ofMessage(renderIssues(issues));
@@ -106,7 +178,7 @@ class ListIssuesRender implements HandleResponse<Issue[]> {
 }
 
 const command = new ListIssuesCommand();
-const render = new ListIssuesRender();
+const listIssues = new ListIssuesRender();
 const repo = new ListRepositoryIssuesCommand();
 
-export { command, render, repo };
+export { command, listIssues, repo };
