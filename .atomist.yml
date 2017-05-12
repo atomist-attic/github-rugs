@@ -119,3 +119,18 @@ editor:
     branch: "0f425945c62957ccc2ccb63e9980e6f78b97a4a1"
     sha: "0f42594"
 
+---
+kind: "operation"
+client: "rug-cli 1.0.0-m.2"
+editor:
+  name: "AddLicenseHeaders"
+  group: "atomist"
+  artifact: "license-rugs"
+  version: "0.1.0"
+  origin:
+    repo: "git@github.com:atomist/github-rugs.git"
+    branch: "render-issues"
+    sha: "7ca2527"
+  parameters:
+    - "rootDir": "*[@name=".atomist"]/handlers"
+
