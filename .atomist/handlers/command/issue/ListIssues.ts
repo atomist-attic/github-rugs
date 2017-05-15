@@ -1,5 +1,3 @@
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
-import { execute } from "@atomist/rugs/operations/PlanUtils";
 /*
  * Copyright © 2017 Atomist, Inc.
  *
@@ -16,6 +14,9 @@ import { execute } from "@atomist/rugs/operations/PlanUtils";
  * limitations under the License.
  */
 
+import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { execute } from "@atomist/rugs/operations/PlanUtils";
+
 import {
     Attachment,
     emptyString,
@@ -23,6 +24,10 @@ import {
     render,
     url,
 } from "@atomist/slack-messages/SlackMessages";
+
+import {
+    renderError,
+} from "@atomist/slack-messages/RugMessages";
 
 import {
     CommandHandler,
@@ -157,7 +162,7 @@ function renderIssues(issues: GitHubIssue[]): ResponseMessage {
         const msg = render({ attachments });
         return new ResponseMessage(msg, MessageMimeTypes.SLACK_JSON);
     } catch (ex) {
-        return new ResponseMessage(`Error rendering issues ${ex}`);
+        return renderError(`Error rendering issues ${ex}`, this.corrid);
     }
 }
 
