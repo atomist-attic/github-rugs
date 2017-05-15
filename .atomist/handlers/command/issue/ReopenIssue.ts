@@ -34,7 +34,6 @@ import {
 } from "@atomist/rug/operations/Handlers";
 
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
-import { renderError, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("ReopenGitHubIssue", "Reopen a closed GitHub issue")

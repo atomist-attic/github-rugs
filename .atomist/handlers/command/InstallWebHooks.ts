@@ -36,8 +36,8 @@ import {
     ResponseMessage,
 } from "@atomist/rug/operations/Handlers";
 import { wrap } from "@atomist/rugs/operations/CommonHandlers";
-import { renderError, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
+import { renderError, renderSuccess } from "@atomist/slack-messages/RugMessages";
 
 @CommandHandler("InstallGitHubOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")

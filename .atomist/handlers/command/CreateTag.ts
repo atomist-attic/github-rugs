@@ -34,7 +34,6 @@ import {
 } from "@atomist/rug/operations/Handlers";
 
 import { wrap } from "@atomist/rugs/operations/CommonHandlers";
-import { renderError, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("CreateGitHubTag", "Create a tag from a sha")

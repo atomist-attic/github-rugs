@@ -39,8 +39,6 @@ import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { Issue } from "@atomist/cortex/Issue";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
-import { renderError, renderIssues, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
-
 @CommandHandler("AssignGitHubIssue", "Assign a GitHub issue to a user")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")

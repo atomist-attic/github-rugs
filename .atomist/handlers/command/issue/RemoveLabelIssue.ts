@@ -35,7 +35,6 @@ import {
 } from "@atomist/rug/operations/Handlers";
 
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
-import { renderError, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("RemoveLabelGitHubIssue", "Remove a known label from a GitHub issue")

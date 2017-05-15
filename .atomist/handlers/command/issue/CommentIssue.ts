@@ -34,7 +34,6 @@ import {
 } from "@atomist/rug/operations/Handlers";
 
 import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
-import { renderError, renderIssues, renderSuccess } from "@atomist/rugs/operations/messages/MessageRendering";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 import { Issue } from "@atomist/cortex/Issue";
