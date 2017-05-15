@@ -20,9 +20,9 @@
     "@atomist/rug" "1.0.0-m.3"
     mustache "^2.3.0"
 
-"@atomist/slack-messages@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-0.5.0.tgz#180f34c1adb3812c589a7d7cc573fd2103d732a9"
+"@atomist/slack-messages@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-0.5.1.tgz#b9fd4c7e2c976bede245ab92ff8a0f390ab10848"
   dependencies:
     "@atomist/rug" "^1.0.0-m.3"
 
