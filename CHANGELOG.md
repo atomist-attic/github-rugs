@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/github-rugs/compare/0.35.0...HEAD
 
+### Fixed
+
+-   Allow multi-line input for body of issue [#35][35]
+
+[35]: https://github.com/atomist/github-rugs/issues/35
+
 ## [0.35.0] - 2017-04-27
 
 [0.35.0]: https://github.com/atomist/github-rugs/compare/0.34.0...0.35.0

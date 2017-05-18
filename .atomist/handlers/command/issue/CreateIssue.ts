@@ -61,7 +61,7 @@ class CreateIssueCommand implements HandleCommand {
         description: "descriptive text for issue",
         pattern: Pattern.any,
         validInput: "free text",
-        minLength: 1,
+        minLength: 0,
         maxLength: 250,
         required: false,
     })
