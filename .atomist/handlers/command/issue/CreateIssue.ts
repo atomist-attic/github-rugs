@@ -32,6 +32,7 @@ import {
     MappedParameters,
     Response,
 } from "@atomist/rug/operations/Handlers";
+import { Pattern } from "@atomist/rug/operations/RugOperation";
 
 import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
@@ -44,11 +45,27 @@ import { Issue } from "@atomist/cortex/Issue";
 @Intent("create issue")
 class CreateIssueCommand implements HandleCommand {
 
-    @Parameter({ description: "The issue title", pattern: "^.*$" })
+    @Parameter({
+        displayName: "Issue Title",
+        description: "title of issue",
+        pattern: "^.*$",
+        validInput: "a single line of text",
+        minLength: 1,
+        maxLength: 120,
+        required: true,
+    })
     public title: string;
 
-    @Parameter({ description: "The issue body", pattern: "^.*(?m)$" })
-    public body: string;
+    @Parameter({
+        displayName: "Issue Body",
+        description: "descriptive text for issue",
+        pattern: Pattern.any,
+        validInput: "free text",
+        minLength: 1,
+        maxLength: 250,
+        required: false,
+    })
+    public body: string = "";
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     public repo: string;
