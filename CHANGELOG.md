@@ -7,13 +7,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.35.0...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.37.4...HEAD
+
+## [0.37.4] - 2017-05-19
+
+[0.37.4]: https://github.com/atomist/github-rugs/compare/0.37.3...0.37.4
+
+Multi-line release
 
 ### Fixed
 
 -   Allow multi-line input for body of issue [#35][35]
 
 [35]: https://github.com/atomist/github-rugs/issues/35
+
+## [0.37.3] - 2017-05-15
+
+[0.37.3]: https://github.com/atomist/github-rugs/compare/0.35.0...0.37.3
+
+What? release
+
+### Changed
+
+-   Update message rendering
+
+### Added
+
+-   Copyright headers
 
 ## [0.35.0] - 2017-04-27
 
