@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/github-rugs/compare/0.37.4...HEAD
 
+### Added
+
+-   Add integration test for create-issue event handler
+
 ## [0.37.4] - 2017-05-19
 
 [0.37.4]: https://github.com/atomist/github-rugs/compare/0.37.3...0.37.4

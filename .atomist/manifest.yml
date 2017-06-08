@@ -1,7 +1,8 @@
 group: "atomist"
 artifact: "github-rugs"
 version: "0.38.0"
-requires: "[1.0.0-m.3,2.0.0)"
+requires: "[1.0.0-m.4,2.0.0)"
 extensions:
   - "com.atomist.rug:rug-functions-github:[0.14.2,1.0.0)"
-  - "com.atomist.rug:rug-function-http:[0.6.1,1.0.0)"
+  - "com.atomist.rug:rug-function-http:0.7.6"
+  - "com.atomist.rug:rug-functions-slack:0.3.1"
