@@ -14,7 +14,9 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "outDir": "target/ts-built"
+        "outDir": "target/ts-built",
+        "rootDir": ".",
+        "sourceMap": true
     },
     "exclude": [
         "node_modules",
@@ -22,7 +24,7 @@
         "typings/browser.d.ts"
     ],
     "compileOnSave": true,
-    "buildOnSave": true,
+    "buildOnSave": false,
     "atom": {
         "rewriteTsconfig": false
     }
