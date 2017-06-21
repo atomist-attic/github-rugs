@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Add integration test for create-issue event handler
 
+### Changed
+
+-   Migrated from manifest.yml to package.json for Rug archive
+    metadata
+-   Updated TypeScript and build support files
+
 ## [0.37.4] - 2017-05-19
 
 [0.37.4]: https://github.com/atomist/github-rugs/compare/0.37.3...0.37.4
