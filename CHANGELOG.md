@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Migrated from manifest.yml to package.json for Rug archive
     metadata
 -   Updated TypeScript and build support files
+-   Added `apiUrl` parameter to `InstallGitHubOrgWebhook` and `InstallRepoWebhook`
 
 ## [0.37.4] - 2017-05-19
 

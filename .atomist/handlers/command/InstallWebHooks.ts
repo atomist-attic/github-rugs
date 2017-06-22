@@ -51,6 +51,9 @@ class CreateOrgWebHookCommand implements HandleCommand {
     @MappedParameter("atomist://github_webhook_url")
     public url: string = "https://webhook.atomist.com/github";
 
+    @MappedParameter("atomist://github_api_url")
+    public apiUrl: string = "https://api.github.com";
+
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
@@ -80,6 +83,12 @@ class InstallRepoWebhookCommand implements HandleCommand {
 
     @MappedParameter("atomist://github_webhook_url")
     public url: string = "https://webhook.atomist.com/github";
+
+    @MappedParameter("atomist://github_api_url")
+    public apiUrl: string = "https://api.github.com";
+
+    @MappedParameter("atomist://correlation_id")
+    public corrid: string;
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
