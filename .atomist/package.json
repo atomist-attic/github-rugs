@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@atomist/rugs": "^1.0.0-m.5",
-    "@atomist/slack-messages": "^0.5.1"
+    "@atomist/slack-messages": "^0.6.0"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",

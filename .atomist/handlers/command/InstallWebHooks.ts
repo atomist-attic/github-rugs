@@ -38,6 +38,9 @@ import {
 import { wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 import { renderError, renderSuccess } from "@atomist/slack-messages/RugMessages";
+import {
+    bold,
+} from "@atomist/slack-messages/SlackMessages";
 
 @CommandHandler("InstallGitHubOrgWebhook", "Create a webhook for a whole organization")
 @Tags("github", "webhooks")
@@ -110,12 +113,16 @@ class InstallRepoWebhookCommand implements HandleCommand {
 }
 
 // Reusable creation of formatted success messages
-function success(owner: string, url: string, repo?: string): Respond {
-    const repoStr = repo == null ? "" : `/${repo}`;
+function success(owner: string, webhookUrl: string, repoName?: string): Respond {
+    const target = !repoName ? owner : `${owner}/${repoName}`;
+    const webhookType = !repoName ? "Org" : "Repository";
     return {
         kind: "respond",
         name: "GenericSuccessHandler",
-        parameters: { msg: `Installed new webhook for ${owner}${repoStr} (${url})` },
+        parameters: {
+            // tslint:disable-next-line:max-line-length
+            msg: `Thanks to you it's Bring Your Bot to Work Day!\n${webhookType} webhook installed for ${bold(target)}`,
+        },
     };
 }
 
@@ -152,5 +159,5 @@ class WebHookErrorHandler implements HandleResponse<any> {
     }
 }
 
-export let errors = new WebHookErrorHandler();
+export let webhookErrors = new WebHookErrorHandler();
 export let repo = new InstallRepoWebhookCommand();
