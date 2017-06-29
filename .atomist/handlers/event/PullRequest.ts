@@ -31,23 +31,7 @@ import { PullRequest } from "@atomist/cortex/PullRequest";
 @Tags("github", "pr", "pull request")
 class OpenedPullRequest implements HandleEvent<PullRequest, PullRequest> {
     public handle(event: Match<PullRequest, PullRequest>): EventPlan {
-        const pr = event.root;
-
-        const cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number;
-        const message = new LifecycleMessage(pr, cid);
-
-        message.addAction({
-            label: "Merge",
-            instruction: {
-                kind: "command",
-                name: "MergeGitHubPullRequest",
-                parameters: {
-                    issue: pr.number,
-                },
-            },
-        });
-
-        return EventPlan.ofMessage(message);
+        return new EventPlan();
     }
 }
 export const openedPullRequest = new OpenedPullRequest();
@@ -63,12 +47,7 @@ export const openedPullRequest = new OpenedPullRequest();
 @Tags("github", "pr", "pull reuqest")
 class ClosedPullRequest implements HandleEvent<PullRequest, PullRequest> {
     public handle(event: Match<PullRequest, PullRequest>): EventPlan {
-        const pr = event.root;
-
-        const cid = "pr_event/" + pr.repo.owner + "/" + pr.repo.name + "/" + pr.number;
-        const message = new LifecycleMessage(pr, cid);
-
-        return EventPlan.ofMessage(message);
+        return new EventPlan();
     }
 }
 export const closedPullRequest = new ClosedPullRequest();

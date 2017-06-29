@@ -29,10 +29,7 @@ import { GraphNode, Match, PathExpression } from "@atomist/rug/tree/PathExpressi
 @Tags("github", "push")
 class NewPush implements HandleEvent<Push, Push> {
     public handle(event: Match<Push, Push>): EventPlan {
-        const push = event.root;
-        const cid = "commit_event/" + push.repo.owner + "/" + push.repo.name + "/" + push.after.sha;
-        const message = new LifecycleMessage(push, cid);
-        return EventPlan.ofMessage(message);
+        return new EventPlan();
     }
 }
 export const push = new NewPush();
