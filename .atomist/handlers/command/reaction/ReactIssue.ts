@@ -54,11 +54,14 @@ class ReactIssueCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     public owner: string;
 
+    @MappedParameter("atomist://github_api_url")
+    public apiUrl: string = "https://api.github.com";
+
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
     public handle(ctx: HandlerContext): CommandPlan {
-        const ghRepo = new Repository(this.owner, this.repo, `#{github://user_token?scopes=repo}`);
+        const ghRepo = new Repository(this.owner, this.repo, `#{github://user_token?scopes=repo}`, this.apiUrl);
         const ghIssue = ghRepo.issue(Number(this.issue));
         const http = ghIssue.react({ content: this.reaction as ReactionContent });
 

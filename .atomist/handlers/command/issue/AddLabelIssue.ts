@@ -48,7 +48,7 @@ class AddLabelIssueCommand implements HandleCommand {
     @Parameter({ description: "The issue number", pattern: "^.*$" })
     public issue: number;
 
-    @Parameter({ description: "A known label to add to an issue", pattern: "^.*$" })
+    @Parameter({ description: "A label to add to an issue", pattern: "^.*$" })
     public label: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
@@ -56,6 +56,9 @@ class AddLabelIssueCommand implements HandleCommand {
 
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     public owner: string;
+
+    @MappedParameter("atomist://github_api_url")
+    public apiUrl: string = "https://api.github.com";
 
     @MappedParameter("atomist://correlation_id")
     public corrid: string;

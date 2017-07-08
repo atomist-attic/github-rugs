@@ -55,6 +55,9 @@ class RemoveLabelIssueCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     public owner: string;
 
+    @MappedParameter("atomist://github_api_url")
+    public apiUrl: string = "https://api.github.com";
+
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 

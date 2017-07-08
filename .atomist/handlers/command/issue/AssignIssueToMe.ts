@@ -57,6 +57,9 @@ class AssignToMeIssueCommand implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     public owner: string;
 
+    @MappedParameter("atomist://github_api_url")
+    public apiUrl: string = "https://api.github.com";
+
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
@@ -69,7 +72,7 @@ class AssignToMeIssueCommand implements HandleCommand {
         );
 
         const exec = execute("assign-github-issue",
-            { issue: this.issue, owner: this.owner, repo: this.repo, assignee: gitHubUser.login });
+            { issue: this.issue, owner: this.owner, repo: this.repo, assignee: gitHubUser.login, apiUrl: this.apiUrl });
         plan.add(
             wrap(
                 exec,

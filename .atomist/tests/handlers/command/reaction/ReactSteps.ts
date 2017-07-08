@@ -39,6 +39,7 @@ const invokeReactHandler = (w: CommandHandlerScenarioWorld, handlerName: string,
         repo: "testRepo",
         owner: "testOwner",
         corrid: "123",
+        apiUrl: "https://api.github.com",
     };
     const parameters = { ...commonParameters, ...specificParameters };
     const handler = w.commandHandler(handlerName);

@@ -17,12 +17,15 @@
 import { Http } from "./HttpApi";
 
 export class Repository {
-    public readonly url = `https://api.github.com/repos/${this.owner}/${this.name}/`;
+    public readonly url;
     public readonly headers = {
         "Content-Type": "application/json",
         "Authorization": `token ${this.token}`,
     };
-    constructor(readonly owner: string, readonly name: string, readonly token: string) {}
+    constructor(readonly owner: string, readonly name: string, readonly token: string,
+                readonly apiUrl: string = "https://api.github.com") {
+        this.url = `${apiUrl}/repos/${this.owner}/${this.name}/`;
+    }
     public issue(id: number): Issue {
         return new Issue(this, id);
     }

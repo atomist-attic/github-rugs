@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/github-rugs/compare/0.38.0...HEAD
 
+## [0.39.0] - 2017-07-08
+
+[0.38.0]: https://github.com/atomist/github-rugs/compare/0.37.4...0.38.0
+
+Full GHE Release
+
+### Changed 
+
+-   Every command now takes an `apiUrl` `MappedParameter
+
 ## [0.38.0] - 2017-06-27
 
 [0.38.0]: https://github.com/atomist/github-rugs/compare/0.37.4...0.38.0
