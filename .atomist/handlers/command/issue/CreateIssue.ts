@@ -37,7 +37,9 @@ import { Pattern } from "@atomist/rug/operations/RugOperation";
 import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
-import { Issue } from "@atomist/cortex/Issue";
+import { ChatTeam } from "@atomist/cortex/ChatTeam";
+
+import { replaceChatIdWithGitHubId } from "./Helpers";
 
 @CommandHandler("CreateGitHubIssue", "Create an issue on GitHub")
 @Tags("github", "issues")
@@ -81,6 +83,7 @@ class CreateIssueCommand implements HandleCommand {
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
+        this.body = replaceChatIdWithGitHubId(this.body, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam);
         const exec = execute("create-github-issue", this);
         plan.add(handleErrors(exec, this));
         return plan;

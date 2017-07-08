@@ -7,11 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.38.0...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.42.1...HEAD
+
+## [0.42.1] - 2017-07-08
+
+[0.42.1]: https://github.com/atomist/github-rugs/compare/0.42.0...0.42.1
+
+The `let's jump a couple of versions` Release
+
+### Added
+
+-   Re-write Slack user ids in issues and comments
 
 ## [0.39.0] - 2017-07-08
 
-[0.38.0]: https://github.com/atomist/github-rugs/compare/0.37.4...0.38.0
+[0.39.0]: https://github.com/atomist/github-rugs/compare/0.38.0...0.39.0
 
 Full GHE Release
 

@@ -36,7 +36,9 @@ import {
 import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
-import { Issue } from "@atomist/cortex/Issue";
+import { ChatTeam } from "@atomist/cortex/ChatTeam";
+
+import { replaceChatIdWithGitHubId } from "./Helpers";
 
 @CommandHandler("CommentGitHubIssue", "Comment on a GitHub issue")
 @Tags("github", "issues")
@@ -64,6 +66,7 @@ class CommentIssueCommand implements HandleCommand {
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
+        this.comment = replaceChatIdWithGitHubId(this.comment, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam);
         const exec = execute("comment-github-issue", this);
         plan.add(handleErrors(exec, this));
         return plan;
