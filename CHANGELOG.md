@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.42.1...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.43.0...HEAD
+
+## [0.43.0] - 2017-07-10
+
+[0.43.0]: https://github.com/atomist/github-rugs/compare/0.42.1...0.43.0
+
+Delete Branch Release
+
+### Added
+
+-   Added `DeleteGitHubBranch` command handler
 
 ## [0.42.1] - 2017-07-08
 
