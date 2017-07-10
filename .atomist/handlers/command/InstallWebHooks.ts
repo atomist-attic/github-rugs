@@ -121,7 +121,7 @@ function success(owner: string, webhookUrl: string, repoName?: string): Respond 
         name: "GenericSuccessHandler",
         parameters: {
             // tslint:disable-next-line:max-line-length
-            msg: `Thanks to you it's Bring Your Bot to Work Day!\n${webhookType} webhook installed for ${bold(target)}`,
+            msg: `${webhookType} webhook installed for ${bold(target)}`,
         },
     };
 }
