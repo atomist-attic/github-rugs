@@ -52,11 +52,15 @@ class DeleteGitHubBranch implements HandleCommand {
     @MappedParameter(MappedParameters.GITHUB_REPO_OWNER)
     public owner: string;
 
+    @MappedParameter("atomist://github_api_url")
+    public apiUrl: string = "https://api.github.com";
+
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
+        this.branch = `heads/${this.branch}`;
         const ex = execute("delete-github-branch", this);
         plan.add(handleErrors(ex, this));
         return plan;

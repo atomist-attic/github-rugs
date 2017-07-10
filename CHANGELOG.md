@@ -19,6 +19,10 @@ Delete Branch Release
 
 -   Added `DeleteGitHubBranch` command handler
 
+### Changed
+
+-   Remove all event handlers as they now live in `lifecycle-rugs`
+
 ## [0.42.1] - 2017-07-08
 
 [0.42.1]: https://github.com/atomist/github-rugs/compare/0.42.0...0.42.1
