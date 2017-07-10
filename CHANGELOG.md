@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [0.43.0]: https://github.com/atomist/github-rugs/compare/0.42.1...0.43.0
 
-Delete Branch Release
+Delete Branch and Remove Event Handlers Release
 
 ### Added
 
