@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.43.0...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.44.0...HEAD
+
+## [0.44.0] - 2017-07-11
+
+[0.44.0]: https://github.com/atomist/github-rugs/compare/0.43.0...0.44.0
+
+### Fixed
+
+-   Added missing `apiUrl` to `list and open issues` command
 
 ## [0.43.0] - 2017-07-10
 
