@@ -8,7 +8,7 @@ const PATTERNS = [
 export function replaceChatIdWithGitHubId(body: string, pe: PathExpressionEngine, root: cortex.ChatTeam): string {
     const matches = getChatIds(body);
     if (matches != null) {
-        matches.forEach((m) => {
+        matches.forEach(m => {
             const gitHubId = loadGitHubId(m, pe, root);
             if (gitHubId != null) {
                 body = body.split(`<@${m}>`).join(`@${gitHubId.login}`);
@@ -31,7 +31,7 @@ function loadGitHubId(id: string, pe: PathExpressionEngine, root: cortex.ChatTea
 function getChatIds(str: string): string[] {
     const matches = [];
     let match;
-    PATTERNS.forEach((regex) => {
+    PATTERNS.forEach(regex => {
         // tslint:disable-next-line:no-conditional-assignment
         while (match = regex.exec(str)) {
             matches.push(match[1]);

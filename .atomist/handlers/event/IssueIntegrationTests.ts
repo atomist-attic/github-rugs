@@ -75,7 +75,7 @@ function createRepo(response: Response<any>, params: any): ChainedInstruction {
         throw new Error(`Could not retrieve user list: ${body.error}`);
     }
     const members: any[] = body.members;
-    const found: any[] = members.filter((m) => {
+    const found: any[] = members.filter(m => {
         return m.name === "atomist" && m.is_bot === true;
     });
     if (found.length !== 1) {

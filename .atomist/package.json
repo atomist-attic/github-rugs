@@ -1,7 +1,7 @@
 {
   "name": "@atomist/github-rugs",
   "description": "Atomist Rugs for working with GitHub",
-  "version": "0.44.0",
+  "version": "0.44.1",
   "author": "Atomist",
   "license": "Apache-2.0",
   "repository": {
@@ -10,6 +10,7 @@
   },
   "keywords": [
     "atomist",
+    "github",
     "rug"
   ],
   "homepage": "https://github.com/atomist/github-rugs#readme",
@@ -17,7 +18,7 @@
     "url": "https://github.com/atomist/github-rugs/issues"
   },
   "dependencies": {
-    "@atomist/rugs": "^1.0.0-m.5",
+    "@atomist/rugs": "^1.0.0-m.6",
     "@atomist/slack-messages": "^0.6.0"
   },
   "devDependencies": {
@@ -35,15 +36,19 @@
   },
   "scripts": {
     "autotest": "supervisor -q -n exit -e ts -x npm -- run mocha",
+    "clean": "npm run clean-js ; rug clean",
+    "clean-js": "find . -type d \\( -path ./node_modules -o -path ./target \\) -prune -o -type f -name '*.js' -print0 | xargs -0 rm -f",
+    "compile": "tsc -p .",
+    "distclean": "npm run clean ; rm -rf node_modules",
     "lint": "tslint '**/*.ts' --exclude 'node_modules/**' --exclude 'target/**' -t verbose",
     "mocha": "mocha --compilers ts:espower-typescript/guess 'mocha/**/*.ts'",
     "test": "npm run mocha && rug test"
   },
   "atomist": {
-    "requires": "[1.0.0-m.4,2.0.0)",
+    "requires": "[1.0.0-m.5,2.0.0)",
     "extensions": {
       "com.atomist.rug:rug-functions-github": "[0.19.0,1.0.0)",
-      "com.atomist.rug:rug-function-http": "[0.7.6,1.0.0)",
+      "com.atomist.rug:rug-function-http": "[0.8.0,1.0.0)",
       "com.atomist.rug:rug-functions-slack": "[0.3.1,1.0.0)"
     }
   }
