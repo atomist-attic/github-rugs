@@ -42,14 +42,37 @@ import { execute } from "@atomist/rugs/operations/PlanUtils";
 @Intent("create tag")
 class CreateTagCommand implements HandleCommand {
 
-    @Parameter({ description: "The tag to release", pattern: "^.*$" })
+    @Parameter({
+        displayName: "Tag",
+        description: "tag to create",
+        pattern: "^\\w(?:[-.\\w/]*\\w)*$",
+        validInput: "valid git tag, starting and ending with a alphanumeric character and containing alphanumeric,"
+        + "_, -, ., and / characters",
+        minLength: 1,
+        maxLength: 100,
+    })
     public tag: string;
 
-    @Parameter({ description: "The sha to tag", pattern: "^.*$" })
+    @Parameter({
+        displayName: "SHA",
+        description: "commit SHA to create tag on",
+        pattern: "^[a-f0-9]+$",
+        validInput: "",
+        minLength: 7,
+        maxLength: 40,
+    })
     public sha: string;
 
-    @Parameter({ description: "The message for the tag", pattern: "@any" })
-    public message: string;
+    @Parameter({
+        displayName: "Message",
+        description: "message for the annotated tag",
+        pattern: "@any",
+        validInput: "arbitrary string",
+        minLength: 0,
+        maxLength: 200,
+        required: false,
+    })
+    public message: string = "";
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     public repo: string;
