@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.44.0...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.44.1...HEAD
+
+## [0.44.1] - 2017-07-17
+
+[0.44.1]: https://github.com/atomist/github-rugs/compare/0.44.0...0.44.1
+
+Slash release
+
+### Fixed
+
+-   Update rug-functions-http so API URLs with trailing slashes
+    work [#50][50]
+
+[50]: https://github.com/atomist/github-rugs/issues/50
 
 ## [0.44.0] - 2017-07-11
 
@@ -47,7 +60,7 @@ The `let's jump a couple of versions` Release
 
 Full GHE Release
 
-### Changed 
+### Changed
 
 -   Every command now takes an `apiUrl` `MappedParameter
 

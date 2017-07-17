@@ -55,7 +55,7 @@ class CreateReleaseCommand implements HandleCommand {
     public owner: string;
 
     @MappedParameter("atomist://github_api_url")
-    public apiUrl: string = "https://api.github.com";
+    public apiUrl: string = "https://api.github.com/";
 
     @MappedParameter("atomist://correlation_id")
     public corrid: string;

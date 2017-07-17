@@ -64,7 +64,7 @@ class ListIssuesCommand implements HandleCommand {
     public corrid: string;
 
     @MappedParameter("atomist://github_api_url")
-    public apiUrl: string = "https://api.github.com";
+    public apiUrl: string = "https://api.github.com/";
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
@@ -91,7 +91,7 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     public owner: string;
 
     @MappedParameter("atomist://github_api_url")
-    public apiUrl: string = "https://api.github.com";
+    public apiUrl: string = "https://api.github.com/";
 
     public handle(ctx: HandlerContext): CommandPlan {
         // Bot sends null for search if it is no specified
