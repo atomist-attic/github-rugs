@@ -34,6 +34,8 @@ import {
     Response,
 } from "@atomist/rug/operations/Handlers";
 
+import { Pattern } from "@atomist/rug/operations/RugOperation";
+
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
@@ -46,7 +48,7 @@ class RaisePullRequestCommand implements HandleCommand {
     @Parameter({ description: "The pull request title", pattern: "^.*$" })
     public title: string;
 
-    @Parameter({ description: "The pull request body", pattern: "^[\s\S]*$" })
+    @Parameter({ description: "The pull request body", pattern: Pattern.any })
     public body: string;
 
     @Parameter({ description: "Branch the changes should get pulled into",
