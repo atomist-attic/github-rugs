@@ -74,10 +74,7 @@ class ReactIssueCommand implements HandleCommand {
             },
         };
 
-        handleErrors(execute, this);
-        const msg = `Successfully reacted with :${this.reaction}: to ${this.owner}/${this.repo}/issues/#${this.issue}`;
-        handleSuccess(execute, msg);
-        plan.add(execute);
+        plan.add(handleErrors(execute, this));
         return plan;
     }
 }

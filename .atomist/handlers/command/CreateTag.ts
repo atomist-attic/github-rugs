@@ -33,7 +33,7 @@ import {
     Response,
 } from "@atomist/rug/operations/Handlers";
 
-import { wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("CreateGitHubTag", "Create a tag from a sha")
@@ -89,7 +89,7 @@ class CreateTagCommand implements HandleCommand {
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
         const ex = execute("create-github-tag", this);
-        plan.add(wrap(ex, `Successfully created a new tag on ${this.owner}/${this.repo}#${this.sha}`, this));
+        plan.add(handleErrors(ex));
         return plan;
     }
 }

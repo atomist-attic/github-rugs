@@ -33,7 +33,7 @@ import {
     Response,
 } from "@atomist/rug/operations/Handlers";
 
-import { wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("UnassignGitHubIssue", "Unassign a GitHub issue to a user")
@@ -63,9 +63,7 @@ class UnassignIssueCommand implements HandleCommand {
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
         const exec = execute("unassign-github-issue", this);
-        plan.add(
-            wrap(
-                exec, `${this.owner}/${this.repo}#${this.issue} successfully unassigned from ${this.assignee}`, this));
+        plan.add(handleErrors(exec));
         return plan;
     }
 }

@@ -73,14 +73,7 @@ class AssignToMeIssueCommand implements HandleCommand {
 
         const exec = execute("assign-github-issue",
             { issue: this.issue, owner: this.owner, repo: this.repo, assignee: gitHubUser.login, apiUrl: this.apiUrl });
-        plan.add(
-            wrap(
-                exec,
-                `${this.owner}/${this.repo}#${this.issue} successfully assigned to ${gitHubUser.login}`,
-                this));
-
-        const message = new ResponseMessage(`Assigning issue to ${gitHubUser.login}`);
-        plan.add(message);
+        plan.add(handleErrors(exec));
 
         return plan;
     }

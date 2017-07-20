@@ -34,7 +34,7 @@ import {
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 
 import { Issue } from "@atomist/cortex/Issue";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
@@ -66,15 +66,7 @@ class AssignIssueCommand implements HandleCommand {
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
         const exec = execute("assign-github-issue", this);
-        plan.add(
-            wrap(
-                exec,
-                `${this.owner}/${this.repo}#${this.issue} successfully assigned to ${this.assignee}`,
-                this));
-
-        const message = new ResponseMessage(`Assigning issue to ${this.assignee}`);
-        plan.add(message);
-
+        plan.add(handleErrors(exec));
         return plan;
     }
 }

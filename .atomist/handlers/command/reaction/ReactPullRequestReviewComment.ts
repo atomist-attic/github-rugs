@@ -70,12 +70,7 @@ class ReactGitHubPullRequestCommentCommand implements HandleCommand {
             },
         };
         const msg = "Successfully reacted with :";
-        handleErrors(execute, this);
-        handleSuccess(
-            execute,
-            `${msg}${this.reaction}: to ${this.owner}/${this.repo}/pulls/#${this.pullRequest}/comments/${this.comment}`,
-        );
-        plan.add(execute);
+        plan.add(handleErrors(execute, this));
         return plan;
     }
 }

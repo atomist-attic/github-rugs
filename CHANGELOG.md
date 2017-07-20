@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.44.1...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.45.0...HEAD
+
+## [0.45.0] - 2017-07-19
+
+[0.44.1]: https://github.com/atomist/github-rugs/compare/0.44.1...0.45.0
+
+Remove success messages release
+
+### Added
+
+-   Added `RaiseGitHubPullRequest` command handler
+
+### Fixed
+
+-   Remove succes confirmation messages [#53][53]
+
+[53]: https://github.com/atomist/github-rugs/issues/53
 
 ## [0.44.1] - 2017-07-17
 

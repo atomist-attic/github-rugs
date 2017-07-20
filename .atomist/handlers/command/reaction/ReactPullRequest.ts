@@ -61,11 +61,7 @@ class ReactGitHubPullRequest implements HandleCommand {
         const plan = new CommandPlan();
         const execute = { instruction: { kind: "execute", name: "react-github-pull-request", parameters: this } };
         const msg = "Successfully reacted with :";
-        handleErrors(execute, this);
-        handleSuccess(
-            execute,
-            `${msg}${this.reaction}: to ${this.owner}/${this.repo}/pulls/#${this.pullRequest}`);
-        plan.add(execute);
+        plan.add(handleErrors(execute, this));
         return plan;
     }
 }

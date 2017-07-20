@@ -64,11 +64,7 @@ class ReactIssueCommentCommand implements HandleCommand {
         const plan = new CommandPlan();
         const execute = { instruction: { kind: "execute", name: "react-github-issue-comment", parameters: this } };
         const msg = "Successfully reacted with :";
-        handleErrors(execute, this);
-        handleSuccess(
-            execute,
-            `${msg}${this.reaction}: to ${this.owner}/${this.repo}/issues/#${this.issue}/comments/${this.comment}`);
-        plan.add(execute);
+        plan.add(handleErrors(execute, this));
         return plan;
     }
 }

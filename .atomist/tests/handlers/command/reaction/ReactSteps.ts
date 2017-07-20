@@ -64,10 +64,3 @@ Then("execute http instruction", (w: CommandHandlerScenarioWorld) => {
     return instruction.name === "http" && http.method === "post" &&
         http.url === "https://api.github.com/repos/testOwner/testRepo/issues/1/reactions";
 });
-
-Then("on success send '(.+)'", (w: CommandHandlerScenarioWorld, expectedSuccessMessage: string) => {
-    const respondable = w.plan().instructions[0] as CommandRespondable<Execute>;
-    const onSuccessMessage = respondable.onSuccess as any;
-    const successMessage = onSuccessMessage.parameters.msg;
-    return successMessage === expectedSuccessMessage;
-});
