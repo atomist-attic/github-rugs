@@ -191,7 +191,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
 function createActions(issue: GitHubIssue, apiUrl: string):
     Array<[ Presentable<"command">, Action ]> {
     const owner = issue.repo.split("/")[0];
-    const repo = issue.repo.split("/")[1];
+    const repository = issue.repo.split("/")[1];
     const actions: Array<[ Presentable<"command">, Action ]> = [];
     const assignInstr: Presentable<"command"> = {
         id: `assign-issue-${issue.number}`,
@@ -200,7 +200,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             name: "AssignToMeGitHubIssue",
             parameters: {
                 issue: issue.number,
-                repo,
+                repo: repository,
                 owner,
                 apiUrl,
             },
@@ -215,7 +215,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             name: "AddLabelGitHubIssue",
             parameters: {
                 issue: issue.number,
-                repo,
+                repo: repository,
                 owner,
                 apiUrl,
             },
@@ -230,7 +230,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             name: "CloseGitHubIssue",
             parameters: {
                 issue: issue.number,
-                repo,
+                repo: repository,
                 owner,
                 apiUrl,
             },
@@ -245,7 +245,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             name: "CommentGitHubIssue",
             parameters: {
                 issue: issue.number,
-                repo,
+                repo: repository,
                 owner,
                 apiUrl,
             },
@@ -261,7 +261,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             parameters: {
                 reaction: "+1",
                 issue: issue.number,
-                repo,
+                repo: repository,
                 owner,
                 apiUrl,
             },
