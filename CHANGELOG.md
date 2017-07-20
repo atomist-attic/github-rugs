@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/github-rugs/compare/0.45.0...HEAD
 
+## [0.46.0] - 2017-07-20
+
+[0.44.1]: https://github.com/atomist/github-rugs/compare/0.45.0...0.46.0
+
+Buttons on Issue Listing release
+
+### Added
+
+-   Added common issue buttons onto `open issues`
+
 ## [0.45.0] - 2017-07-19
 
 [0.44.1]: https://github.com/atomist/github-rugs/compare/0.44.1...0.45.0
