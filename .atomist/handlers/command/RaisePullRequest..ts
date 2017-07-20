@@ -34,10 +34,14 @@ import {
     Response,
 } from "@atomist/rug/operations/Handlers";
 
+import { ChatTeam } from "@atomist/cortex/ChatTeam";
+
 import { Pattern } from "@atomist/rug/operations/RugOperation";
 
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
+
+import { replaceChatIdWithGitHubId } from "./issue/Helpers";
 
 @CommandHandler("RaiseGitHubPullRequest", "Raise a GitHub pull request")
 @Tags("github", "pr")
@@ -73,6 +77,7 @@ class RaisePullRequestCommand implements HandleCommand {
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
+        this.body = replaceChatIdWithGitHubId(this.body, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam);
         const ex = execute("raise-github-pull-request", this);
         plan.add(handleErrors(ex, this));
         return plan;
