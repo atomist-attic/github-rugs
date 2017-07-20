@@ -189,11 +189,11 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
 }
 
 function createActions(issue: GitHubIssue, apiUrl: string):
-    Array<[ Presentable<"command">, Action ]> {
+    Array<[ any, Action ]> {
     const owner = issue.repo.split("/")[0];
     const repository = issue.repo.split("/")[1];
-    const actions: Array<[ Presentable<"command">, Action ]> = [];
-    const assignInstr: Presentable<"command"> = {
+    const actions: Array<[ any, Action ]> = [];
+    const assignInstr = {
         id: `assign-issue-${issue.number}`,
         instruction: {
             kind: "command",
@@ -208,7 +208,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
     };
     actions.push([ assignInstr, rugButtonFrom({ text: "Assign to Me"}, assignInstr) ]);
 
-    const labelInstr: Presentable<"command"> = {
+    const labelInstr = {
         id: `label-issue-${issue.number}`,
         instruction: {
             kind: "command",
@@ -223,7 +223,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
     };
     actions.push([ labelInstr, rugButtonFrom({ text: "Label"}, labelInstr) ]);
 
-    const closeInstr: Presentable<"command"> = {
+    const closeInstr = {
         id: `close-issue-${issue.number}`,
         instruction: {
             kind: "command",
@@ -238,7 +238,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
     };
     actions.push([ closeInstr, rugButtonFrom({ text: "Close"}, closeInstr) ]);
 
-    const commentInstr: Presentable<"command"> = {
+    const commentInstr = {
         id: `comment-issue-${issue.number}`,
         instruction: {
             kind: "command",
@@ -253,7 +253,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
     };
     actions.push([ commentInstr, rugButtonFrom({ text: "Comment"}, commentInstr) ]);
 
-    const reactInstr: Presentable<"command"> = {
+    const reactInstr = {
         id: `react-issue-${issue.number}`,
         instruction: {
             kind: "command",
