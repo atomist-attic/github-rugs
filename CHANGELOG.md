@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.45.0...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.46.1...HEAD
+
+## [0.46.1] - 2017-07-21
+
+[0.46.1]: https://github.com/atomist/github-rugs/compare/0.46.0...0.46.1
+
+### Changed
+
+-   Make `body` on `raise pr` optional.
 
 ## [0.46.0] - 2017-07-20
 
-[0.44.1]: https://github.com/atomist/github-rugs/compare/0.45.0...0.46.0
+[0.46.0]: https://github.com/atomist/github-rugs/compare/0.45.0...0.46.0
 
 Buttons on Issue Listing release
 
@@ -21,7 +29,7 @@ Buttons on Issue Listing release
 
 ## [0.45.0] - 2017-07-19
 
-[0.44.1]: https://github.com/atomist/github-rugs/compare/0.44.1...0.45.0
+[0.45.1]: https://github.com/atomist/github-rugs/compare/0.44.1...0.45.0
 
 Remove success messages release
 

@@ -52,7 +52,8 @@ class RaisePullRequestCommand implements HandleCommand {
     @Parameter({ description: "The pull request title", pattern: "^.*$" })
     public title: string;
 
-    @Parameter({ description: "The pull request body", pattern: Pattern.any })
+    @Parameter({ description: "The pull request body", pattern: Pattern.any,
+        required: false })
     public body: string;
 
     @Parameter({ description: "Branch the changes should get pulled into",
