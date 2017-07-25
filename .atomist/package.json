@@ -1,7 +1,7 @@
 {
   "name": "@atomist/github-rugs",
   "description": "Atomist Rugs for working with GitHub",
-  "version": "0.46.1",
+  "version": "0.46.2",
   "author": "Atomist",
   "license": "Apache-2.0",
   "repository": {
@@ -47,7 +47,7 @@
   "atomist": {
     "requires": "[1.0.0-m.5,2.0.0)",
     "extensions": {
-      "com.atomist.rug:rug-functions-github": "[0.20.0-SNAPSHOT,1.0.0)",
+      "com.atomist.rug:rug-functions-github": "[0.20.1,1.0.0)",
       "com.atomist.rug:rug-function-http": "[0.8.0,1.0.0)",
       "com.atomist.rug:rug-functions-slack": "[0.3.1,1.0.0)"
     }
