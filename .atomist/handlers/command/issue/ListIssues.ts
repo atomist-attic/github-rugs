@@ -43,6 +43,7 @@ import {
 } from "@atomist/rug/operations/Decorators";
 
 import {
+    ChannelAddress,
     CommandPlan,
     HandleCommand,
     HandlerContext,
@@ -53,7 +54,6 @@ import {
     Response,
     ResponseMessage,
     UpdatableMessage,
-    ChannelAddress,
 } from "@atomist/rug/operations/Handlers";
 
 @CommandHandler("ListGitHubIssues", "List user's GitHub issues")
@@ -80,9 +80,13 @@ class ListIssuesCommand implements HandleCommand {
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
         const exec = execute("list-github-user-issues", this);
-        exec.onSuccess = { kind: "respond", name: "DisplayGitHubIssues",
-            parameters: { days: this.days, apiUrl: this.apiUrl, showActions: 0, requester: this.requester,
-                channel: this.channel  } };
+        exec.onSuccess = {
+            kind: "respond", name: "DisplayGitHubIssues",
+            parameters: {
+                days: this.days, apiUrl: this.apiUrl, showActions: 0, requester: this.requester,
+                channel: this.channel
+            }
+        };
         plan.add(handleErrors(exec, this));
         return plan;
     }
@@ -167,7 +171,7 @@ interface GitHubIssue {
 }
 
 function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
-                      perPage: number, requestor: string, channel: string):
+    perPage: number, requestor: string, channel: string):
     UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
@@ -194,8 +198,8 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
             }
             attachment.actions = [];
             if (showActions.toString() === "1") {
-                createActions(issue, apiUrl).forEach( a => {
-                    const [ instruction, action ] = a;
+                createActions(issue, apiUrl).forEach(a => {
+                    const [instruction, action] = a;
                     attachment.actions.push(action);
                     instructions.push(instruction);
                 });
@@ -225,10 +229,12 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                         },
                     },
                 };
-                pagingAttachment.actions.push(rugButtonFrom({ text: "< Back"}, nextInstr));
+                pagingAttachment.actions.push(rugButtonFrom({ text: "< Back" }, nextInstr));
                 instructions.push(nextInstr);
             }
             // Next
+            // Tripple equals won't work
+            // tslint:disable-next-line:triple-equals
             if (issues.length == perPage) {
                 console.log("testing2");
                 const nextInstr: any = {
@@ -243,9 +249,11 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                         },
                     },
                 };
-                pagingAttachment.actions.push(rugButtonFrom({ text: "Next >"}, nextInstr));
+                pagingAttachment.actions.push(rugButtonFrom({ text: "Next >" }, nextInstr));
                 instructions.push(nextInstr);
             }
+            // Triple equals won't work!!!
+            // tslint:disable-next-line:triple-equals
             if (issues.length == perPage || page > 1) {
                 attachments.push(pagingAttachment);
             }
@@ -268,10 +276,10 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
 }
 
 function createActions(issue: GitHubIssue, apiUrl: string):
-    Array<[ any, Action ]> {
+    Array<[any, Action]> {
     const owner = issue.repo.split("/")[0];
     const repository = issue.repo.split("/")[1];
-    const actions: Array<[ any, Action ]> = [];
+    const actions: Array<[any, Action]> = [];
     const assignInstr = {
         id: `assign-issue-${issue.number}`,
         instruction: {
@@ -285,7 +293,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             },
         },
     };
-    actions.push([ assignInstr, rugButtonFrom({ text: "Assign to Me"}, assignInstr) ]);
+    actions.push([assignInstr, rugButtonFrom({ text: "Assign to Me" }, assignInstr)]);
 
     const labelInstr = {
         id: `label-issue-${issue.number}`,
@@ -300,7 +308,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             },
         },
     };
-    actions.push([ labelInstr, rugButtonFrom({ text: "Label"}, labelInstr) ]);
+    actions.push([labelInstr, rugButtonFrom({ text: "Label" }, labelInstr)]);
 
     const closeInstr = {
         id: `close-issue-${issue.number}`,
@@ -315,7 +323,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             },
         },
     };
-    actions.push([ closeInstr, rugButtonFrom({ text: "Close"}, closeInstr) ]);
+    actions.push([closeInstr, rugButtonFrom({ text: "Close" }, closeInstr)]);
 
     const commentInstr = {
         id: `comment-issue-${issue.number}`,
@@ -330,7 +338,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             },
         },
     };
-    actions.push([ commentInstr, rugButtonFrom({ text: "Comment"}, commentInstr) ]);
+    actions.push([commentInstr, rugButtonFrom({ text: "Comment" }, commentInstr)]);
 
     const reactInstr = {
         id: `react-issue-${issue.number}`,
@@ -346,7 +354,7 @@ function createActions(issue: GitHubIssue, apiUrl: string):
             },
         },
     };
-    actions.push([ reactInstr, rugButtonFrom({ text: ":+1:"}, reactInstr) ]);
+    actions.push([reactInstr, rugButtonFrom({ text: ":+1:" }, reactInstr)]);
 
     return actions;
 }
