@@ -84,8 +84,8 @@ class ListIssuesCommand implements HandleCommand {
             kind: "respond", name: "DisplayGitHubIssues",
             parameters: {
                 days: this.days, apiUrl: this.apiUrl, showActions: 0, requester: this.requester,
-                channel: this.channel
-            }
+                channel: this.channel,
+            },
         };
         plan.add(handleErrors(exec, this));
         return plan;
@@ -171,7 +171,7 @@ interface GitHubIssue {
 }
 
 function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
-    perPage: number, requestor: string, channel: string):
+                      perPage: number, requestor: string, channel: string):
     UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
