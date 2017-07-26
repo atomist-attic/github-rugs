@@ -229,7 +229,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                         },
                     },
                 };
-                pagingAttachment.actions.push(rugButtonFrom({ text: "< Back" }, nextInstr));
+                pagingAttachment.actions.push(rugButtonFrom({ text: ":arrow_backward: Back" }, nextInstr));
                 instructions.push(nextInstr);
             }
             // Next
@@ -249,7 +249,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                         },
                     },
                 };
-                pagingAttachment.actions.push(rugButtonFrom({ text: "Next >" }, nextInstr));
+                pagingAttachment.actions.push(rugButtonFrom({ text: "Next :arrow_forward:" }, nextInstr));
                 instructions.push(nextInstr);
             }
             // Triple equals won't work!!!
@@ -266,7 +266,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
         } else {
             responseMsg = new UpdatableMessage(`issue_search/${requestor}/${encodeURI(q)}`, msg,
                 new ChannelAddress(channel), MessageMimeTypes.SLACK_JSON);
-            responseMsg.ttl = (new Date().getTime() + (1000 * 60 * 10)).toString();
+            responseMsg.ttl = (new Date().getTime() + (1000 * 60 * 5)).toString();
         }
         instructions.forEach(i => responseMsg.addAction(i));
         return responseMsg;
