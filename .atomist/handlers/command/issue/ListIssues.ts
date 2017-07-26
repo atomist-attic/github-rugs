@@ -59,7 +59,7 @@ import {
 @CommandHandler("ListGitHubIssues", "List user's GitHub issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("list issues")
+@Intent("my issues", "list issues")
 class ListIssuesCommand implements HandleCommand {
 
     @Parameter({ description: "Number of days to search", pattern: "^.*$" })
@@ -99,7 +99,7 @@ class ListIssuesCommand implements HandleCommand {
 class ListRepositoryIssuesCommand implements HandleCommand {
 
     @Parameter({ description: "Issue search term", pattern: "^.*$", required: false })
-    public q: string = "";
+    public q: string = "is:open is:issue";
 
     @Parameter({ description: "Results per page", pattern: "^[0-9]*$", required: false })
     public perPage: number = 5;
@@ -171,7 +171,7 @@ interface GitHubIssue {
 }
 
 function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
-                      perPage: number, requestor: string, channel: string):
+                      perPage: number, requester: string, channel: string, owner: string, repo: string):
     UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
@@ -209,9 +209,10 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
 
         // Add paging actions into Message
         if (showActions.toString() === "1") {
-
             const pagingAttachment: Attachment = {
                 fallback: "Paging",
+                footer: `Search: ${q}`,
+                ts: Math.floor(new Date().getTime() / 1000),
                 actions: [],
             };
 
@@ -226,10 +227,12 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                             q,
                             page: Math.floor(+page - 1),
                             perPage,
+                            repo,
+                            owner,
                         },
                     },
                 };
-                pagingAttachment.actions.push(rugButtonFrom({ text: ":arrow_backward: Back" }, nextInstr));
+                pagingAttachment.actions.push(rugButtonFrom({ text: "Back" }, nextInstr));
                 instructions.push(nextInstr);
             }
             // Next
@@ -246,10 +249,12 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                             q,
                             page: Math.floor(+page + 1),
                             perPage,
+                            repo,
+                            owner,
                         },
                     },
                 };
-                pagingAttachment.actions.push(rugButtonFrom({ text: "Next :arrow_forward:" }, nextInstr));
+                pagingAttachment.actions.push(rugButtonFrom({ text: "Next" }, nextInstr));
                 instructions.push(nextInstr);
             }
             // Triple equals won't work!!!
@@ -264,7 +269,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
         if (q == null || q.length === 0) {
             responseMsg = new ResponseMessage(msg, MessageMimeTypes.SLACK_JSON);
         } else {
-            responseMsg = new UpdatableMessage(`issue_search/${requestor}/${encodeURI(q)}`, msg,
+            responseMsg = new UpdatableMessage(`issue_search/${requester}/${encodeURI(q)}`, msg,
                 new ChannelAddress(channel), MessageMimeTypes.SLACK_JSON);
             responseMsg.ttl = (new Date().getTime() + (1000 * 60 * 5)).toString();
         }
@@ -280,81 +285,100 @@ function createActions(issue: GitHubIssue, apiUrl: string):
     const owner = issue.repo.split("/")[0];
     const repository = issue.repo.split("/")[1];
     const actions: Array<[any, Action]> = [];
-    const assignInstr = {
-        id: `assign-issue-${issue.number}`,
-        instruction: {
-            kind: "command",
-            name: "AssignToMeGitHubIssue",
-            parameters: {
-                issue: issue.number,
-                repo: repository,
-                owner,
-                apiUrl,
-            },
-        },
-    };
-    actions.push([assignInstr, rugButtonFrom({ text: "Assign to Me" }, assignInstr)]);
 
-    const labelInstr = {
-        id: `label-issue-${issue.number}`,
-        instruction: {
-            kind: "command",
-            name: "AddLabelGitHubIssue",
-            parameters: {
-                issue: issue.number,
-                repo: repository,
-                owner,
-                apiUrl,
+    if (issue.state === "open") {
+        const assignInstr = {
+            id: `assign-issue-${issue.number}`,
+            instruction: {
+                kind: "command",
+                name: "AssignToMeGitHubIssue",
+                parameters: {
+                    issue: issue.number,
+                    repo: repository,
+                    owner,
+                    apiUrl,
+                },
             },
-        },
-    };
-    actions.push([labelInstr, rugButtonFrom({ text: "Label" }, labelInstr)]);
+        };
+        actions.push([assignInstr, rugButtonFrom({ text: "Assign to Me" }, assignInstr)]);
 
-    const closeInstr = {
-        id: `close-issue-${issue.number}`,
-        instruction: {
-            kind: "command",
-            name: "CloseGitHubIssue",
-            parameters: {
-                issue: issue.number,
-                repo: repository,
-                owner,
-                apiUrl,
+        const labelInstr = {
+            id: `label-issue-${issue.number}`,
+            instruction: {
+                kind: "command",
+                name: "AddLabelGitHubIssue",
+                parameters: {
+                    issue: issue.number,
+                    repo: repository,
+                    owner,
+                    apiUrl,
+                },
             },
-        },
-    };
-    actions.push([closeInstr, rugButtonFrom({ text: "Close" }, closeInstr)]);
+        };
+        actions.push([labelInstr, rugButtonFrom({ text: "Label" }, labelInstr)]);
 
-    const commentInstr = {
-        id: `comment-issue-${issue.number}`,
-        instruction: {
-            kind: "command",
-            name: "CommentGitHubIssue",
-            parameters: {
-                issue: issue.number,
-                repo: repository,
-                owner,
-                apiUrl,
+        const closeInstr = {
+            id: `close-issue-${issue.number}`,
+            instruction: {
+                kind: "command",
+                name: "CloseGitHubIssue",
+                parameters: {
+                    issue: issue.number,
+                    repo: repository,
+                    owner,
+                    apiUrl,
+                },
             },
-        },
-    };
-    actions.push([commentInstr, rugButtonFrom({ text: "Comment" }, commentInstr)]);
+        };
+        actions.push([closeInstr, rugButtonFrom({ text: "Close" }, closeInstr)]);
 
-    const reactInstr = {
-        id: `react-issue-${issue.number}`,
-        instruction: {
-            kind: "command",
-            name: "ReactGitHubIssue",
-            parameters: {
-                reaction: "+1",
-                issue: issue.number,
-                repo: repository,
-                owner,
-                apiUrl,
+        const commentInstr = {
+            id: `comment-issue-${issue.number}`,
+            instruction: {
+                kind: "command",
+                name: "CommentGitHubIssue",
+                parameters: {
+                    issue: issue.number,
+                    repo: repository,
+                    owner,
+                    apiUrl,
+                },
             },
-        },
-    };
-    actions.push([reactInstr, rugButtonFrom({ text: ":+1:" }, reactInstr)]);
+        };
+        actions.push([commentInstr, rugButtonFrom({ text: "Comment" }, commentInstr)]);
+
+        const reactInstr = {
+            id: `react-issue-${issue.number}`,
+            instruction: {
+                kind: "command",
+                name: "ReactGitHubIssue",
+                parameters: {
+                    reaction: "+1",
+                    issue: issue.number,
+                    repo: repository,
+                    owner,
+                    apiUrl,
+                },
+            },
+        };
+        actions.push([reactInstr, rugButtonFrom({ text: ":+1:" }, reactInstr)]);
+
+    } else if (issue.state === "closed") {
+        const reopenInstr = {
+            id: `reopen-issue-${issue.number}`,
+            instruction: {
+                kind: "command",
+                name: "ReopenGitHubIssue",
+                parameters: {
+                    issue: issue.number,
+                    repo: repository,
+                    owner,
+                    apiUrl,
+                },
+            },
+        };
+        actions.push([reopenInstr, rugButtonFrom({ text: "Reopen" }, reopenInstr)]);
+    }
 
     return actions;
 }
@@ -386,12 +410,18 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     @Parameter({ description: "Channel the search is being run from", pattern: "^.*$" })
     public channel: string;
 
+    @Parameter({ description: "Repo", pattern: "^.*$" })
+    public repo: string;
+
+    @Parameter({ description: "Owner", pattern: "^.*$" })
+    public owner: string;
+
     public handle( @ParseJson response: Response<GitHubIssue[]>): CommandPlan {
         const issues = response.body;
         if (issues.length >= 1) {
             const plan = new CommandPlan();
             plan.add(renderIssues(issues, this.apiUrl, this.showActions, this.q, this.page, this.perPage,
-                this.requester, this.channel));
+                this.requester, this.channel, this.owner, this.repo));
             return plan;
         } else {
             if (this.showActions.toString() === "1") {
