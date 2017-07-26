@@ -102,7 +102,7 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     public q: string = "";
 
     @Parameter({ description: "Results per page", pattern: "^[0-9]*$", required: false })
-    public perPage: number = 10;
+    public perPage: number = 5;
 
     @Parameter({ description: "Results page", pattern: "^[0-9]*$", required: false })
     public page: number = 1;
