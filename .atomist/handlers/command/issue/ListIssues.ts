@@ -175,7 +175,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
     UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
-        const attachments = issues.map((issue, idx) => {
+        const attachments = issues.map((issue, ix) => {
             const issueTitle = `#${issue.number}: ${issue.title}`;
             const attachment: Attachment = {
                 fallback: escape(issueTitle),
@@ -433,8 +433,8 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     }
 }
 
-const command = new ListIssuesCommand();
+const issueCommand = new ListIssuesCommand();
 const listIssues = new ListIssuesRender();
-const repo = new ListRepositoryIssuesCommand();
+const repoCommand = new ListRepositoryIssuesCommand();
 
-export { command, listIssues, repo };
+export { issueCommand, listIssues, repoCommand };
