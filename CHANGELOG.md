@@ -7,7 +7,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.0...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.3...HEAD
+
+## [0.47.3] - 2017-07-26
+
+[0.47.3]: https://github.com/atomist/github-rugs/compare/0.47.2...0.47.3
+
+### Fixed
+
+-   Fixed issue with `my issues` command not working
+
+## [0.47.2] - 2017-07-26
+
+[0.47.2]: https://github.com/atomist/github-rugs/compare/0.47.1...0.47.2
+
+### Changed
+
+-   Remove buttons for closed issues
+
+-   Add query footer
+
+## [0.47.1] - 2017-07-26
+
+[0.47.1]: https://github.com/atomist/github-rugs/compare/0.47.0...0.47.1
+
+### Changed
+
+-   Display only 5 issues by default on `search issues`
 
 ## [0.47.0] - 2017-07-26
 

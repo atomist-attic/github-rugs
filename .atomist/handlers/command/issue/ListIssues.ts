@@ -410,10 +410,10 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     @Parameter({ description: "Channel the search is being run from", pattern: "^.*$" })
     public channel: string;
 
-    @Parameter({ description: "Repo", pattern: "^.*$" })
+    @Parameter({ description: "Repo", pattern: "^.*$", required: false })
     public repo: string;
 
-    @Parameter({ description: "Owner", pattern: "^.*$" })
+    @Parameter({ description: "Owner", pattern: "^.*$", required: false})
     public owner: string;
 
     public handle( @ParseJson response: Response<GitHubIssue[]>): CommandPlan {
