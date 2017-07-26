@@ -52,6 +52,8 @@ import {
     Presentable,
     Response,
     ResponseMessage,
+    UpdatableMessage,
+    ChannelAddress,
 } from "@atomist/rug/operations/Handlers";
 
 @CommandHandler("ListGitHubIssues", "List user's GitHub issues")
@@ -69,11 +71,18 @@ class ListIssuesCommand implements HandleCommand {
     @MappedParameter("atomist://github_api_url")
     public apiUrl: string = "https://api.github.com/";
 
+    @MappedParameter(MappedParameters.SLACK_USER)
+    public requester: string;
+
+    @MappedParameter(MappedParameters.SLACK_CHANNEL_NAME)
+    public channel: string;
+
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
         const exec = execute("list-github-user-issues", this);
         exec.onSuccess = { kind: "respond", name: "DisplayGitHubIssues",
-            parameters: { days: this.days, apiUrl: this.apiUrl, showActions: 0 } };
+            parameters: { days: this.days, apiUrl: this.apiUrl, showActions: 0, requester: this.requester,
+                channel: this.channel  } };
         plan.add(handleErrors(exec, this));
         return plan;
     }
@@ -82,11 +91,17 @@ class ListIssuesCommand implements HandleCommand {
 @CommandHandler("ListGitHubRepositoryIssues", "List a GitHub repo's issues")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("open issues")
+@Intent("search issues", "open issues")
 class ListRepositoryIssuesCommand implements HandleCommand {
 
     @Parameter({ description: "Issue search term", pattern: "^.*$", required: false })
-    public search: string = "";
+    public q: string = "";
+
+    @Parameter({ description: "Results per page", pattern: "^[0-9]*$", required: false })
+    public perPage: number = 10;
+
+    @Parameter({ description: "Results page", pattern: "^[0-9]*$", required: false })
+    public page: number = 1;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     public repo: string;
@@ -97,10 +112,16 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     @MappedParameter("atomist://github_api_url")
     public apiUrl: string = "https://api.github.com/";
 
+    @MappedParameter(MappedParameters.SLACK_USER)
+    public requester: string;
+
+    @MappedParameter(MappedParameters.SLACK_CHANNEL_NAME)
+    public channel: string;
+
     public handle(ctx: HandlerContext): CommandPlan {
         // Bot sends null for search if it is no specified
-        if (!this.search) {
-            this.search = "";
+        if (!this.q) {
+            this.q = "";
         }
 
         const plan = new CommandPlan();
@@ -145,7 +166,9 @@ interface GitHubIssue {
     ts: number;
 }
 
-function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number): ResponseMessage {
+function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
+                      perPage: number, requestor: string, channel: string):
+    UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
         const attachments = issues.map((issue, idx) => {
@@ -179,8 +202,64 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
             }
             return attachment;
         });
+
+        // Add paging actions into Message
+        if (showActions.toString() === "1") {
+
+            const pagingAttachment: Attachment = {
+                fallback: "Paging",
+                actions: [],
+            };
+
+            // Back
+            if (page > 1) {
+                const nextInstr: any = {
+                    id: `back-issue-search`,
+                    instruction: {
+                        kind: "command",
+                        name: "ListGitHubRepositoryIssues",
+                        parameters: {
+                            q,
+                            page: Math.floor(+page - 1),
+                            perPage,
+                        },
+                    },
+                };
+                pagingAttachment.actions.push(rugButtonFrom({ text: "< Back"}, nextInstr));
+                instructions.push(nextInstr);
+            }
+            // Next
+            if (issues.length == perPage) {
+                console.log("testing2");
+                const nextInstr: any = {
+                    id: `next-issue-search`,
+                    instruction: {
+                        kind: "command",
+                        name: "ListGitHubRepositoryIssues",
+                        parameters: {
+                            q,
+                            page: Math.floor(+page + 1),
+                            perPage,
+                        },
+                    },
+                };
+                pagingAttachment.actions.push(rugButtonFrom({ text: "Next >"}, nextInstr));
+                instructions.push(nextInstr);
+            }
+            if (issues.length == perPage || page > 1) {
+                attachments.push(pagingAttachment);
+            }
+        }
+
         const msg = render({ attachments }, true);
-        const responseMsg = new ResponseMessage(msg, MessageMimeTypes.SLACK_JSON);
+        let responseMsg;
+        if (q == null || q.length === 0) {
+            responseMsg = new ResponseMessage(msg, MessageMimeTypes.SLACK_JSON);
+        } else {
+            responseMsg = new UpdatableMessage(`issue_search/${requestor}/${encodeURI(q)}`, msg,
+                new ChannelAddress(channel), MessageMimeTypes.SLACK_JSON);
+            responseMsg.ttl = (new Date().getTime() + (1000 * 60 * 10)).toString();
+        }
         instructions.forEach(i => responseMsg.addAction(i));
         return responseMsg;
     } catch (ex) {
@@ -278,20 +357,40 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     @Parameter({ description: "Number of days to search", pattern: "^.*$" })
     public days: number = 1;
 
+    @Parameter({ description: "Issue search term", pattern: "^.*$", required: false })
+    public q: string = "";
+
+    @Parameter({ description: "Results per page", pattern: "^[0-9]*$", required: false })
+    public perPage: number = 30;
+
+    @Parameter({ description: "Issue search term", pattern: "^[0-9]*$", required: false })
+    public page: number = 1;
+
     @Parameter({ description: "Show actions on issues", pattern: "^.*$" })
     public showActions: number = 1;
 
     @Parameter({ description: "GitHub api url", pattern: "^.*$" })
     public apiUrl: string = "https://api.github.com/";
 
+    @Parameter({ description: "User requesting the search", pattern: "^.*$" })
+    public requester: string;
+
+    @Parameter({ description: "Channel the search is being run from", pattern: "^.*$" })
+    public channel: string;
+
     public handle( @ParseJson response: Response<GitHubIssue[]>): CommandPlan {
         const issues = response.body;
         if (issues.length >= 1) {
             const plan = new CommandPlan();
-            plan.add(renderIssues(issues, this.apiUrl, this.showActions));
+            plan.add(renderIssues(issues, this.apiUrl, this.showActions, this.q, this.page, this.perPage,
+                this.requester, this.channel));
             return plan;
         } else {
-            return CommandPlan.ofMessage(new ResponseMessage(`No issues found for the last ${this.days} day(s)`));
+            if (this.showActions.toString() === "1") {
+                return CommandPlan.ofMessage(new ResponseMessage(`No issues match your query \`${this.q}\``));
+            } else {
+                return CommandPlan.ofMessage(new ResponseMessage(`No issues found for the last ${this.days} day(s)`));
+            }
         }
     }
 }
