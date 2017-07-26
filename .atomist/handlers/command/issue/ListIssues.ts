@@ -71,9 +71,6 @@ class ListIssuesCommand implements HandleCommand {
     @MappedParameter("atomist://github_api_url")
     public apiUrl: string = "https://api.github.com/";
 
-    @MappedParameter(MappedParameters.SLACK_USER)
-    public requester: string;
-
     @MappedParameter(MappedParameters.SLACK_CHANNEL_NAME)
     public channel: string;
 
@@ -83,8 +80,7 @@ class ListIssuesCommand implements HandleCommand {
         exec.onSuccess = {
             kind: "respond", name: "DisplayGitHubIssues",
             parameters: {
-                days: this.days, apiUrl: this.apiUrl, showActions: 0, requester: this.requester,
-                channel: this.channel,
+                days: this.days, apiUrl: this.apiUrl, showActions: 0, channel: this.channel,
             },
         };
         plan.add(handleErrors(exec, this));
@@ -107,6 +103,9 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     @Parameter({ description: "Results page", pattern: "^[0-9]*$", required: false })
     public page: number = 1;
 
+    @Parameter({ description: "Search Id", pattern: "^[0-9]*$", required: false })
+    public id: string = new Date().getTime().toString();
+
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     public repo: string;
 
@@ -115,9 +114,6 @@ class ListRepositoryIssuesCommand implements HandleCommand {
 
     @MappedParameter("atomist://github_api_url")
     public apiUrl: string = "https://api.github.com/";
-
-    @MappedParameter(MappedParameters.SLACK_USER)
-    public requester: string;
 
     @MappedParameter(MappedParameters.SLACK_CHANNEL_NAME)
     public channel: string;
@@ -171,7 +167,7 @@ interface GitHubIssue {
 }
 
 function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
-                      perPage: number, requester: string, channel: string, owner: string, repo: string):
+                      perPage: number, channel: string, owner: string, repo: string, id: string):
     UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
@@ -179,7 +175,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
             const issueTitle = `#${issue.number}: ${issue.title}`;
             const attachment: Attachment = {
                 fallback: escape(issueTitle),
-                mrkdwn_in: ["text"],
+                mrkdwn_in: [ "text" ],
                 text: `${url(issue.issueUrl, issueTitle)}`,
                 footer: `${url(issue.url, issue.repo)}`,
                 ts: issue.ts,
@@ -229,6 +225,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                             perPage,
                             repo,
                             owner,
+                            id,
                         },
                     },
                 };
@@ -239,7 +236,6 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
             // Tripple equals won't work
             // tslint:disable-next-line:triple-equals
             if (issues.length == perPage) {
-                console.log("testing2");
                 const nextInstr: any = {
                     id: `next-issue-search`,
                     instruction: {
@@ -251,6 +247,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
                             perPage,
                             repo,
                             owner,
+                            id,
                         },
                     },
                 };
@@ -269,7 +266,7 @@ function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number
         if (q == null || q.length === 0) {
             responseMsg = new ResponseMessage(msg, MessageMimeTypes.SLACK_JSON);
         } else {
-            responseMsg = new UpdatableMessage(`issue_search/${requester}/${encodeURI(q)}`, msg,
+            responseMsg = new UpdatableMessage(`issue_search/${id}/${encodeURI(q)}`, msg,
                 new ChannelAddress(channel), MessageMimeTypes.SLACK_JSON);
             responseMsg.ttl = (new Date().getTime() + (1000 * 60 * 5)).toString();
         }
@@ -404,9 +401,6 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     @Parameter({ description: "GitHub api url", pattern: "^.*$" })
     public apiUrl: string = "https://api.github.com/";
 
-    @Parameter({ description: "User requesting the search", pattern: "^.*$" })
-    public requester: string;
-
     @Parameter({ description: "Channel the search is being run from", pattern: "^.*$" })
     public channel: string;
 
@@ -416,12 +410,15 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     @Parameter({ description: "Owner", pattern: "^.*$", required: false})
     public owner: string;
 
+    @Parameter({ description: "Id", pattern: "^.*$", required: false})
+    public id: string = new Date().getTime().toString();
+
     public handle( @ParseJson response: Response<GitHubIssue[]>): CommandPlan {
         const issues = response.body;
         if (issues.length >= 1) {
             const plan = new CommandPlan();
             plan.add(renderIssues(issues, this.apiUrl, this.showActions, this.q, this.page, this.perPage,
-                this.requester, this.channel, this.owner, this.repo));
+                this.channel, this.owner, this.repo, this.id));
             return plan;
         } else {
             if (this.showActions.toString() === "1") {

@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.3...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.4...HEAD
+
+## [0.47.4] - 2017-07-26
+
+[0.47.4]: https://github.com/atomist/github-rugs/compare/0.47.3...0.47.4
+
+### Fixed
+
+-   Use unique id rather then slack user name for message id in search results
 
 ## [0.47.3] - 2017-07-26
 
