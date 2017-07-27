@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.4...HEAD
 
+### Changed
+
+-   Always log webhook installation errors. Add some webhook installation error
+    handling tests. Slightly better error handling.
+
 ## [0.47.5] - 2017-07-27
 
 [0.47.5]: https://github.com/atomist/github-rugs/compare/0.47.4...0.47.5
