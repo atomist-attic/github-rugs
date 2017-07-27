@@ -83,11 +83,18 @@ class CreateIssueCommand implements HandleCommand {
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
-        this.body = replaceChatIdWithGitHubId(this.body, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam);
+        this.body = trimQuotes(replaceChatIdWithGitHubId(this.body, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam));
         const exec = execute("create-github-issue", this);
         plan.add(handleErrors(exec, this));
         return plan;
     }
+
+}
+
+function trimQuotes(original: string): string {
+    return original.replace(
+        /^"(.*)"$/, "$1").replace(
+        /^'(.*)'$/, "$1");
 }
 
 export let create = new CreateIssueCommand();
