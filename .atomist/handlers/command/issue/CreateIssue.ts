@@ -62,9 +62,9 @@ class CreateIssueCommand implements HandleCommand {
         displayName: "Issue Body",
         description: "descriptive text for issue",
         pattern: Pattern.any,
-        validInput: "free text",
+        validInput: "free text, up to 1000 characters",
         minLength: 0,
-        maxLength: 250,
+        maxLength: 1000,
         required: false,
     })
     public body: string = "";
