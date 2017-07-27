@@ -104,7 +104,7 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     public page: number = 1;
 
     @Parameter({ description: "Search Id", pattern: "^[0-9]*$", required: false })
-    public id: string = new Date().getTime().toString();
+    public id: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     public repo: string;
@@ -411,9 +411,13 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     public owner: string;
 
     @Parameter({ description: "Id", pattern: "^.*$", required: false})
-    public id: string = new Date().getTime().toString();
+    public id: string;
 
-    public handle( @ParseJson response: Response<GitHubIssue[]>): CommandPlan {
+    public handle(@ParseJson response: Response<GitHubIssue[]>): CommandPlan {
+        if (this.id == null) {
+            this.id = new Date().getTime().toString();
+        }
+
         const issues = response.body;
         if (issues.length >= 1) {
             const plan = new CommandPlan();
