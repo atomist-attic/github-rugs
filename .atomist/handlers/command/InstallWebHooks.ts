@@ -127,7 +127,7 @@ function success(owner: string, webhookUrl: string, repoName?: string): Respond 
 }
 
 @ResponseHandler("GitHubWebhookErrors", "Custom error handling for some cases")
-class WebHookErrorHandler implements HandleResponse<any> {
+export class WebHookErrorHandler implements HandleResponse<any> {
 
     @Parameter({ description: "Repo", pattern: "@any", required: false })
     public repo: string;
@@ -144,17 +144,29 @@ class WebHookErrorHandler implements HandleResponse<any> {
     public handle( @ParseJson response: Response<any>): CommandPlan {
         const errors = response.body.errors;
         try {
-            if (errors[0].message === "Hook already exists on this organization") {
+            if (errors != null && errors.length > 0) {
+                if (errors[0].message === "Hook already exists on this organization") {
+                    return CommandPlan.ofMessage(
+                        renderSuccess(`Webhook already installed for ${this.owner} (${this.url})`));
+                }
+                if (errors[0].message === "Hook already exists on this repository") {
+                    return CommandPlan.ofMessage(
+                        renderSuccess(`Webhook already installed for ${this.owner}/${this.repo} (${this.url})`));
+                }
+                const errorMsg = `Failed to install webhook: ${errors[0].message} (${response.code})`;
+                console.error(errorMsg);
+                return CommandPlan.ofMessage(renderError(errorMsg));
+            } else {
+                const msg = `Failed to install webhook: ${response.body.message} (${response.code})`;
+                console.error(msg);
                 return CommandPlan.ofMessage(
-                    renderSuccess(`Webhook already installed for ${this.owner} (${this.url})`));
+                    renderError(msg));
             }
-            if (errors[0].message === "Hook already exists on this repository") {
-                return CommandPlan.ofMessage(
-                    renderSuccess(`Webhook already installed for ${this.owner}/${this.repo} (${this.url})`));
-            }
-            return CommandPlan.ofMessage(renderError(`${response.msg}: ${errors[0].message}`));
         } catch (ex) {
-            return CommandPlan.ofMessage(renderError(`Failed to install webhook: ${response.body.message}`));
+            const genError = `Failed to install webhook: ${JSON.stringify(response)}`;
+            console.error(genError);
+            return CommandPlan.ofMessage(
+                renderError(genError));
         }
     }
 }
