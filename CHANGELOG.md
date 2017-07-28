@@ -7,8 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.5...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.7...HEAD
 
+## [0.47.7] - 2017-07-28
+
+[0.47.6]: https://github.com/atomist/github-rugs/compare/0.47.6...0.47.7
+
+### Changed
+
+-   DeleteGitHubBranch command handler doesn't prefix branch with
+    `heads/` any longer
+    
 ## [0.47.6] - 2017-07-27
 
 [0.47.6]: https://github.com/atomist/github-rugs/compare/0.47.5...0.47.6

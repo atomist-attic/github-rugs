@@ -60,7 +60,6 @@ class DeleteGitHubBranch implements HandleCommand {
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
-        this.branch = `heads/${this.branch}`;
         const ex = execute("delete-github-branch", this);
         plan.add(handleErrors(ex, this));
         return plan;
