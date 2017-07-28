@@ -62,9 +62,9 @@ class CreateIssueCommand implements HandleCommand {
         displayName: "Issue Body",
         description: "descriptive text for issue",
         pattern: Pattern.any,
-        validInput: "free text",
+        validInput: "free text, up to 1000 characters",
         minLength: 0,
-        maxLength: 250,
+        maxLength: 1000,
         required: false,
     })
     public body: string = "";
@@ -83,11 +83,19 @@ class CreateIssueCommand implements HandleCommand {
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
-        this.body = replaceChatIdWithGitHubId(this.body, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam);
+        this.body = trimQuotes(replaceChatIdWithGitHubId(
+            this.body, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam));
         const exec = execute("create-github-issue", this);
         plan.add(handleErrors(exec, this));
         return plan;
     }
+
+}
+
+function trimQuotes(original: string): string {
+    return original.replace(
+        /^"(.*)"$/, "$1").replace(
+        /^'(.*)'$/, "$1");
 }
 
 export let create = new CreateIssueCommand();
