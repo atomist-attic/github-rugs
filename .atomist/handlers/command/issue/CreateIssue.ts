@@ -34,12 +34,13 @@ import {
 } from "@atomist/rug/operations/Handlers";
 import { Pattern } from "@atomist/rug/operations/RugOperation";
 
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 import { ChatTeam } from "@atomist/cortex/ChatTeam";
 
 import { replaceChatIdWithGitHubId } from "./Helpers";
+import { GitHubIssue, renderIssues } from "./ListIssues";
 
 @CommandHandler("CreateGitHubIssue", "Create an issue on GitHub")
 @Tags("github", "issues")
@@ -78,6 +79,9 @@ class CreateIssueCommand implements HandleCommand {
     @MappedParameter("atomist://github_api_url")
     public apiUrl: string = "https://api.github.com/";
 
+    @MappedParameter(MappedParameters.SLACK_CHANNEL_NAME)
+    public channelName: string;
+
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
@@ -86,10 +90,32 @@ class CreateIssueCommand implements HandleCommand {
         this.body = trimQuotes(replaceChatIdWithGitHubId(
             this.body, ctx.pathExpressionEngine, ctx.contextRoot as ChatTeam));
         const exec = execute("create-github-issue", this);
+        if (repoIsMappedToChannel(ctx, this.repo, this.owner, this.channelName)) {
+            // The issue event will appear in the channel. We don't need to post it.
+        } else {
+            exec.onSuccess = {
+                kind: "respond", name: CreateIssueRender.handlerName,
+                parameters: {
+                    corrid: this.corrid,
+                    owner: this.owner,
+                    repository: this.repo,
+                    apiUrl: this.apiUrl,
+                },
+            };
+        }
         plan.add(handleErrors(exec, this));
         return plan;
     }
 
+}
+
+function repoIsMappedToChannel(ctx: HandlerContext, repository: string, owner: string, channelName: string) {
+    const queryString =
+        `/channels::ChatChannel()[@name='${channelName}'][/repos::Repo()[@name='${repository}'][@owner='${owner}']]`;
+    const match = ctx.pathExpressionEngine.evaluate(
+        ctx.contextRoot,
+        queryString);
+    return match && match.matches && match.matches.length > 0;
 }
 
 function trimQuotes(original: string): string {
@@ -98,4 +124,58 @@ function trimQuotes(original: string): string {
         /^'(.*)'$/, "$1");
 }
 
+interface GitHubServicesIssue {
+    number: number;
+    id: number;
+    title: string;
+    url: string; // API url
+    body: string;
+    state: string;
+}
+
+function guessGitHubHtmlUrl(apiUrl: string) {
+    return apiUrl.replace("api.", "");
+}
+
+@ResponseHandler(CreateIssueRender.handlerName, "Formats a GitHub issues for display in slack")
+class CreateIssueRender implements HandleResponse<GitHubServicesIssue> {
+
+    public static handlerName = "CreateIssueRender";
+
+    @MappedParameter("atomist://correlation_id")
+    public corrid: string;
+
+    @Parameter({description: "Repo", pattern: "^.*$", required: false})
+    public repository: string;
+
+    @Parameter({description: "Owner", pattern: "^.*$", required: false})
+    public owner: string;
+
+    @Parameter({description: "GitHub api url", pattern: "^.*$"})
+    public apiUrl: string = "https://api.github.com/";
+
+    public handle(@ParseJson response: Response<GitHubServicesIssue>): CommandPlan {
+
+        const paltryIssue = response.body;
+        const repoUrl = `${guessGitHubHtmlUrl(this.apiUrl)}/${this.owner}/${this.repository}`;
+        const htmlUrl = `${repoUrl}/issues/${paltryIssue.number}`;
+        const gitHubIssue: GitHubIssue = {
+            ...paltryIssue,
+            number: paltryIssue.number.toString(),
+            url: htmlUrl,
+            issueUrl: htmlUrl,
+            assignee: undefined,
+            repo: `${this.owner}/${this.repository}`,
+            ts: undefined,
+        };
+
+        const issues = [gitHubIssue];
+        const plan = new CommandPlan();
+        plan.add(renderIssues(issues, null, 1, null, 1, 2,
+            null, null, null, null));
+        return plan;
+    }
+}
+
 export let create = new CreateIssueCommand();
+export let respond = new CreateIssueRender();

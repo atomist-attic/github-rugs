@@ -149,13 +149,13 @@ class ListRepositoryIssuesCommand implements HandleCommand {
     }
 }
 
-interface GitHubUser {
+export interface GitHubUser {
     html_url: string;
     login: string;
     avatar_url: string;
 }
 
-interface GitHubIssue {
+export interface GitHubIssue {
     number: string;
     title: string;
     state: string;
@@ -166,8 +166,13 @@ interface GitHubIssue {
     ts: number;
 }
 
-function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
-                      perPage: number, channel: string, owner: string, repo: string, id: string):
+// if q is nonempty and showActions is 1, you'll get an UpdatableMessage with paging actions
+// apiUrl, page, perPage, channel, owner, repo, and id are only used for these
+//
+// if you want actions on the issue(s) but not paging actions, then pass in:
+// showActions = 1, page = 1, perPage > issues.length
+export function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
+                             perPage: number, channel: string, owner: string, repo: string, id: string):
     UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
