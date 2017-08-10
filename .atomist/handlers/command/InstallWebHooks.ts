@@ -126,8 +126,10 @@ function success(owner: string, webhookUrl: string, repoName?: string): Respond 
     };
 }
 
-@ResponseHandler("GitHubWebhookErrors", "Custom error handling for some cases")
+@ResponseHandler(WebHookErrorHandler.handlerName, "Custom error handling for some cases")
 export class WebHookErrorHandler implements HandleResponse<any> {
+
+    public static handlerName = "GitHubWebhookErrors";
 
     @Parameter({ description: "Repo", pattern: "@any", required: false })
     public repo: string;
@@ -141,9 +143,9 @@ export class WebHookErrorHandler implements HandleResponse<any> {
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
-    public handle( @ParseJson response: Response<any>): CommandPlan {
-        const errors = response.body.errors;
+    public handle(response: Response<any>): CommandPlan {
         try {
+            const errors = JSON.parse(response.body).errors;
             if (errors != null && errors.length > 0) {
                 if (errors[0].message === "Hook already exists on this organization") {
                     return CommandPlan.ofMessage(
