@@ -18,6 +18,7 @@
     "url": "https://github.com/atomist/github-rugs/issues"
   },
   "dependencies": {
+    "@atomist/rug": "^1.0.0-m.5",
     "@atomist/rugs": "^1.0.0-m.6",
     "@atomist/slack-messages": "^0.6.0"
   },
