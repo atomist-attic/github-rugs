@@ -7,17 +7,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.7...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.8...HEAD
+
+## [0.47.8] - 2017-08-16
+
+[0.47.8]: https://github.com/atomist/github-rugs/compare/0.47.7...0.47.8
+
+GHE API release
+
+### Fixed
+
+-   Properly interpolate the GitHub base API URL into full URL,
+    avoiding double forward slash (//)
 
 ## [0.47.7] - 2017-07-28
 
-[0.47.6]: https://github.com/atomist/github-rugs/compare/0.47.6...0.47.7
+[0.47.7]: https://github.com/atomist/github-rugs/compare/0.47.6...0.47.7
 
 ### Changed
 
 -   DeleteGitHubBranch command handler doesn't prefix branch with
     `heads/` any longer
-    
+
 ## [0.47.6] - 2017-07-27
 
 [0.47.6]: https://github.com/atomist/github-rugs/compare/0.47.5...0.47.6

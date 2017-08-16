@@ -23,8 +23,9 @@ export class Repository {
         "Authorization": `token ${this.token}`,
     };
     constructor(readonly owner: string, readonly name: string, readonly token: string,
-                readonly apiUrl: string = "https://api.github.com") {
-        this.url = `${apiUrl}/repos/${this.owner}/${this.name}/`;
+                readonly apiUrl: string = "https://api.github.com/") {
+        const baseUrl = apiUrl.replace(/\/+$/, "");
+        this.url = `${baseUrl}/repos/${this.owner}/${this.name}/`;
     }
     public issue(id: number): Issue {
         return new Issue(this, id);
@@ -41,7 +42,7 @@ export abstract class Reactable {
     private readonly url = `${this.repo.url}${this.relativeUrl()}reactions`;
     private readonly headers = { ...this.repo.headers, ...this.reactionHeaders };
 
-    constructor(readonly repo: Repository, readonly id: number) {}
+    constructor(readonly repo: Repository, readonly id: number) { }
 
     public react(reaction: Reaction): Http {
         return {
