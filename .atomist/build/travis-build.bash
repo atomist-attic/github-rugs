@@ -3,8 +3,8 @@
 
 set -o pipefail
 
-declare Pkg=travis-build
-declare Version=0.9.0
+declare Pkg=travis-build-rug
+declare Version=1.0.0
 
 function msg() {
     echo "$Pkg: $*"
@@ -16,6 +16,19 @@ function err() {
 
 # usage: main "$@"
 function main () {
+    local arg ignore_lint
+    for arg in "$@"; do
+        case "$arg" in
+            --ignore-lint | --ignore-lin | --ignore-li | --ignore-l)
+                ignore_lint=1
+                ;;
+            -*)
+                err "unknown option: $arg"
+                return 2
+                ;;
+        esac
+    done
+
     local formula_url=https://raw.githubusercontent.com/atomist/homebrew-tap/master/Formula/rug-cli.rb
     local formula
     formula=$(curl -s -f "$formula_url")
@@ -56,8 +69,7 @@ function main () {
             return 1
         fi
     fi
-    rug="$rug --timer --quiet --update --resolver-report --error --settings=$PWD/.atomist/build/cli.yml"
-    export TEAM_ID=T1L0VDKJP
+    rug="$rug --settings=$PWD/.atomist/build/cli.yml"
 
     msg "running npm install"
     if ! ( cd .atomist && npm install ); then
@@ -66,8 +78,19 @@ function main () {
     fi
 
     msg "running lint"
-    if ! ( cd .atomist && npm run lint ); then
-        err "tslint failed"
+    ( cd .atomist && npm run lint )
+    local lint_status=$?
+    if [[ $lint_status -eq 0 ]]; then
+        :
+    elif [[ $lint_status -eq 2 ]]; then
+        err "TypeScript failed to pass linting"
+        if [[ $ignore_lint ]]; then
+            err "ignoring linting failure"
+        else
+            return 1
+        fi
+    else
+        err "tslint errored"
         return 1
     fi
 
@@ -106,6 +129,7 @@ function main () {
         err "failed to extract archive version from $pkg_json: $archive_version"
         return 1
     fi
+    local teams=staging,staging-ghe
     local project_version
     if [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         if [[ $archive_version != $TRAVIS_TAG ]]; then
@@ -113,7 +137,7 @@ function main () {
             return 1
         fi
         project_version=$TRAVIS_TAG
-        TEAM_ID=rugs-release
+        teams=$teams,release
     else
         local timestamp
         timestamp=$(date +%Y%m%d%H%M%S)
@@ -127,8 +151,8 @@ function main () {
     msg "archive version: $project_version"
 
     if [[ $TRAVIS_BRANCH == master || $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        msg "publishing archive to $TEAM_ID"
-        if ! $rug publish -a "$project_version"; then
+        msg "publishing archive to $teams"
+        if ! $rug publish -a "$project_version" -i "$teams"; then
             err "failed to publish archive $project_version"
             git diff
             return 1

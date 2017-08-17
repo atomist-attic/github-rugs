@@ -11,9 +11,29 @@ remote_repositories:
   rug:
     publish: false
     url: "https://atomist.jfrog.io/atomist/rugs"
-  team:
+  staging:
     publish: true
-    url: "${MAVEN_BASE_URL}/${TEAM_ID}"
+    url: "${MAVEN_BASE_URL}/T1L0VDKJP"
     authentication:
       username: "${MAVEN_USER}"
       password: "${MAVEN_TOKEN}"
+  staging-ghe:
+    publish: true
+    url: "${MAVEN_BASE_URL}/T6G4G4B4G"
+    authentication:
+      username: "${MAVEN_USER}"
+      password: "${MAVEN_TOKEN}"
+  release:
+    publish: true
+    url: "${MAVEN_BASE_URL}/rugs-release"
+    authentication:
+      username: "${MAVEN_USER}"
+      password: "${MAVEN_TOKEN}"
+configuration:
+  options:
+    disable_console_log: true
+    error: true
+    quiet: true
+    resolver_report: true
+    timer: true
+    update: true

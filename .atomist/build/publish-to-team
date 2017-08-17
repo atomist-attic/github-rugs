@@ -1,0 +1,79 @@
+#!/bin/bash
+
+set -e
+
+TEAM_ID=atomist-staging
+
+USAGE="publish-to-staging [<TEAM_ID>] 
+
+TEAM_ID defaults to ${TEAM_ID}. It can be either a name or Slack ID.
+"
+
+
+if [[ -n "$1" ]]
+	then
+	TEAM_ID=$1
+fi
+
+# To publish to staging, we need to
+# - be on the tip of origin/master
+#    (we are assuming this version has not been published yet)
+#    (there are race conditions here if 2 of us are working at the same time.
+#     In this case, consider pairing instead.)
+# - publish to a team
+# - bump the version
+#    - npm version patch
+#    - npm install
+# - push the updated version to origin
+#    - both package.json and package-lock.json
+
+
+cd $(git rev-parse --show-toplevel) # top of repo
+
+# Am I at the tip of origin/master?
+(git fetch 2>&1) > /dev/null
+if [[ "master" != $(git rev-parse --abbrev-ref HEAD) ]]
+	then
+	cat .atomist/build/error
+	echo "ERROR: Be on the master branch to publish" >&2
+	exit 1
+fi
+if [[ $(git rev-parse master) != $(git rev-parse origin/master) ]]
+	then
+	cat .atomist/build/error
+	echo "ERROR: Please push all your changes to origin before publishing" >&2
+	# todo: push if we're ahead?
+	exit 1
+fi
+if [[ -n $(git status --porcelain) ]]
+	then
+	cat .atomist/build/error
+	echo "ERROR: Please commit your changes (and push) before publishing" >&2
+	exit 1
+fi
+
+# bump the version
+
+( cd .atomist && npm version patch && npm install )
+
+# update origin/master
+git add .atomist/package.json
+git add .atomist/package-lock.json
+
+VERSION=$(cat .atomist/package.json | jq -r .version)
+git commit -am "bump version to ${VERSION}
+
+for publishing to ${TEAM_ID}
+"
+
+git push
+
+# publish to a team!
+
+echo "publishing $VERSION to $TEAM_ID"
+
+rug publish --id ${TEAM_ID}
+cat .atomist/build/success | sed "s/vvvvvvv/${VERSION}/" | sed "s/ttttttt/${TEAM_ID}/"
+
+
+
