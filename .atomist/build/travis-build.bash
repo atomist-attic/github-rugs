@@ -4,7 +4,7 @@
 set -o pipefail
 
 declare Pkg=travis-build-rug
-declare Version=1.0.0
+declare Version=2.0.0
 
 function msg() {
     echo "$Pkg: $*"
@@ -78,8 +78,9 @@ function main () {
     fi
 
     msg "running lint"
+    local lint_status
     ( cd .atomist && npm run lint )
-    local lint_status=$?
+    lint_status=$?
     if [[ $lint_status -eq 0 ]]; then
         :
     elif [[ $lint_status -eq 2 ]]; then
@@ -122,40 +123,38 @@ function main () {
 
     [[ $TRAVIS_PULL_REQUEST == false ]] || return 0
 
-    local archive_version
-    local pkg_json=.atomist/package.json
-    archive_version=$(jq -er .version "$pkg_json")
-    if [[ $? -ne 0 || ! $archive_version ]]; then
-        err "failed to extract archive version from $pkg_json: $archive_version"
-        return 1
-    fi
-    local teams=staging,staging-ghe
-    local project_version
-    if [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        if [[ $archive_version != $TRAVIS_TAG ]]; then
-            err "archive version ($archive_version) does not match git tag ($TRAVIS_TAG)"
-            return 1
-        fi
-        project_version=$TRAVIS_TAG
-        teams=$teams,release
-    else
-        local timestamp
-        timestamp=$(date +%Y%m%d%H%M%S)
-        if [[ $? -ne 0 || ! $timestamp ]]; then
-            err "failed to generate timestamp: $timestamp"
-            return 1
-        fi
-        project_version=$archive_version-$timestamp
-    fi
     msg "branch: $TRAVIS_BRANCH"
-    msg "archive version: $project_version"
-
     if [[ $TRAVIS_BRANCH == master || $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        msg "publishing archive to $teams"
-        if ! $rug publish -a "$project_version" -i "$teams"; then
-            err "failed to publish archive $project_version"
-            git diff
+        local archive_version
+        local pkg_json=.atomist/package.json
+        archive_version=$(jq -er .version "$pkg_json")
+        if [[ $? -ne 0 || ! $archive_version ]]; then
+            err "failed to extract archive version from $pkg_json: $archive_version"
             return 1
+        fi
+        local project_version
+        if [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            if [[ $archive_version != $TRAVIS_TAG ]]; then
+                err "archive version ($archive_version) does not match git tag ($TRAVIS_TAG)"
+                return 1
+            fi
+            project_version=$TRAVIS_TAG
+
+            msg "releasing version $project_version"
+            if ! $rug publish -a "$project_version" -i release; then
+                err "failed to publish archive $project_version"
+                git diff
+                return 1
+            fi
+        else
+            local timestamp
+            timestamp=$(date +%Y%m%d%H%M%S)
+            if [[ $? -ne 0 || ! $timestamp ]]; then
+                err "failed to generate timestamp: $timestamp"
+                return 1
+            fi
+            project_version=$archive_version-$timestamp
+            msg "archive version: $project_version"
         fi
 
         if ! git config --global user.email "travis-ci@atomist.com"; then

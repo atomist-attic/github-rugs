@@ -18,9 +18,10 @@
     "url": "https://github.com/atomist/github-rugs/issues"
   },
   "dependencies": {
-    "@atomist/rug": "^1.0.0-m.5",
+    "@atomist/rug": "^1.0.0-m.6",
     "@atomist/rugs": "^1.0.0-m.6",
-    "@atomist/slack-messages": "^0.6.0"
+    "@atomist/slack-messages": "^0.6.0",
+    "@atomist/cortex": "^1.0.0-m.5"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",
@@ -43,10 +44,12 @@
     "distclean": "npm run clean ; rm -rf node_modules",
     "lint": "tslint '**/*.ts' --exclude 'node_modules/**' --exclude 'target/**' -t verbose",
     "mocha": "mocha --compilers ts:espower-typescript/guess 'mocha/**/*.ts'",
-    "test": "npm run mocha && rug test"
+    "test": "npm run mocha && rug test",
+    "stage": "build/publish-to-team",
+    "lint-fix": "npm run lint -- --fix"
   },
   "atomist": {
-    "requires": "[1.0.0-m.5,2.0.0)",
+    "requires": "[1.0.0-m.6,2.0.0)",
     "extensions": {
       "com.atomist.rug:rug-functions-github": "[0.21.0,1.0.0)",
       "com.atomist.rug:rug-function-http": "[0.8.0,1.0.0)",
