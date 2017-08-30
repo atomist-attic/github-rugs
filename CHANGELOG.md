@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.47.8...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.48.0...HEAD
+
+## [0.48.0] - 2017-08-30
+
+[0.48.0]: https://github.com/atomist/github-rugs/compare/0.47.8...0.48.0
+
+Update release
+
+### Changed
+
+-   Get notification of created issue if creating in non-linked channel
+-   Update Rug dependencies and support files
+
+### Added
+
+-   Automate releases on GitHub
 
 ## [0.47.8] - 2017-08-16
 
