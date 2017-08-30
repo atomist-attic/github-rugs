@@ -204,3 +204,17 @@ editor:
     branch: "318a9e27b5ba6d98450040837872bd529c7b0645"
     sha: "318a9e2"
 
+---
+kind: "operation"
+client: "com.atomist:rug"
+version: "1.0.0-m.7"
+editor:
+  name: "UpdateRug"
+  group: "atomist"
+  artifact: "rug-rugs"
+  version: "0.34.0"
+  origin:
+    repo: "https://github.com/atomist/rug-rugs.git"
+    branch: "c7ddec0ff638a1cfd019004b18917468d209883d"
+    sha: "c7ddec0"
+

@@ -26,5 +26,12 @@ notifications:
     on_error: always
 cache:
   directories:
-  - $HOME/.atomist
-  - $HOME/.npm
+  - "$HOME/.atomist"
+  - "$HOME/.npm"
+deploy:
+  provider: releases
+  api_key:
+    secure: b3N7GqDOVvw7JfFbR6Kuv5u8Dd7Z3RMTAFMC+Wl91FfQtS2rc4lEvpMPv5SlhVl9mKIfTfzUJl6me/KxBMQvhTh87Y3LqLrGcSGXMRNvfp4Wi9tT8z13vgunk5FbbvXtm4Se7JUM8hKv61i6uvJwDWdk+RfMRiI3VEWOxCmbq13S2WJfVKRK65oXJlBHPjkCXVrh9qKcJBf/OKThhPk3HrY9LwZhZt4FDi8pm8DKfPRGoGMFbrmOGhZMJmM7oKShhaMk70nOvgy4pbRdcbXM9Our+t3D7QFSyiacfruBgTBXrmiDLTnEuw5p21Ea4pyPtqsT3ymqtv6Oi83U4RMn5JGXplof3q5v7fNZ76f2S26xUJXXcMqt5ykai2LTWLwjqub19XdrqqNdQxHuJnUdopW+E/Q0AewUV3ahcQXDS1ZKHMtivchAs2MppcWBI8UdagqRJr+SzfD/GfMogAQe1Zq0N4E4SF0ywkVrmuaohKZ/IswSJMwMYHPqWlrWnW82LEHW9ZocRZyp39CJQfOVlE/K7BXk1bNbSAUchKda3+8Sh61egx+6Dw1zlnscFBCRWV0SvWh9fbdunt5b5kOIQex3iYj40wQDX5PXCBYUXw1HZOaRPxDCPPABG2cn+f7/CvJuS55GHp+/+y/xjCaGghxQgtDzFMKs91jFFdT8B1Q=
+  on:
+    tags: true
+    condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+$"

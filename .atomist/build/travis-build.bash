@@ -4,7 +4,7 @@
 set -o pipefail
 
 declare Pkg=travis-build-rug
-declare Version=2.0.0
+declare Version=2.1.0
 
 function msg() {
     echo "$Pkg: $*"
@@ -172,7 +172,7 @@ function main () {
         fi
         local remote=origin
         if [[ $GITHUB_TOKEN ]]; then
-            remote=https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG
+            remote=https://$GITHUB_TOKEN:x-oauth-basic@github.com/$TRAVIS_REPO_SLUG.git
         fi
         if ! git push --quiet --tags "$remote" > /dev/null 2>&1; then
             err "failed to push git tags"
