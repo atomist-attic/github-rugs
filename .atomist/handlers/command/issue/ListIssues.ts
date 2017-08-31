@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 import {
     Action,
-    Attachment,
-    emptyString,
+    Attachment, codeLine,
     escape,
     render,
     rugButtonFrom,
@@ -164,6 +163,19 @@ export interface GitHubIssue {
     url: string;
     repo: string;
     ts: number;
+    commits: IssueCommit[];
+}
+
+export interface IssueCommit {
+    sha: string;
+    htmlUrl: string;
+    message: string;
+}
+
+export function renderCommit(c: IssueCommit) {
+    const sha = c.sha.slice(0, 7);
+    const title = (c.message.length > 50) ? c.message.slice(0, 51) + "..." : c.message;
+    return `${codeLine(url(c.htmlUrl, sha))} ${title}`;
 }
 
 // if q is nonempty and showActions is 1, you'll get an UpdatableMessage with paging actions
@@ -178,10 +190,15 @@ export function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions:
         const instructions: Array<Presentable<"command">> = [];
         const attachments = issues.map((issue, ix) => {
             const issueTitle = `#${issue.number}: ${issue.title}`;
+            let text = `${url(issue.issueUrl, issueTitle)}`;
+            issue.commits.forEach(c => {
+                text += `\n${renderCommit(c)}`;
+            });
+
             const attachment: Attachment = {
                 fallback: escape(issueTitle),
                 mrkdwn_in: [ "text" ],
-                text: `${url(issue.issueUrl, issueTitle)}`,
+                text,
                 footer: `${url(issue.url, issue.repo)}`,
                 ts: issue.ts,
             };
@@ -442,5 +459,3 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
 const issueCommand = new ListIssuesCommand();
 const listIssues = new ListIssuesRender();
 const repoCommand = new ListRepositoryIssuesCommand();
-
-export { issueCommand, listIssues, repoCommand };
