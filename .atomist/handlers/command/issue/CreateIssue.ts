@@ -167,6 +167,7 @@ class CreateIssueRender implements HandleResponse<GitHubServicesIssue> {
             assignee: undefined,
             repo: `${this.owner}/${this.repository}`,
             ts: undefined,
+            commits: undefined,
         };
 
         const issues = [gitHubIssue];
