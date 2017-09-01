@@ -174,8 +174,9 @@ export interface IssueCommit {
 
 export function renderCommit(c: IssueCommit) {
     const sha = c.sha.slice(0, 7);
-    const title = (c.message.length > 50) ? c.message.slice(0, 51) + "..." : c.message;
-    return `${codeLine(url(c.htmlUrl, sha))} ${title}`;
+    const title = c.message.split("\n")[0];
+    const shortTitle = (title.length > 50) ? title.slice(0, 50) + "..." : title;
+    return `${codeLine(url(c.htmlUrl, sha))} ${shortTitle}`;
 }
 
 // if q is nonempty and showActions is 1, you'll get an UpdatableMessage with paging actions
@@ -183,9 +184,11 @@ export function renderCommit(c: IssueCommit) {
 //
 // if you want actions on the issue(s) but not paging actions, then pass in:
 // showActions = 1, page = 1, perPage > issues.length
-export function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
-    perPage: number, channel: string, owner: string, repo: string, id: string):
-    UpdatableMessage | ResponseMessage {
+export function renderIssues(
+    issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
+    perPage: number, channel: string, owner: string, repo: string, id: string,
+): UpdatableMessage | ResponseMessage {
+
     try {
         const instructions: Array<Presentable<"command">> = [];
         const attachments = issues.map((issue, ix) => {
