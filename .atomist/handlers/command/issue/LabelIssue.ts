@@ -32,7 +32,7 @@ import {
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
-@CommandHandler("LabelGitHubIssue", "Add a known label to a GitHub issue")
+@CommandHandler("LabelGitHubIssue", "Add label to or remove label from a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("label issue")
