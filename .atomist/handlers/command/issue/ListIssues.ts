@@ -184,7 +184,7 @@ export function renderCommit(c: IssueCommit) {
 // if you want actions on the issue(s) but not paging actions, then pass in:
 // showActions = 1, page = 1, perPage > issues.length
 export function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions: number, q: string, page: number,
-                             perPage: number, channel: string, owner: string, repo: string, id: string):
+    perPage: number, channel: string, owner: string, repo: string, id: string):
     UpdatableMessage | ResponseMessage {
     try {
         const instructions: Array<Presentable<"command">> = [];
@@ -197,7 +197,7 @@ export function renderIssues(issues: GitHubIssue[], apiUrl: string, showActions:
 
             const attachment: Attachment = {
                 fallback: escape(issueTitle),
-                mrkdwn_in: [ "text" ],
+                mrkdwn_in: ["text"],
                 text,
                 footer: `${url(issue.url, issue.repo)}`,
                 ts: issue.ts,
@@ -429,13 +429,13 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     @Parameter({ description: "Repo", pattern: "^.*$", required: false })
     public repo: string;
 
-    @Parameter({ description: "Owner", pattern: "^.*$", required: false})
+    @Parameter({ description: "Owner", pattern: "^.*$", required: false })
     public owner: string;
 
-    @Parameter({ description: "Id", pattern: "^.*$", required: false})
+    @Parameter({ description: "Id", pattern: "^.*$", required: false })
     public id: string;
 
-    public handle(@ParseJson response: Response<GitHubIssue[]>): CommandPlan {
+    public handle( @ParseJson response: Response<GitHubIssue[]>): CommandPlan {
         if (this.id == null) {
             this.id = new Date().getTime().toString();
         }
@@ -456,6 +456,6 @@ class ListIssuesRender implements HandleResponse<GitHubIssue[]> {
     }
 }
 
-const issueCommand = new ListIssuesCommand();
-const listIssues = new ListIssuesRender();
-const repoCommand = new ListRepositoryIssuesCommand();
+export const issueCommand = new ListIssuesCommand();
+export const listIssues = new ListIssuesRender();
+export const repoCommand = new ListRepositoryIssuesCommand();
