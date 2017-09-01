@@ -326,10 +326,10 @@ function createActions(issue: GitHubIssue, apiUrl: string):
         actions.push([assignInstr, rugButtonFrom({ text: "Assign to Me" }, assignInstr)]);
 
         const labelInstr = {
-            id: `label-issue-${issue.number}`,
+            id: `toggle-label-issue-${issue.number}`,
             instruction: {
                 kind: "command",
-                name: "AddLabelGitHubIssue",
+                name: "ToggleLabelIssue",
                 parameters: {
                     issue: issue.number,
                     repo: repository,

@@ -14,41 +14,33 @@
  * limitations under the License.
  */
 
-import { Issue } from "@atomist/cortex/Issue";
 import {
     CommandHandler,
     Intent,
     MappedParameter,
     Parameter,
-    ParseJson,
-    ResponseHandler,
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
 import {
     CommandPlan,
-    Execute,
     HandleCommand,
     HandlerContext,
-    HandleResponse,
-    Instruction,
     MappedParameters,
-    Respond,
-    Response,
 } from "@atomist/rug/operations/Handlers";
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
-@CommandHandler("AddLabelGitHubIssue", "Add a known label to a GitHub issue")
+@CommandHandler("ToggleLabelIssue", "Add label to or remove a label from a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
-@Intent("add label issue")
-class AddLabelIssueCommand implements HandleCommand {
+@Intent("toggle issue label")
+class ToggleIssueLabelCommand implements HandleCommand {
 
     @Parameter({ description: "The issue number", pattern: "^.*$" })
     public issue: number;
 
-    @Parameter({ description: "A label to add to an issue", pattern: "^.*$" })
+    @Parameter({ description: "A label to add to or remove from an issue", pattern: "^.*$" })
     public label: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
@@ -65,10 +57,10 @@ class AddLabelIssueCommand implements HandleCommand {
 
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
-        const ex = execute("add-label-github-issue", this);
+        const ex = execute("toggle-issue-label", this);
         plan.add(handleErrors(ex, this));
         return plan;
     }
 }
 
-export let command = new AddLabelIssueCommand();
+export let command = new ToggleIssueLabelCommand();
