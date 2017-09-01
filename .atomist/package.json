@@ -38,15 +38,16 @@
   },
   "scripts": {
     "autotest": "supervisor -q -n exit -e ts -x npm -- run mocha",
+    "build": "npm run lint && npm run compile && npm run test",
     "clean": "npm run clean-js ; rug clean",
     "clean-js": "find . -type d \\( -path ./node_modules -o -path ./target \\) -prune -o -type f -name '*.js' -print0 | xargs -0 rm -f",
     "compile": "tsc -p .",
     "distclean": "npm run clean ; rm -rf node_modules",
     "lint": "tslint '**/*.ts' --exclude 'node_modules/**' --exclude 'target/**' -t verbose",
+    "lint-fix": "npm run lint -- --fix",
     "mocha": "mocha --compilers ts:espower-typescript/guess 'mocha/**/*.ts'",
-    "test": "npm run mocha && rug test",
     "stage": "build/publish-to-team",
-    "lint-fix": "npm run lint -- --fix"
+    "test": "npm run mocha && rug test"
   },
   "atomist": {
     "requires": "[1.0.0-m.7,2.0.0)",
