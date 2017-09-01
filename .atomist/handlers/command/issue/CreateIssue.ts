@@ -145,16 +145,16 @@ class CreateIssueRender implements HandleResponse<GitHubServicesIssue> {
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
-    @Parameter({description: "Repo", pattern: "^.*$", required: false})
+    @Parameter({ description: "Repo", pattern: "^.*$", required: false })
     public repository: string;
 
-    @Parameter({description: "Owner", pattern: "^.*$", required: false})
+    @Parameter({ description: "Owner", pattern: "^.*$", required: false })
     public owner: string;
 
-    @Parameter({description: "GitHub api url", pattern: "^.*$"})
+    @Parameter({ description: "GitHub api url", pattern: "^.*$" })
     public apiUrl: string = "https://api.github.com/";
 
-    public handle(@ParseJson response: Response<GitHubServicesIssue>): CommandPlan {
+    public handle( @ParseJson response: Response<GitHubServicesIssue>): CommandPlan {
 
         const paltryIssue = response.body;
         const repoUrl = `${guessGitHubHtmlUrl(this.apiUrl)}/${this.owner}/${this.repository}`;
@@ -167,7 +167,7 @@ class CreateIssueRender implements HandleResponse<GitHubServicesIssue> {
             assignee: undefined,
             repo: `${this.owner}/${this.repository}`,
             ts: undefined,
-            commits: undefined,
+            commits: [],
         };
 
         const issues = [gitHubIssue];

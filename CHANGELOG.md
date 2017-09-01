@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/github-rugs/compare/0.48.0...HEAD
 
+### Added
+
+-   List commits associated with issues
+
+### Changed
+
+-   Update rug-functions-github to 0.23.0, now Merge PRs using "merge"
+
 ## [0.48.0] - 2017-08-30
 
 [0.48.0]: https://github.com/atomist/github-rugs/compare/0.47.8...0.48.0
