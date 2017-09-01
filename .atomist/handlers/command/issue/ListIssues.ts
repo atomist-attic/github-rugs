@@ -176,7 +176,7 @@ export function renderCommit(c: IssueCommit) {
     const sha = c.sha.slice(0, 7);
     const title = c.message.split("\n")[0];
     const shortTitle = (title.length > 50) ? title.slice(0, 50) + "..." : title;
-    return `${codeLine(url(c.htmlUrl, sha))} ${shortTitle}`;
+    return `${url(c.htmlUrl, sha)} ${shortTitle}`;
 }
 
 // if q is nonempty and showActions is 1, you'll get an UpdatableMessage with paging actions
