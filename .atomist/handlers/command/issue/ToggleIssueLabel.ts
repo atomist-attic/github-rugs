@@ -31,7 +31,7 @@ import {
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
-@CommandHandler("ToggleLabelIssue", "Add label to or remove a label from a GitHub issue")
+@CommandHandler("ToggleLabelGitHubIssue", "Add label to or remove a label from a GitHub issue")
 @Tags("github", "issues")
 @Secrets("github://user_token?scopes=repo")
 @Intent("toggle issue label")
