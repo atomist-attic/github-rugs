@@ -40,7 +40,7 @@ class ToggleIssueLabelCommand implements HandleCommand {
     @Parameter({ description: "The issue number", pattern: "^.*$" })
     public issue: number;
 
-    @Parameter({ description: "A label to add to or remove from an issue", pattern: "^.*$" })
+    @Parameter({ description: "a label to add to or remove from an issue", pattern: "^.*$" })
     public label: string;
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
