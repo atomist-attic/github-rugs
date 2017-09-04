@@ -3,6 +3,7 @@ import assert = require("power-assert");
 
 import { Response, Status } from "@atomist/rug/operations/Handlers";
 import { WebHookErrorHandler } from "../handlers/command/InstallWebHooks";
+
 describe("Handle webhook installation errors", () => {
 
     const handler = new WebHookErrorHandler();

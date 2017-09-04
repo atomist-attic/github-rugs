@@ -18,10 +18,7 @@ import {
     CommandPlan,
     HandleCommand,
     HandlerContext,
-    HandleResponse,
     MappedParameters,
-    Response,
-    ResponseMessage,
 } from "@atomist/rug/operations/Handlers";
 
 import {
@@ -29,14 +26,11 @@ import {
     Intent,
     MappedParameter,
     Parameter,
-    ParseJson,
-    ResponseHandler,
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 
-import { Issue } from "@atomist/cortex/Issue";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("AssignGitHubIssue", "Assign a GitHub issue to a user")

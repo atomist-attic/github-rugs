@@ -1,5 +1,5 @@
 
-import { CommandPlan, CommandRespondable, Execute, Respond } from "@atomist/rug/operations/Handlers";
+import { Execute } from "@atomist/rug/operations/Handlers";
 
 const gh = "https://api.github.com";
 

@@ -1,4 +1,4 @@
-import { CommandPlan, CommandRespondable, Execute, Instruction, Respond } from "@atomist/rug/operations/Handlers";
+import { Execute } from "@atomist/rug/operations/Handlers";
 
 const slack = "https://slack.com/api";
 

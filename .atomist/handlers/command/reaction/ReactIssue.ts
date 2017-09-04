@@ -16,11 +16,8 @@
 
 import {
     CommandHandler,
-    Intent,
     MappedParameter,
     Parameter,
-    ParseJson,
-    ResponseHandler,
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
@@ -28,12 +25,10 @@ import {
     CommandPlan,
     HandleCommand,
     HandlerContext,
-    HandleResponse,
     MappedParameters,
-    Response,
 } from "@atomist/rug/operations/Handlers";
 
-import { handleErrors, handleSuccess } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 
 import { ReactionContent, Repository } from "../../GitHubApi";
 
@@ -79,4 +74,4 @@ class ReactIssueCommand implements HandleCommand {
     }
 }
 
-export let comment = new ReactIssueCommand();
+export let command = new ReactIssueCommand();

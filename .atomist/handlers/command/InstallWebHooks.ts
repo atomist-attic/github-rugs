@@ -30,12 +30,9 @@ import {
     HandlerContext,
     HandleResponse,
     MappedParameters,
-    MessageMimeTypes,
     Respond,
     Response,
-    ResponseMessage,
 } from "@atomist/rug/operations/Handlers";
-import { wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 import { renderError, renderSuccess } from "@atomist/slack-messages/RugMessages";
 import {

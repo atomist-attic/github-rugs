@@ -19,8 +19,6 @@ import {
     Intent,
     MappedParameter,
     Parameter,
-    ParseJson,
-    ResponseHandler,
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
@@ -28,12 +26,10 @@ import {
     CommandPlan,
     HandleCommand,
     HandlerContext,
-    HandleResponse,
     MappedParameters,
-    Response,
 } from "@atomist/rug/operations/Handlers";
 
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 import { ChatTeam } from "@atomist/cortex/ChatTeam";
@@ -73,4 +69,4 @@ class CommentIssueCommand implements HandleCommand {
     }
 }
 
-export let comment = new CommentIssueCommand();
+export let command = new CommentIssueCommand();

@@ -5,7 +5,6 @@ import * as slack from "../utils/Slack";
 
 import {
     ChainedInstruction,
-    HandlerChain,
     HandlerChainDescriptor,
     ResponseChainingCommandHandler,
 } from "@atomist/rugs/operations/HandlerChains";

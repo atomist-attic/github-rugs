@@ -19,19 +19,14 @@ import {
     Intent,
     MappedParameter,
     Parameter,
-    ParseJson,
-    ResponseHandler,
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
 import {
     CommandPlan,
-    Execute,
     HandleCommand,
     HandlerContext,
-    HandleResponse,
     MappedParameters,
-    Response,
 } from "@atomist/rug/operations/Handlers";
 import { wrap } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";

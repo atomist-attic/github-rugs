@@ -16,11 +16,8 @@
 
 import {
     CommandHandler,
-    Intent,
     MappedParameter,
     Parameter,
-    ParseJson,
-    ResponseHandler,
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
@@ -28,11 +25,9 @@ import {
     CommandPlan,
     HandleCommand,
     HandlerContext,
-    HandleResponse,
     MappedParameters,
-    Response,
 } from "@atomist/rug/operations/Handlers";
-import { handleErrors, handleSuccess } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 
 @CommandHandler("ReactGitHubPullRequest", "React to a GitHub pull request")
 @Tags("github", "pull requests", "reactions")
@@ -66,4 +61,4 @@ class ReactGitHubPullRequest implements HandleCommand {
     }
 }
 
-export let comment = new ReactGitHubPullRequest();
+export let command = new ReactGitHubPullRequest();

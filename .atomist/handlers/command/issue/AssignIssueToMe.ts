@@ -18,10 +18,7 @@ import {
     CommandPlan,
     HandleCommand,
     HandlerContext,
-    HandleResponse,
     MappedParameters,
-    Response,
-    ResponseMessage,
 } from "@atomist/rug/operations/Handlers";
 
 import {
@@ -29,14 +26,12 @@ import {
     Intent,
     MappedParameter,
     Parameter,
-    ParseJson,
-    ResponseHandler,
     Secrets,
     Tags,
 } from "@atomist/rug/operations/Decorators";
-import { handleErrors, wrap } from "@atomist/rugs/operations/CommonHandlers";
+import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 
-import { ChatTeam, GitHubId, Issue } from "@atomist/cortex/Types";
+import { ChatTeam, GitHubId } from "@atomist/cortex/Types";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
 @CommandHandler("AssignToMeGitHubIssue", "Assign a GitHub issue to the invoking user")
