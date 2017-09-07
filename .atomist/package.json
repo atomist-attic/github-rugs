@@ -1,7 +1,7 @@
 {
   "name": "@atomist/github-rugs",
   "description": "Atomist Rugs for working with GitHub",
-  "version": "0.50.10",
+  "version": "0.50.11",
   "author": "Atomist",
   "license": "Apache-2.0",
   "repository": {
