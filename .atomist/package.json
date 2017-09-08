@@ -52,7 +52,7 @@
   "atomist": {
     "requires": "[1.0.0-m.7,2.0.0)",
     "extensions": {
-      "com.atomist.rug:rug-functions-github": "[0.25.2,1.0.0)",
+      "com.atomist.rug:rug-functions-github": "[0.25.3,1.0.0)",
       "com.atomist.rug:rug-function-http": "[0.8.0,1.0.0)",
       "com.atomist.rug:rug-functions-slack": "[0.3.1,1.0.0)"
     }

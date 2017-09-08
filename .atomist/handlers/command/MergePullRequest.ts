@@ -54,6 +54,9 @@ class MergePullRequestCommand implements HandleCommand {
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
+    @Parameter({ description: "The merge method", pattern: "^.*$" })
+    public mergeMethod: string = "merge";
+
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
         const ex = execute("merge-github-pull-request", this);
