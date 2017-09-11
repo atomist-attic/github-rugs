@@ -5,9 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [Unreleased][]
 
-[Unreleased]: https://github.com/atomist/github-rugs/compare/0.50.0...HEAD
+[Unreleased]: https://github.com/atomist/github-rugs/compare/0.51.0...HEAD
+
+## [0.51.0][] - 2017-09-11
+
+[0.51.0]: https://github.com/atomist/github-rugs/compare/0.50.0...0.51.0
+
+Method release
+
+### Added
+
+-   Merge method for PRs [atomist/rug-functions-github#26][]
+
+[atomist/rug-functions-github#26]: https://github.com/atomist/rug-functions-github/issues/26
 
 ## [0.50.0][] - 2017-09-01
 

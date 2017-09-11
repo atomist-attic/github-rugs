@@ -33,14 +33,34 @@ import {
 import { handleErrors } from "@atomist/rugs/operations/CommonHandlers";
 import { execute } from "@atomist/rugs/operations/PlanUtils";
 
-@CommandHandler("MergeGitHubPullRequest", "Merge a GitHub pull request")
+@CommandHandler("MergeGitHubPullRequest", "merge a GitHub pull request")
 @Tags("github", "pr")
 @Secrets("github://user_token?scopes=repo")
 @Intent("merge pr", "merge pullrequest")
 class MergePullRequestCommand implements HandleCommand {
 
-    @Parameter({ description: "The pull request number", pattern: "^.*$" })
+    @Parameter({
+        displayName: "Pull Request Number",
+        description: "the number of the pull request number to merge, with no leading `#`",
+        pattern: "^\\d+$",
+        validInput: "an open GitHub pull request number",
+        minLength: 1,
+        maxLength: 10,
+        required: true,
+    })
     public issue: number;
+
+    @Parameter({
+        displayName: "Merge Method",
+        description: "the method to use when merging the pull request",
+        pattern: "^(?:merge|squash|rebase)$",
+        validInput: "one of 'merge', 'squash', or 'rebase', see " +
+        "https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button",
+        minLength: 5,
+        maxLength: 6,
+        required: false,
+    })
+    public mergeMethod: string = "merge";
 
     @MappedParameter(MappedParameters.GITHUB_REPOSITORY)
     public repo: string;
@@ -54,9 +74,6 @@ class MergePullRequestCommand implements HandleCommand {
     @MappedParameter("atomist://correlation_id")
     public corrid: string;
 
-    @Parameter({ description: "The merge method", pattern: "^.*$" })
-    public mergeMethod: string = "merge";
-
     public handle(ctx: HandlerContext): CommandPlan {
         const plan = new CommandPlan();
         const ex = execute("merge-github-pull-request", this);
@@ -65,4 +82,4 @@ class MergePullRequestCommand implements HandleCommand {
     }
 }
 
-export let command = new MergePullRequestCommand();
+export const command = new MergePullRequestCommand();
