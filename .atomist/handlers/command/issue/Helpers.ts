@@ -21,7 +21,7 @@ export function replaceChatIdWithGitHubId(body: string, pe: PathExpressionEngine
 function loadGitHubId(id: string, pe: PathExpressionEngine, root: cortex.ChatTeam): cortex.GitHubId {
     try {
         return pe.scalar<cortex.ChatTeam, cortex.GitHubId>(
-            root, `/members::ChatId()[@id='${id}']/person::Person()/gitHubId::GitHubId()`);
+            root, `/members::ChatId()[@userId='${id}']/person::Person()/gitHubId::GitHubId()`);
     } catch (e) {
         console.log(`Unable to load GithubId for ${id}`);
     }

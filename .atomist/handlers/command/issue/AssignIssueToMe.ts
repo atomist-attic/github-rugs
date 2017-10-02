@@ -63,7 +63,7 @@ class AssignToMeIssueCommand implements HandleCommand {
 
         const gitHubUser = context.pathExpressionEngine.scalar<ChatTeam, GitHubId>(
             context.contextRoot as ChatTeam,
-            `/members::ChatId()[@id='${this.requester}']/person::Person()/gitHubId::GitHubId()`,
+            `/members::ChatId()[@userId='${this.requester}']/person::Person()/gitHubId::GitHubId()`,
         );
 
         const exec = execute("assign-github-issue",
